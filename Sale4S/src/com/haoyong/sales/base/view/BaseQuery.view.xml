@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mily-mappings package="com.haoyong.sales.base.form">
+	<import>net.sf.mily.support.form.*</import>
+	<import>com.haoyong.sales.common.listener.*</import>
+	<import>com.haoyong.sales.base.domain.*</import>
+	<class name="BaseQueryForm" label="基础查询">
+		<view name="CommodityQuery" label="商品查询" builder="EditViewBuilder">
+			<property name="CommodityForm" class="CommodityForm" builder="ViewFieldBuilder">
+				<param name="cfg">
+					<attribute name="view-name" value="CommodityQuery" />
+					<attribute name="position" value="row" />
+				</param>
+			</property>
+		</view>
+		<view name="ClientQuery" label="客户查询" builder="EditViewBuilder">
+			<property name="ClientForm" class="ClientForm" builder="ViewFieldBuilder">
+				<param name="cfg">
+					<attribute name="view-name" value="ClientQuery" />
+					<attribute name="position" value="row" />
+				</param>
+			</property>
+		</view>
+		<view name="SupplierQuery" label="供应商查询" builder="EditViewBuilder">
+			<property name="SupplierForm" class="SupplierForm" builder="ViewFieldBuilder">
+				<param name="cfg">
+					<attribute name="view-name" value="SupplierQuery" />
+					<attribute name="position" value="row" />
+				</param>
+			</property>
+		</view>
+		<view name="SubCompanyQuery" label="分公司查询" builder="EditViewBuilder">
+			<property name="SubCompanyForm" class="SubCompanyForm" builder="ViewFieldBuilder">
+				<param name="cfg">
+					<attribute name="view-name" value="ShowQuery.selectedList" />
+					<attribute name="position" value="row" />
+				</param>
+			</property>
+		</view>
+	</class>
+</mily-mappings>

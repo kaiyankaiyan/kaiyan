@@ -1,0 +1,40 @@
+.Dialog {
+	background-image:url(../img/div_background.gif);
+	padding:0;
+	margin:0;
+	border-collapse:collapse;
+	z-index:100;
+	position:absolute;
+	BORDER-RIGHT: #455690 1px solid; BORDER-TOP: #a6b4cf 1px solid;
+	BORDER-LEFT: #a6b4cf 1px solid; BORDER-BOTTOM: #455690 1px solid;
+	-moz-user-select: none;
+}
+.SimpleDialog {
+	background-color:#E6EEFA;
+	z-index:100;
+	position:absolute;
+	width:600;
+	height:450;
+	border:2px solid #92C0F2;
+}
+.SimpleDialog_Close {
+	font-weight:bold;
+	z-index: 1;
+	position: absolute;
+}
+.TitleTr {
+	background:transparent url(../img/menubar_bg.jpg) repeat-x scroll 0% 0%;
+	color:#FFFFFF;
+	font-weight:bold;
+	cursor:pointer;
+}
+.TdClose {
+	padding: 0 3;
+	cursor: pointer;
+}
+.Body {
+	padding-bottom: 3px;
+}
+.ButtonBar {
+	padding-bottom: 5px;
+}

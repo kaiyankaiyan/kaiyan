@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mily-mappings package="com.haoyong.salel.base.form">
+	<import>net.sf.mily.support.form.*</import>
+	<import>com.haoyong.salel.common.listener.*</import>
+	<import>com.haoyong.salel.base.domain.*</import>
+	<!-- 城市显图 -->
+	<class name="CityForm" label="城市">
+		<view name="Form" label="城市建档" builder="EditViewBuilder">
+			<property name="province" class="Province" label0="省份" builder="SelectListBuilder">
+				<param name="options">
+					<attribute name="type" value="SelectNodeList"/>
+				</param>
+				<param name="nodes">
+					<attribute name="nodes-method" value="getTreeNodes"/>
+					<attribute name="node-property" value=""/>
+					<attribute name="node-comp-property" value="name"/>
+					<attribute name="node-builder" value="HyperlinkBuilder"/>
+				</param>
+				<param name="listener">
+					<attribute name="class" value="ChangeAssociateListener" />
+					<attribute name="properties" value="form"/>
+				</param>
+			</property>
+			<property name="form" class="CityForm" builder="ViewFieldBuilder">
+				<param name="cfg">
+					<attribute name="view-name" value="CreateList"/>
+					<attribute name="position" value="right"/>
+				</param>
+			</property>
+		</view>
+		<view name="CreateList" builder="EditViewBuilder">
+			<!-- 点击新增按钮到新增页面 -->
+			<param name="cfg">
+				<attribute name="freezable" value="false" />
+			</param>
+			<param name="menu">
+				<attribute name="text" value="新增" />
+				<attribute name="image" value="mily/img/color.gif" />
+				<param name="listener">
+					<attribute name="class" value="PostListener" />
+					<attribute name="method" value="createPrepare" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="ForwardListener"/>
+					<attribute name="view-name" value="Edit"/>
+				</param>
+			</param>
+			<param name="menu">
+				<attribute name="text" value="编辑" />
+				<attribute name="image" value="mily/img/color.gif" />
+				<param name="listener">
+					<attribute name="class" value="SelectDomainListener" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="PostListener" />
+					<attribute name="method" value="editPrepare" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="ForwardListener" />
+					<attribute name="view-name" value="Edit" />
+				</param>
+			</param>
+			<param name="menu">
+				<attribute name="text" value="删除" />
+				<attribute name="image" value="mily/img/color.gif" />
+				<param name="listener">
+					<attribute name="class" value="SelectDomainListener" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="ActionServiceListener" />
+					<attribute name="action" value="City_Delete" />
+					<attribute name="setter" value="setCityDelete4Service" />
+					<attribute name="message" value="确认删除此城市？" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="RefreshListener" />
+				</param>
+			</param>
+			<property name="selectedList" class="City" builder="SqlListBuilder">
+				<param name="cfg">
+					<attribute name="parameter" value="getListParameters" />
+				</param>
+				<fields>
+					<field id="id" type="Long" label="选择" expression="c.ID" />
+					<field id="number" type="String" label="城市编号" expression="c.number" />
+					<field id="SecurityNumber" type="String" label="城市名称" expression="c.name" />
+					<field id="version" type="int" label="版本" visible="false" expression="c.version" />
+				</fields>
+				<DataSource><![CDATA[
+					from bs_city c
+				]]>
+				</DataSource>
+				<Where><![CDATA[
+					c.PROVINCEID={$provinceId}
+				]]>
+				</Where>
+			</property>
+		</view>
+		<view name="Edit" builder="EditViewBuilder">
+			<param name="menu">
+				<attribute name="text" value="提交"></attribute>
+				<attribute name="image" value="mily/img/color.gif" />
+				<param name="listener">
+					<attribute name="class" value="ValidateListener" />
+					<attribute name="method" value="createCommit" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="ActionServiceListener" />
+					<attribute name="action" value="City_Effect" />
+					<attribute name="setter" value="setCity4Service" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="ForwardListener" />
+					<attribute name="view-name" value="CreateList" />
+				</param>
+			</param>
+			<param name="menu">
+				<attribute name="text" value="取消" />
+				<attribute name="image" value="mily/img/color.gif" />
+				<param name="listener">
+					<attribute name="class" value="ForwardListener" />
+					<attribute name="view-name" value="CreateList" />
+				</param>
+			</param>
+			<property name="province.name" label="省份" builder="TextBuilder" />
+			<property name="domain" class="City" builder="EditViewBuilder">
+				<property name="number" label="城市编号" builder="TextFieldBuilder" >
+  					<param name="validate">
+						<attribute name="require" value="true"/>
+						<attribute name="message" value="4位大写字母" />
+						<attribute name="validate"><![CDATA[(this.value.match(/^[A-Z]{4}$/g) && 1)==1;]]></attribute>
+					</param>
+				</property>
+				<property name="name" label="城市名称" builder="TextFieldBuilder" >
+  					<param name="validate">
+						<attribute name="require" value="true"/>
+					</param>
+				</property>
+			</property>
+		</view>
+		<view name="CityQuery" builder="EditViewBuilder">
+			<property name="selectedList" class="City" builder="SqlListBuilder">
+				<param name="cfg">
+					<attribute0 name="freezable" value="false" />
+				</param>
+				<fields>
+					<field id="id" type="Long" label="选择" expression="c.ID" />
+					<field id="provinceId" type="Long" label="省份" visible="false" expression="p.ID" />
+					<field id="provinceName" type="String" label="所属省份" expression="p.name" />
+					<field id="name" type="String" label="城市名称" expression="c.name" />
+					<field id="number" type="String" label="城市编号" expression="c.number" />
+					<field id="version" type="int" label="城市版本" visible="false" expression="c.version" />
+					<field id="provinceVersion" type="int" label="省份版本" visible="false" expression="p.version" />
+				</fields>
+				<DataSource><![CDATA[
+					FROM bs_city c 
+					left join bs_province p on p.id=c.PROVINCEID
+				]]>
+				</DataSource>
+			</property>
+		</view>
+	</class>
+</mily-mappings>

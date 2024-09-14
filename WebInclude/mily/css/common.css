@@ -1,0 +1,164 @@
+body,th,td,table,iframe,div,form {
+	margin:0;
+	padding:0;
+	border: 0px;
+	/*border-spacing: 0px*/;
+	font-size: 12px;
+	font-family: times New Roman;
+	empty-cells: show;
+	border-collapse: collapse;
+}
+body {
+	overflow: visible;
+	background-color:#E6EEFA;
+}
+#errorPanel {
+	height: 0%;
+	width: 100%;
+	background-color: #E6EEFA;
+}
+.footerbk {
+	background:#E6EEFA;
+	width:100%;
+	height:0;
+	font-size: 0;
+}
+#footer {
+	position:fixed;
+	z-index:20; 
+	background:#E6EEFA;
+	bottom:0;
+	width:100%;
+}
+td {
+	vertical-align: top;
+	white-space:nowrap;
+}
+a:hover {
+	color:#FF6600;
+	text-decoration:underline;
+}
+a:visited {
+	color:#0041D9;
+	text-decoration:none;
+}
+a:hover {
+	text-decoration:underline;
+}
+a {
+	color:#0041D9;
+	text-decoration:none;
+	white-space: nowrap;
+}
+.textarea {
+	border:1px solid #CCCCCC;
+	font-size: 12px;
+	height: 60px;
+}
+.select {
+	border-top:solid #5CB4EC;
+	border-width:1 0 0 0;
+	background-color:white;
+}
+.htmlfield {
+	border-top:solid #5CB4EC;
+	border-width:1 0 0 0;
+	background-color:#FFFFFF;
+}
+.textfield {
+	border-top:solid #5CB4EC;
+	border-width:1 0 0 0;
+}
+.checkgroup a {
+	margin-right: 10px;
+	white-space: nowrap;
+	color: black;
+}
+.button {
+	background: url(../img/button_bg.jpg) repeat-x;
+	border: 1px solid #9DCFFE;
+	padding: 0px 0px 0px 3px;
+}
+.warn {
+	color: red;
+	margin: 5px 2px 5px 0px;
+}
+.floatWarn {
+	font-size: 12px;
+	color: blue;
+	z-index: 15;
+	position: fixed;
+	background-color: #E6EEFA;
+	width:100%;
+	padding: 2 0 5 2;
+}
+.floatError {
+	font-size: 12px;
+	color: red;
+	z-index: 15;
+	position: fixed;
+	background-color: #E6EEFA;
+	width:100%;
+	padding: 2 0 5 2;
+}
+.verticalSpliter {
+	background-color:#99BBE8;
+	font-size:10%;
+	cursor:e-resize;
+	width:5px;
+}
+.horizontalSpliter {
+	background-color:#99BBE8;
+	font-size:10%;
+	cursor:n-resize;
+	height:5px;
+}
+.mask_panel {
+	cursor:pointer;
+	padding:0; margin:0;
+	z-index:200;
+	position:fixed;
+	width:100%; height:100%;
+}
+.loading_panel {
+	background: #C3DAF9;
+	border: 1px solid #6593CF;
+	padding: 2px;
+	position: absolute;
+	cursor: wait;
+	z-index:300;
+}
+.confirm_panel {
+	background: #C3DAF9;
+	border: solid #6593CF;
+	border-width: 4 3 3 3;
+	position: absolute;
+	z-index:300;
+}
+.loading_inner {
+	border: 1px solid #A3BAD9;
+	background: #FBFBFB url(../img/loading.gif) no-repeat scroll 5px;
+	line-height: 16px;
+	padding: 8px 15px 8px 30px;
+}
+.TabbedPane{
+	width: 100%;
+	height: 100%;
+}
+.TabbedPane_Tab td {
+	background-color:#E5ECF9;
+	vertical-align: middle;
+	color:#15428B;
+	-moz-user-select:none;
+}
+.TabbedPane_Tab_Selected td {
+	background-color:#F0F8FF;
+	vertical-align: middle;
+	font-weight:bold;
+	-moz-user-select:none;
+}
+.TabbedPane_Pane{
+	height:100%;
+	vertical-align:top;
+	background-color:#F0F8FF;
+}

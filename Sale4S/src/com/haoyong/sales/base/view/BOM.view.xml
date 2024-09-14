@@ -1,0 +1,451 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mily-mappings package="com.haoyong.sales.base.form">
+	<import>net.sf.mily.support.form.*</import>
+	<import>com.haoyong.sales.common.listener.*</import>
+	<import>com.haoyong.sales.base.domain.*</import>
+	<import>com.haoyong.sales.sale.domain.BomDetail</import>
+	<class name="BOMForm" label="商品">
+		<property name="MaterialTicket" class="Commodity" builder="EditViewBuilder">
+			<property name="choose" class="Commodity">
+				<property name="commNumber" label="物料编号" builder="TextFieldBuilder">
+					<param name="listener">
+						<attribute name="class" value="SelectRowListener" />
+					</param>
+					<param name="listener">
+						<attribute name="class" value="ChangeAssociateListener" />
+						<attribute name="properties" value="commodity" />
+						<attribute name="getter" value="getCommoditySearchNumber" />
+					</param>
+					<param name="listener">
+						<attribute name="class" value="SimpleDialogOpenListener" />
+						<attribute name="view-name" value="CommodityQuery" />
+						<attribute name="expression" value="isDialogOpen=true" />
+					</param>
+					<param name="button">
+						<attribute name="text" value="选择" />
+						<param name="listener">
+							<attribute name="class" value="SelectRowListener" />
+						</param>
+						<param name="listener">
+							<attribute name="class" value="SimpleDialogOpenListener" />
+							<attribute name="view-name" value="CommodityQuery" />
+						</param>
+					</param>
+				</property>
+				<property name="name" label="物料名称" builder="TextFieldBuilder">
+					<param name="cfg">
+						<attribute name="type" value="Require" />
+					</param>
+				</property>
+				<property name="spec" label="规格" builder="TextFieldBuilder" />
+				<property name="model" label="型号" builder="TextFieldBuilder" />
+				<property name="color" label="颜色" builder="TextFieldBuilder" />
+				<property name="supplyType" label="供货方式" builder="SelectListBuilder">
+					<param name="cfg">
+						<attribute name="type" value="Require" />
+					</param>
+					<param name="options">
+						<attribute name="type" value="SelectList" />
+						<attribute name="collection" value="getSupplyTypeOptions" />
+						<attribute name="value-property" value="name" />
+						<attribute name="text-property" value="name" />
+					</param>
+				</property>
+				<property name="aweight" label="单位重量" builder="TextFieldBuilder" />
+				<property name="barNum" label="条形编码" builder="TextFieldBuilder" />
+				<property name="unit" label="单位" builder="TextFieldBuilder" />
+			</property>
+		</property>
+		<view name="BomList" builder="EditViewBuilder">
+			<param name="menu">
+				<attribute name="text" value="返回" />
+				<attribute name="image" value="mily/img/color.gif" />
+				<param name="listener">
+					<attribute name="class" value="ForwardListener" />
+					<attribute name="former" value="firerForm" />
+					<attribute name="getter" value="getForwardFromBuilder" info="放弃BOM编辑吗？" />
+				</param>
+			</param>
+			<param name="menu">
+				<attribute name="text" value="导入BOM表" />
+				<attribute name="image" value="mily/img/color.gif" />
+				<param name="listener">
+					<attribute name="class" value="SelectDomainListener" />
+					<attribute name="former" value="selectFormer4Bom" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="PostListener" />
+					<attribute name="method" value="prepareBomImport" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="ForwardListener" />
+					<attribute name="view-name" value="BomImport" />
+				</param>
+			</param>
+			<param name="menu">
+				<attribute name="text" value="粘贴入BOM表" />
+				<attribute name="image" value="mily/img/color.gif" />
+				<param name="listener">
+					<attribute name="class" value="SelectDomainListener" />
+					<attribute name="former" value="selectFormer4Bom" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="PostListener" />
+					<attribute name="method" value="setBomPaste" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="RefreshListener" />
+				</param>
+			</param>
+			<property name="domain" class="BomDetail">
+				<property name="BomTicket.aunit" label="新增空白行数" builder="TextFieldBuilder"/>
+				<property name="level" label="调整显示级数" builder="TextFieldBuilder">
+					<param name="button">
+						<attribute name="text" value="调整显示级数" />
+						<attribute name="image" value="mily/img/color.gif" />
+						<param name="listener">
+							<attribute name="class" value="PostListener" />
+							<attribute name="method" value="setBomShowLevel" />
+						</param>
+						<param name="listener">
+							<attribute name="class" value="RefreshListener" />
+						</param>
+					</param>
+				</property>
+			</property>
+			<property name="showList" label="物料BOM树" class="BomDetail" builder="EditListBuilder">
+				<param name="menu">
+					<attribute name="text" value="新增同级" />
+					<attribute name="image" value="mily/img/color.gif" />
+					<param name="listener">
+						<attribute name="class" value="SelectDomainListener" />
+						<attribute name="former" value="selectFormer4Bom" />
+						<attribute name="validate" value="false" />
+					</param>
+					<param name="listener">
+						<attribute name="class" value="PostListener" />
+						<attribute name="method" value="addBomDetailSame" />
+					</param>
+					<param name="listener">
+						<attribute name="class" value="RefreshListener" />
+					</param>
+				</param>
+				<param name="menu">
+					<attribute name="text" value="新增子级" />
+					<attribute name="image" value="mily/img/color.gif" />
+					<param name="listener">
+						<attribute name="class" value="SelectDomainListener" />
+						<attribute name="former" value="selectFormer4Bom" />
+					</param>
+					<param name="listener">
+						<attribute name="class" value="PostListener" />
+						<attribute name="method" value="addBomDetailSub" />
+					</param>
+					<param name="listener">
+						<attribute name="class" value="RefreshListener" />
+					</param>
+				</param>
+				<param name="menu">
+					<attribute name="text" value="复制" />
+					<attribute name="image" value="mily/img/color.gif" />
+					<param name="listener">
+						<attribute name="class" value="SelectDomainListener" />
+						<attribute name="former" value="selectFormer4Bom" />
+					</param>
+					<param name="listener">
+						<attribute name="class" value="PostListener" />
+						<attribute name="method" value="setBomCopy" />
+					</param>
+					<param name="listener">
+						<attribute name="class" value="RefreshListener" />
+					</param>
+				</param>
+				<param name="menu">
+					<attribute name="text" value="上调层级" />
+					<attribute name="image" value="mily/img/color.gif" />
+					<param name="listener">
+						<attribute name="class" value="SelectDomainListener" />
+						<attribute name="former" value="selectFormer4Bom" />
+					</param>
+					<param name="listener">
+						<attribute name="class" value="PostListener" />
+						<attribute name="method" value="setBomLevelUp" />
+					</param>
+					<param name="listener">
+						<attribute name="class" value="RefreshListener" />
+					</param>
+				</param>
+				<param name="menu">
+					<attribute name="text" value="下调层级" />
+					<attribute name="image" value="mily/img/color.gif" />
+					<param name="listener">
+						<attribute name="class" value="SelectDomainListener" />
+						<attribute name="former" value="selectFormer4Bom" />
+					</param>
+					<param name="listener">
+						<attribute name="class" value="PostListener" />
+						<attribute name="method" value="setBomLevelDown" />
+					</param>
+					<param name="listener">
+						<attribute name="class" value="RefreshListener" />
+					</param>
+				</param>
+				<param name="menu">
+					<attribute name="text" value="上移至" />
+					<attribute name="image" value="mily/img/color.gif" />
+					<param name="listener">
+						<attribute name="class" value="SelectDomainListener" />
+						<attribute name="former" value="selectFormer4Bom" />
+					</param>
+					<param name="listener">
+						<attribute name="class" value="PostListener" />
+						<attribute name="method" value="setBomMoveUpTo" />
+					</param>
+					<param name="listener">
+						<attribute name="class" value="RefreshListener" />
+					</param>
+				</param>
+				<param name="menu">
+					<attribute name="text" value="下移至" />
+					<attribute name="image" value="mily/img/color.gif" />
+					<param name="listener">
+						<attribute name="class" value="SelectDomainListener" />
+						<attribute name="former" value="selectFormer4Bom" />
+					</param>
+					<param name="listener">
+						<attribute name="class" value="PostListener" />
+						<attribute name="method" value="setBomMoveDownTo" />
+					</param>
+					<param name="listener">
+						<attribute name="class" value="RefreshListener" />
+					</param>
+				</param>
+				<param name="menu">
+					<attribute name="text" value="删除节点" />
+					<attribute name="image" value="mily/img/color.gif" />
+					<param name="listener">
+						<attribute name="class" value="SelectDomainListener" />
+						<attribute name="former" value="selectFormer4Bom" />
+					</param>
+					<param name="listener">
+						<attribute name="class" value="PostListener" />
+						<attribute name="method" value="setBomRemove" />
+					</param>
+					<param name="listener">
+						<attribute name="class" value="RefreshListener" />
+					</param>
+				</param>
+				<param name="menu">
+					<attribute name="text" value="清空供给方式" />
+					<attribute name="image" value="mily/img/color.gif" />
+					<param name="listener">
+						<attribute name="class" value="SelectDomainListener" />
+						<attribute name="former" value="selectFormer4Bom" />
+					</param>
+					<param name="listener">
+						<attribute name="class" value="PostListener" />
+						<attribute name="method" value="setBomArrangeNull" />
+					</param>
+					<param name="listener">
+						<attribute name="class" value="RefreshListener" />
+					</param>
+				</param>
+				<property name="level" label="层级节点" builder="HyperlinkBuilder">
+					<param name="cfg">
+						<attribute name="setter" value="setLevelLink" />
+					</param>
+				</property>
+				<property name="commodity" class="Commodity" >
+					<param name="cfg0">
+						<attribute name="property" value="Choose-Edit" />
+					</param>
+				</property>
+				<property name="BomTicket.aunit" label="单位用量" builder="TextFieldBuilder"/>
+				<property name="arrange" label="供给方式" builder="RadioButtonGroupBuilder" >
+					<param name="options">
+						<attribute name="collection" value="getBomArrangeOptions"/>
+					</param>
+				</property>
+				<property name="remark" label="明细备注" builder="TextFieldBuilder"/>
+			</property>
+<!-- 
+			<property name="detailList" label="全部BOM物料" class="BomDetail" builder="EditListBuilder">
+				<property name="BomTicket.level" label="层级节点" builder="HyperlinkBuilder">
+					<param name="cfg">
+						<attribute name="setter" value="setLevelLink" />
+					</param>
+				</property>
+				<property name="commodity" class="Commodity" >
+					<param name="cfg">
+						<attribute name="property" value="Choose-Edit" />
+					</param>
+					<property name="name" label="物料名称" builder="TextFieldBuilder"/>
+				</property>
+				<property name="BomTicket.aunit" label="单位用量" builder="TextFieldBuilder"/>
+			</property>
+-->
+		</view>
+		<view name="ShowQuery" label0="生产物料查询" builder="EditViewBuilder">
+			<property name="selectedList" class="BomDetail" builder="SqlListBuilder">
+				<fields>
+					<field id="id" type="Long" label="物料ID" expression="b.ID" />
+					<field id="SellerId" type="Long" label="商家ID" visible="false" expression="b.sellerId" />
+					<field id="bomId" type="Long" label="物料ID" visible="false" expression="b.id" />
+					<field id="number" type="String" label="订单号" expression="b.number" />
+					<field id="monthnum" type="String" label="月流水号" expression="b.monthnum" />
+					<field id="outMonthnum" type="String" label="出库流水" expression="b.outMonthnum" />
+					<field id="supplierName" type="String" label="加工商名称" expression="b.supplierName" />
+					<field id="commNumber" type="String" label="商品编号" expression="b.commNumber" />
+					<field id="commName" type="String" label="商品名称" expression="b.commName" />
+					<field id="arrange" type="String" label="物料安排" expression="b.arrange" />
+					<field id="amount" type="Double" label="需求数量" expression="b.amount" >
+						<param name="footer">
+							<attribute name="type" value="SUM" />
+							<attribute name="expression" value="sum(b.amount)" />
+						</param>
+					</field>
+					<field id="gotAmount" type="Double" label="配给数量" expression="b.gotAmount" >
+						<param name="footer">
+							<attribute name="type" value="SUM" />
+							<attribute name="expression" value="sum(b.gotAmount)" />
+						</param>
+					</field>
+					<field id="notAmount" type="Double" label="差额数量" expression="b.notAmount" >
+						<param name="footer">
+							<attribute name="type" value="SUM" />
+							<attribute name="expression" value="sum(b.notAmount)" />
+						</param>
+					</field>
+					<field id="occupyAmount" type="Double" label="领用数量" expression="b.occupyAmount" >
+						<param name="footer">
+							<attribute name="type" value="SUM" />
+							<attribute name="expression" value="sum(b.occupyAmount)" />
+						</param>
+					</field>
+					<field id="keepAmount" type="Double" label="留用数量" expression="b.keepAmount" >
+						<param name="footer">
+							<attribute name="type" value="SUM" />
+							<attribute name="expression" value="sum(b.keepAmount)" />
+						</param>
+					</field>
+					<field id="price" type="Double" label="单价" expression="b.price" />
+					<field id="orderName" type="String" label="订单名称" expression="b.orderName" />
+					<field id="subName" type="String" label="分公司名称" expression="b.subName" />
+					<field id="clientName" type="String" label="客户名称" expression="b.clientName" />
+					<field id="purName" type="String" label="采购名称" expression="b.purName" />
+					<field id="stateName" type="String" label="流程名称" expression="b.stateName" />
+					<field id="stBom0" type="int" label="物料状态" expression="case when b.stBom=0 then '失效' else null end" />
+					<field id="stBom" type="int" label="流程ID" expression="b.stBom" />
+					<field id="version" type="int" label="版本" visible="false" expression="b.version" />
+				</fields>
+				<DataSource><![CDATA[
+					from sa_BomDetail b
+				]]>
+				</DataSource>
+			</property>
+		</view>
+		<view name="BomImport" builder="EditViewBuilder">
+			<param name="menu">
+				<attribute name="text" value="导入格式化" />
+				<attribute name="image" value="mily/img/color.gif" />
+				<param name="listener">
+					<attribute name="class" value="ValidateListener" />
+					<attribute name="method" value="validateToImport"/>
+				</param>
+				<param name="listener">
+					<attribute name="class" value="PostListener" />
+					<attribute name="method" value="setBomImportFormated"/>
+				</param>
+				<param name="listener">
+					<attribute name="class" value="RefreshListener" />
+				</param>
+			</param>
+			<param name="menu">
+				<attribute name="text" value="导入确定" />
+				<attribute name="image" value="mily/img/color.gif" />
+				<param name="listener">
+					<attribute name="class" value="ValidateListener" />
+					<attribute name="method" value="validateImport"/>
+				</param>
+				<param name="listener">
+					<attribute name="class" value="PostListener" />
+					<attribute name="method" value="addBomDetailImport"/>
+				</param>
+				<param name="listener">
+					<attribute name="class" value="ForwardListener" />
+					<attribute name="getter" value="getForwardFromBuilder"/>
+				</param>
+			</param>
+			<param name="menu">
+				<attribute name="text" value="返回" />
+				<attribute name="image" value="mily/img/color.gif" />
+				<param name="listener">
+					<attribute name="class" value="ForwardListener" />
+					<attribute name="getter" value="getForwardFromBuilder"/>
+				</param>
+			</param>
+			<property name="domain.commodity.remark" label="单元格内容" builder="TextAreaBuilder">
+				<param name="cfg">
+					<attribute name="position" value="row" />
+				</param>
+			</property>
+			<property name="domain" label="标题行配置" class="BomDetail" builder="EditListBuilder">
+				<param name="menu">
+					<attribute name="text" value="默认依次顺序" />
+					<attribute name="image" value="mily/img/color.gif" />
+					<param name="listener">
+						<attribute name="class" value="PostListener" />
+						<attribute name="method" value="setBomDefaultLabelIndex" />
+					</param>
+					<param name="listener">
+						<attribute name="class" value="RefreshListener" />
+					</param>
+				</param>
+				<property name="commodity.voParamMap.note" label="标题名" builder="TextBuilder"/>
+				<property name="commodity" class="Commodity"/>
+				<property name="BomTicket.aunit" label="单位用量" builder="TextFieldBuilder"/>
+				<property name="remark" label="明细备注" builder="TextFieldBuilder"/>
+			</property>
+			<property name="bomImports" label="格式化整理" class="BomDetail" builder="EditListBuilder">
+				<param name="menu">
+					<attribute name="text" value="删除行" />
+					<attribute name="image" value="mily/img/color.gif" />
+					<param name="listener">
+						<attribute name="class" value="SelectDeleteListener" />
+					</param>
+				</param>
+				<property name="commodity" class="Commodity"/>
+				<property name="BomTicket.aunit" label="单位用量" builder="TextFieldBuilder"/>
+				<property name="remark" label="明细备注" builder="TextFieldBuilder"/>
+				<property name="commodity.voParamMap.error" label="导入行错误" builder="TextFieldBuilder"/>
+			</property>
+		</view>
+		<view name="CommodityQuery" builder="EditViewBuilder">
+			<param name="menu">
+				<attribute name="text" value="确定" />
+				<attribute name="image" value="mily/img/color.gif" />
+				<param name="listener">
+					<attribute name="class" value="SelectDomainListener" />
+					<attribute name="setter" value="setCommoditySelect" />
+					<attribute name="view-name" value="selectedList" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="SimpleDialogCloseListener" />
+				</param>
+			</param>
+			<param name="menu">
+				<attribute name="text" value="关闭" />
+				<attribute name="image" value="mily/img/color.gif" />
+				<param name="listener">
+					<attribute name="class" value="SimpleDialogCloseListener" />
+				</param>
+			</param>
+			<property name="commodityForm" class="CommodityForm" builder="ViewFieldBuilder">
+				<param name="cfg">
+					<attribute name="view-name" value="CommodityQuery.selectedList"/>
+					<attribute name="position" value="row"/>
+				</param>
+			</property>
+		</view>
+	</class>
+</mily-mappings>

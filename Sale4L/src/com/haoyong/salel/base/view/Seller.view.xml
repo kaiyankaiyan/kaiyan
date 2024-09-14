@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mily-mappings package="com.haoyong.salel.base.form">
+	<import>net.sf.mily.support.form.*</import>
+	<import>com.haoyong.salel.common.listener.*</import>
+	<import>com.haoyong.salel.base.domain.*</import>
+	<class name="SellerForm" label="商家">
+		<view name="List" label="商家建档" builder="EditViewBuilder">
+			<param name="menu">
+				<attribute name="text" value="新增" />
+				<attribute name="image" value="mily/img/color.gif" />
+				<param name="listener">
+					<attribute name="class" value="PostListener" />
+					<attribute name="method" value="createPrepare" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="ForwardListener" />
+					<attribute name="view-name" value="Edit" />
+				</param>
+			</param>
+			<param name="menu">
+				<attribute name="text" value="编辑" />
+				<attribute name="image" value="mily/img/color.gif" />
+				<param name="listener">
+					<attribute name="class" value="SelectDomainListener" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="PostListener" />
+					<attribute name="method" value="editPrepare" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="ForwardListener" />
+					<attribute name="view-name" value="Edit" />
+				</param>
+			</param>
+			<param name="menu">
+				<attribute name="text" value="删除" />
+				<attribute name="image" value="mily/img/color.gif" />
+				<param name="listener">
+					<attribute name="class" value="SelectDomainListener" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="ActionServiceListener" />
+					<attribute name="action" value="Seller_Delete" />
+					<attribute name="setter" value="setSellerDelete4Service" />
+					<attribute name="message" value="确认删除此商家？" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="RefreshListener" />
+				</param>
+			</param>
+			<property name="selectedList" class="Seller" builder="SqlListBuilder">
+				<param name="cfg">
+					<attribute name="parameter" value="getParam4Seller" />
+				</param>
+				<fields>
+					<field id="id" type="Long" label="选择" expression="c.ID" />
+					<field id="name" type="String" label="商家名称" expression="c.name" />
+				 	<field id="provinceName" type="String" label="省份" expression="c.provinceName" />
+				 	<field id="cityName" type="String" label="城市" expression="c.cityName" />
+					<field id="number" type="String" label="商家编号" expression="c.number" />
+					<field id="sqlName" type="String" label="数据库名称" expression="c.sqlName"/>
+				 	<field id="address" type="String" label="地址" expression="c.address"/>
+				 	<field id="remark" type="String" label="备注" expression="c.remark"/>
+				 	<field id="version" type="int" label="版本" visible="false" expression="c.version" />
+				</fields>
+				<DataSource><![CDATA[
+					from bs_seller c
+				]]>
+				</DataSource>
+				<Where><![CDATA[
+					{$sqlName}
+				]]>
+				</Where>
+			</property>
+		</view>
+		<view name="Edit" builder="EditViewBuilder">
+			<param name="menu">
+				<attribute name="text" value="提交" />
+				<attribute name="image" value="mily/img/color.gif" />
+				<param name="listener">
+					<attribute name="class" value="PostListener" />
+					<attribute name="method" value="createCommit" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="ActionServiceListener" />
+					<param name="action">
+						<attribute name="action" value="Seller_Edit" />
+						<attribute name="setter" value="setSeller4Service" />
+						<attribute name="expression"><![CDATA[domain.id>0]]></attribute>
+						<attribute name="message" value="编辑提交" />
+					</param>
+					<param name="action">
+						<attribute name="action" value="Seller_Create" />
+						<attribute name="setter" value="setSeller4Service" />
+						<attribute name="expression" value="domain.id=0" />
+						<attribute name="message" value="新增提交" />
+					</param>
+				</param>
+				<param name="listener">
+					<attribute name="class" value="ForwardListener" />
+					<attribute name="view-name" value="List" />
+				</param>
+			</param>
+			<param name="menu">
+				<attribute name="text" value="取消" />
+				<attribute name="image" value="mily/img/color.gif" />
+				<param name="listener">
+					<attribute name="class" value="ForwardListener" />
+					<attribute name="view-name" value="List" />
+				</param>
+			</param>
+			<property name="domain" class="Seller" builder="EditViewBuilder">
+				<property name="sqlName" label="数据库名" builder="SelectListBuilder">
+ 					<param name="validate">
+						<attribute name="require" value="true"/>
+						<attribute name="editable" value="{$sqlName}.svalue==0"/>
+					</param>
+					<param name="options">
+						<attribute name="type" value="SelectList"/>
+						<attribute name="collection" value="getSqlnameOptions"/>
+					</param>
+				</property>
+				<property name="number" label="商家编号" builder="TextBuilder"/>
+				<property name="provinceName" label="省份" builder="TextFieldBuilder">
+				  	<param name="validate">
+						<attribute name="require" value="true"/>
+					</param>
+					<param name="listener">
+						<attribute name="class" value="ChangeAssociateListener"/>
+						<attribute name="properties" value="provinceName,cityName"/>
+						<attribute name="getter" value="getProvinceSearchName"/>
+					</param>
+					<param name="listener">
+						<attribute name="class" value="SimpleDialogOpenListener"/>
+						<attribute name="view-name" value="ProvinceQuery"/>
+						<attribute name="expression" value="isDialogOpen=true"/>
+					</param>
+					<param name="button">
+						<attribute name="text" value="选择"/>
+						<attribute name="image" value="mily/img/color.gif"/>
+						<param name="listener">
+							<attribute name="class" value="SimpleDialogOpenListener"/>
+							<attribute name="view-name" value="ProvinceQuery"/>
+						</param>
+					</param>
+				</property>
+				<property name="cityName" label="城市" builder="TextFieldBuilder">
+				  	<param name="validate">
+						<attribute name="require" value="true"/>
+					</param>
+					<param name="listener">
+						<attribute name="class" value="ChangeAssociateListener"/>
+						<attribute name="properties" value="provinceName,cityName"/>
+						<attribute name="getter" value="getCitySearchName"/>
+					</param>
+					<param name="listener">
+						<attribute name="class" value="SimpleDialogOpenListener"/>
+						<attribute name="view-name" value="CityQuery"/>
+						<attribute name="expression" value="isDialogOpen=true"/>
+					</param>
+					<param name="button">
+						<attribute name="text" value="选择"/>
+						<attribute name="image" value="mily/img/color.gif"/>
+						<param name="listener">
+							<attribute name="class" value="SimpleDialogOpenListener"/>
+							<attribute name="view-name" value="CityQuery"/>
+						</param>
+					</param>
+				</property>
+				<property name="name" label="商家名称" builder="TextFieldBuilder">
+  					<param name="validate">
+						<attribute name="require" value="true"/>
+					</param>
+				</property>
+				<property name="address" label="商家地址" builder="TextFieldBuilder" />
+				<property name="remark" label="备注" builder="TextAreaBuilder">
+					<param name="cfg">
+						<attribute name="position" value="row"/>
+					</param>
+				</property>
+			</property>
+		</view>
+		<view name="ProvinceQuery" builder="EditViewBuilder">
+			<param name="menu">
+				<attribute name="text" value="确定"/>
+				<attribute name="image" value="mily/img/color.gif"/>
+				<param name="listener">
+					<attribute name="class" value="SelectDomainListener"/>
+					<attribute name="former" value="selectFormer4Province"/>
+					<attribute name="setter" value="setProvinceSelect"/>
+				</param>
+				<param name="listener">
+					<attribute name="class" value="ChangeAssociateListener"/>
+					<attribute name="properties" value="provinceName,cityName"/>
+				</param>
+				<param name="listener"> 
+					<attribute name="class" value="SimpleDialogCloseListener"/> 
+				</param>
+			</param>
+			<param name="menu">
+				<attribute name="text" value="取消"/>
+				<attribute name="image" value="mily/img/color.gif"/>
+				<param name="listener"> 
+					<attribute name="class" value="SimpleDialogCloseListener"/> 
+				</param>
+			</param>
+			<property name="ProvinceForm" class="ProvinceForm" builder="ViewFieldBuilder">
+				<param name="cfg">
+					<attribute name="view-name" value="ProvinceQuery.selectedList"/>
+					<attribute name="position" value="row"/>
+				</param>
+			</property>
+		</view>	
+		<view name="CityQuery" builder="EditViewBuilder">
+			<param name="menu">
+				<attribute name="text" value="确定"/>
+				<attribute name="image" value="mily/img/color.gif"/>
+				<param name="listener">
+					<attribute name="class" value="SelectDomainListener"/>
+					<attribute name="former" value="selectFormer4City"/>
+					<attribute name="setter" value="setCitySelect"/>
+					<param name="parameter">
+						<attribute name="id" value="provinceId" />
+						<attribute name="version" value="provinceVersion" />
+						<attribute name="class" value="Province" />
+					</param>
+				</param>
+				<param name="listener"> 
+					<attribute name="class" value="ChangeAssociateListener"/>
+					<attribute name="properties" value="cityName"/>
+				</param>
+				<param name="listener"> 
+					<attribute name="class" value="SimpleDialogCloseListener"/> 
+				</param>
+			</param>
+			<param name="menu">
+				<attribute name="text" value="取消"/>
+				<attribute name="image" value="mily/img/color.gif"/>
+				<param name="listener"> 
+					<attribute name="class" value="SimpleDialogCloseListener"/> 
+				</param>
+			</param>
+			<property name="CityForm" class="CityForm" builder="ViewFieldBuilder">
+				<param name="cfg">
+					<attribute name="view-name" value="CityQuery.selectedList"/>
+					<attribute name="position" value="row"/>
+				</param>
+			</property>
+		</view>
+	</class>
+</mily-mappings>

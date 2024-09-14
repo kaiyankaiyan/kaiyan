@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mily-mappings package="com.haoyong.sales.base.form">
+	<import>net.sf.mily.support.form.*</import>
+	<import>com.haoyong.sales.common.listener.*</import>
+	<import>com.haoyong.sales.base.domain.*</import>
+	<!-- 用户显图 -->
+	<class name="ChooseFormer" label="用户">
+		<view name="Base" label0="商品等基础资料" builder="EditViewBuilder">
+			<param name="cfg">
+				<attribute name="freezable" value="false" />
+			</param>
+			<param name="menu">
+				<attribute name="text" value="保存" />
+				<attribute name="image" value="mily/img/color.gif" />
+				<param name="listener">
+					<attribute name="class" value="PostListener" />
+					<attribute name="method" value="saveBase" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="RedirectorListener" />
+					<attribute name="url" value="success.jsp" />
+				</param>
+			</param>
+			<property name="trunkListFromChoose" label="主干属性列表" class="SqlColumnSetting" builder="EditListBuilder">
+				<param name="menu">
+					<attribute name="text" value="上移至" />
+					<attribute name="image" value="mily/img/color.gif" />
+					<param name="listener">
+						<attribute name="class" value="SelectDomainListener" />
+					</param>
+					<param name="listener">
+						<attribute name="class" value="PostListener" />
+						<attribute name="method" value="moveUpto" />
+					</param>
+					<param name="listener">
+						<attribute name="class" value="RefreshListener" />
+					</param>
+				</param>
+				<param name="menu">
+					<attribute name="text" value="下移至" />
+					<attribute name="image" value="mily/img/color.gif" />
+					<param name="listener">
+						<attribute name="class" value="SelectDomainListener" />
+					</param>
+					<param name="listener">
+						<attribute name="class" value="PostListener" />
+						<attribute name="method" value="moveDownto" />
+					</param>
+					<param name="listener">
+						<attribute name="class" value="RefreshListener" />
+					</param>
+				</param>
+				<property name="fieldId" label="属性ID" builder="TextBuilder"/>
+				<property name="fieldLabel" label="属性名称" builder="TextBuilder"/>
+				<property name="voParamMap.index" label="顺序号" builder="TextBuilder"/>
+				<property name="voParamMap.trunk" label="加入主干" builder="CheckBoxBuilder"/>
+				<property name="voParamMap.require" label="必填" builder="CheckBoxBuilder"/>
+				<property name="voParamMap.title" label="加入标题" builder="CheckBoxBuilder"/>
+			</property>
+			<property name="chooseList" label="自选属性列表" class="SqlColumnSetting" builder="EditListBuilder">
+				<param name="menu">
+					<attribute name="text" value="上移至" />
+					<attribute name="image" value="mily/img/color.gif" />
+					<param name="listener">
+						<attribute name="class" value="SelectDomainListener" />
+					</param>
+					<param name="listener">
+						<attribute name="class" value="PostListener" />
+						<attribute name="method" value="moveUpto" />
+					</param>
+					<param name="listener">
+						<attribute name="class" value="RefreshListener" />
+					</param>
+				</param>
+				<param name="menu">
+					<attribute name="text" value="下移至" />
+					<attribute name="image" value="mily/img/color.gif" />
+					<param name="listener">
+						<attribute name="class" value="SelectDomainListener" />
+					</param>
+					<param name="listener">
+						<attribute name="class" value="PostListener" />
+						<attribute name="method" value="moveDownto" />
+					</param>
+					<param name="listener">
+						<attribute name="class" value="RefreshListener" />
+					</param>
+				</param>
+				<property name="fieldId" label="属性ID" builder="TextBuilder"/>
+				<property name="fieldLabel" label="属性名称" builder="TextBuilder"/>
+				<property name="voParamMap.rename" label="重命名" builder="TextFieldBuilder"/>
+				<property name="voParamMap.index" label="顺序号" builder="TextBuilder"/>
+				<property name="voParamMap.choose" label="加入选用" builder="CheckBoxBuilder"/>
+				<property name="voParamMap.input" label="输入框" builder="SelectListBuilder">
+					<param name="options">
+						<attribute name="type" value="SelectList" />
+						<attribute name="collection" value="getInputTypeOptions" />
+						<attribute name="value-property" value="value" />
+						<attribute name="text-property" value="key" />
+					</param>
+					<param name="validate">
+						<attribute name="setter"><![CDATA[
+							[{$voParamMap.options}]
+						]]></attribute>
+					</param>
+				</property>
+				<property name="voParamMap.options" label="可选项以,分隔" builder="TextFieldBuilder">
+					<param name="validate">
+						<attribute name="message" value="输入框为单选或多选时，才能有选项"/>
+						<attribute name="validate"><![CDATA[
+							var ok=true;
+							if (({$voParamMap.input}.svalue=='SelectListBuilder' || {$voParamMap.input}.svalue=='CheckBoxGroupBuilder')) {
+								ok=(isBlank(this.value)==false);
+							} else {
+								ok=(isBlank(this.value)==true);
+							}
+							ok;
+						]]></attribute>
+					</param>
+				</property>
+			</property>
+		</view>
+		<view name="Ticket" label0="订单等主干标题" builder="EditViewBuilder">
+			<param name="cfg">
+				<attribute name="freezable" value="false" />
+			</param>
+			<property name="trunkListFromAll" label="自选属性列表" class="SqlColumnSetting" builder="EditListBuilder">
+				<param name="menu">
+					<attribute name="text" value="保存" />
+					<attribute name="image" value="mily/img/color.gif" />
+					<param name="listener">
+						<attribute name="class" value="PostListener" />
+						<attribute name="method" value="saveTicket" />
+					</param>
+					<param name="listener">
+						<attribute name="class" value="RedirectorListener" />
+						<attribute name="url" value="success.jsp" />
+					</param>
+				</param>
+				<param name="menu">
+					<attribute name="text" value="上移至" />
+					<attribute name="image" value="mily/img/color.gif" />
+					<param name="listener">
+						<attribute name="class" value="SelectDomainListener" />
+					</param>
+					<param name="listener">
+						<attribute name="class" value="PostListener" />
+						<attribute name="method" value="moveUpto" />
+					</param>
+					<param name="listener">
+						<attribute name="class" value="RefreshListener" />
+					</param>
+				</param>
+				<param name="menu">
+					<attribute name="text" value="下移至" />
+					<attribute name="image" value="mily/img/color.gif" />
+					<param name="listener">
+						<attribute name="class" value="SelectDomainListener" />
+					</param>
+					<param name="listener">
+						<attribute name="class" value="PostListener" />
+						<attribute name="method" value="moveDownto" />
+					</param>
+					<param name="listener">
+						<attribute name="class" value="RefreshListener" />
+					</param>
+				</param>
+				<property name="fieldId" label="属性ID" builder="TextBuilder"/>
+				<property name="fieldLabel" label="属性名称" builder="TextBuilder"/>
+				<property name="voParamMap.rename" label="重命名" builder="TextFieldBuilder"/>
+				<property name="voParamMap.index" label="顺序号" builder="TextBuilder"/>
+				<property name="voParamMap.trunk" label="加入选用" builder="CheckBoxBuilder"/>
+				<property name="voParamMap.title" label="加入标题" builder="CheckBoxBuilder"/>
+				<property name="voParamMap.require" label="必填" builder="CheckBoxBuilder"/>
+				<property name="voParamMap.input" label="输入框" builder="SelectListBuilder">
+					<param name="options">
+						<attribute name="type" value="SelectList" />
+						<attribute name="collection" value="getInputTypeOptions" />
+						<attribute name="value-property" value="value" />
+						<attribute name="text-property" value="key" />
+					</param>
+					<param name="validate">
+						<attribute name="setter"><![CDATA[
+							[{$voParamMap.options}]
+						]]></attribute>
+					</param>
+				</property>
+				<property name="voParamMap.options" label="可选项以,分隔" builder="TextFieldBuilder">
+					<param name="validate">
+						<attribute name="message" value="输入框为单选或多选时，才能有选项"/>
+						<attribute name="validate"><![CDATA[
+							var ok=true;
+							if (({$voParamMap.input}.svalue=='SelectListBuilder' || {$voParamMap.input}.svalue=='CheckBoxGroupBuilder')) {
+								ok=(isBlank(this.value)==false);
+							} else {
+								ok=(isBlank(this.value)==true);
+							}
+							ok;
+						]]></attribute>
+					</param>
+				</property>
+			</property>
+		</view>
+	</class>
+</mily-mappings>

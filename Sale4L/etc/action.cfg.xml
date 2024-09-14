@@ -1,0 +1,12 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+<action-navigator-configuration>
+	<realm name="base" label="基础">
+		<class name="com.haoyong.salel.common.form.LoginForm"/>
+		<class name="com.haoyong.salel.common.form.MainForm"/>
+		<class name="com.haoyong.salel.base.form.BaseQueryForm"/>
+		<class name="com.haoyong.salel.base.form.ProvinceForm"/>
+		<class name="com.haoyong.salel.base.form.CityForm"/>
+		<class name="com.haoyong.salel.base.form.SellerForm"/>
+		<class name="com.haoyong.salel.base.form.UserForm"/>
+	</realm>
+</action-navigator-configuration>

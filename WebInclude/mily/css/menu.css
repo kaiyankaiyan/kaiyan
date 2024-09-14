@@ -1,0 +1,57 @@
+.MenuBar{
+	padding:2px,0px;
+	cursor:default;
+}
+.MenuPanel{
+	background:#F0F0F0;
+	position:absolute;
+	cursor:default;
+	border:1px solid #ADAA9C;
+	z-index:100;
+	padding: 0 5px;
+	border-collapse:collapse;
+}
+.Menu{
+	margin: 2 2 2 0;
+	border:1px solid #94BEEF;
+	white-space: nowrap;
+}
+.Menu_over{
+	margin: 2 2 2 0;
+	border:1px solid #94BEEF;
+	white-space: nowrap;
+	background-color: #3169C6;
+	color:#FFFFFF;
+}
+.Menu_down{
+	margin: 2 2 2 0;
+	border:1px solid #94BEEF;
+	white-space: nowrap;
+	background-color: #3169C6;
+	color:#FFFFFF;
+	font-weight:bold;
+}
+.MenuItem {
+}
+.MenuItem_over{
+	background-color: #3169C6;
+	color:#FFFFFF;
+}
+.MenuItem_left {
+	padding: 0 0 0 5;
+	vertical-align: middle;
+}
+.MenuItem_right {
+	padding: 0 5 0 0;
+	vertical-align: middle;
+}
+.SeperatorH {
+	height: 5px;
+	width: 100%;
+	background: url(../img/menuSeph.gif) repeat-x center;
+}
+.SeperatorV {
+	width: 5px;
+	height: 100%;
+	background: url(../img/menuSepv.gif) repeat-y center;
+}

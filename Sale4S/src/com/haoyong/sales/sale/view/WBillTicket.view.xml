@@ -1,0 +1,699 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mily-mappings package="com.haoyong.sales.sale.form">
+	<import>net.sf.mily.support.form.*</import>
+	<import>com.haoyong.sales.common.listener.*</import>
+	<import>com.haoyong.sales.sale.domain.*</import>
+	<import>com.haoyong.sales.base.domain.*</import>
+	<import>com.haoyong.sales.base.form.*</import>
+
+	<class name="WBillTicketForm" label="对账单">
+		<property name="WBillTicket" visible="false" class="WBillTicket" builder="EditViewBuilder">
+			<property name="Ticket" class="WBillTicket">
+				<property name="number" label="对账单号" builder="TextFieldBuilder">
+					<param name="cfg">
+						<attribute name="type" value="Require"/>
+					</param>
+					<param name="button">
+						<attribute name="text" value="生成单号" />
+						<param name="listener">
+							<attribute name="class" value="ChangeAssociateListener" />
+							<attribute name="method" value="setWBillTicketNumber" />
+							<attribute name="properties" value="WBillTicket.Ticket" />
+						</param>
+					</param>
+				</property>
+				<property name="typeName" label="票据类型" builder="TextBuilder">
+					<param name="cfg">
+						<attribute name="type" value="Require"/>
+					</param>
+				</property>
+				<property name="billUnit" label="开票单位" builder="TextFieldBuilder"/>
+				<property name="wbillDate" label="开票日期" builder="DateBuilder">
+					<param name="cfg">
+						<attribute name="type" value="Require"/>
+					</param>
+				</property>
+				<property name="reachMoney" label="到款金额" builder="TextBuilder">
+					<param name="cfg">
+						<attribute name="type" value="Require"/>
+					</param>
+				</property>
+				<property name="waitMoney" label="待付金额" builder="TextBuilder">
+					<param name="cfg">
+						<attribute name="type" value="Require"/>
+					</param>
+				</property>
+				<property name="remark" label="开单备注" builder="TextAreaBuilder">
+					<param name="cfg">
+						<attribute name="position" value="row" />
+					</param>
+				</property>
+			</property>
+		</property>
+		<view name="Choose" label="对账单自选" builder="EditViewBuilder">
+			<property name="ChooseFormer" Class="ChooseFormer" builder="ViewFieldBuilder">
+				<param name="cfg">
+					<attribute name="view-name" value="Ticket"/>
+					<attribute name="position" value="row"/>
+				</param>
+			</property>
+		</view>
+		<view name="InBill" label="收款对账开单" builder="EditViewBuilder">
+			<param name="cfg">
+				<attribute name="before" value="beforeInBill" />
+			</param>
+			<param name="menu">
+				<attribute name="text" value="提交收款对账" />
+				<attribute name="image" value="mily/img/color.gif" />
+				<param name="listener">
+					<attribute name="class" value="SelectDomainListener" />
+					<attribute name="former" value="selectEdit4Reach" />
+					<attribute name="view-name" value="reachList" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="SelectDomainListener" />
+					<attribute name="former" value="selectEdit4Bill" />
+					<attribute name="view-name" value="detailList" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="ValidateListener" />
+					<attribute name="method" value="validateInBill" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="PostListener"/>
+					<attribute name="method" value="selectFormer4Bill.revalidate"/>
+				</param>
+				<param name="listener">
+					<attribute name="class" value="PostListener"/>
+					<attribute name="method" value="selectFormer4Reach.revalidate"/>
+				</param>
+				<param name="listener">
+					<attribute name="class" value="ActionServiceListener" />
+					<attribute name="message" value="新增收款对账" />
+					<param name="action">
+						<attribute name="action" value="BillTicket_Save" />
+						<attribute name="setter" value="setSplit4Service" />
+						<attribute name="message" value="已收款按待收款拆分够付金额，已收款用新分支流水号，未收款用原流水号" />
+					</param>
+					<param name="action">
+						<attribute name="action" value="BillTicket_Save" />
+						<attribute name="setter" value="setReach4Service" />
+						<attribute name="message" value="已收款对账，已收款按待收减少" />
+						<param name="state">
+							<attribute name="name" value="应收款对账" />
+							<attribute name="method" value="setBillState" />
+							<attribute name="select" value="money>0" />
+						</param>
+						<param name="state">
+							<attribute name="id" value="0" />
+							<attribute name="name" value="金额对账用完无剩余结束" />
+							<attribute name="method" value="setBillState" />
+							<attribute name="select" value="money=0" />
+						</param>
+					</param>
+					<param name="action">
+						<attribute name="action" value="BillTicket_Save" />
+						<attribute name="setter" value="setWait4Service" />
+						<attribute name="message" value="待收款对账，不需再对账" />
+						<param name="state">
+							<attribute name="id" value="30" />
+							<attribute name="name" value="应收款对账" />
+							<attribute name="method" value="setBillState" />
+						</param>
+					</param>
+				</param>
+				<param name="listener">
+					<attribute name="class" value="PostListener"/>
+					<attribute name="method" value="setReachDetail"/>
+				</param>
+				<param name="listener">
+					<attribute name="class" value="RefreshListener"/>
+				</param>
+				<param name="listener">
+					<attribute name="class" value="PostListener"/>
+					<attribute name="method" value="selectFormer4Bill.resetVersionMap"/>
+				</param>
+				<param name="listener">
+					<attribute name="class" value="PostListener"/>
+					<attribute name="method" value="selectFormer4Reach.resetVersionMap"/>
+				</param>
+				<param name="listener">
+					<attribute name="class" value="RedirectorListener" />
+					<attribute name="url" value="success.jsp"/>
+					<attribute name="expression" value="detailList.size=0"/>
+				</param>
+			</param>
+			<property name="domain" class="BillDetail">
+				<property name="WBillTicket.Ticket" class="WBillTicket" />
+				<property name="client" class="Client" />
+				<property name="billTicket.remark" label="收款备注" builder="TextAreaBuilder">
+					<param name="cfg">
+						<attribute name="position" value="row" />
+					</param>
+				</property>
+			</property>
+			<property name="reachList" class="BillDetail" label="已收明细" builder="AuditListBuilder">
+				<param name="menu">
+					<attribute name="text" value="添加收款" />
+					<attribute name="image" value="mily/img/color.gif" />
+					<param name="listener">
+						<attribute name="class" value="PostListener"/>
+						<attribute name="method" value="canReceiptAdd"/>
+					</param>
+					<param name="listener">
+						<attribute name="class" value="SimpleDialogOpenListener"/>
+						<attribute name="view-name" value="ReceiptQuery"/>
+					</param>
+				</param>
+				<param name="menu">
+					<attribute name="text" value="移除收款" />
+					<attribute name="image" value="mily/img/color.gif" />
+					<param name="listener">
+						<attribute name="class" value="SelectDeleteListener" />
+					</param>
+					<param name="listener">
+						<attribute name="class" value="ChangeAssociateListener" />
+						<attribute name="method" value="setMoney" />
+						<attribute name="properties" value="domain" />
+					</param>
+				</param>
+				<property name="voParamMap.BillT.Ticket" label="票据名称" builder="TextBuilder"/>
+				<property name="voParamMap.ClientT.Trunk" label="客户名称" builder="TextBuilder" />
+				<property name="voParamMap.SubCompanyT.Trunk" label="分公司" builder="TextBuilder"/>
+				<property name="commodity.name" label="收款名称" builder="TextBuilder" />
+				<property name="money" label="金额" builder="TextBuilder" />
+			</property>
+			<property name="detailList" class="BillDetail" label="应收明细" builder="AuditListBuilder">
+				<param name="menu">
+					<attribute name="text" value="移除应收" />
+					<attribute name="image" value="mily/img/color.gif" />
+					<param name="listener">
+						<attribute name="class" value="SelectDeleteListener" />
+					</param>
+					<param name="listener">
+						<attribute name="class" value="ChangeAssociateListener" />
+						<attribute name="method" value="setMoney" />
+						<attribute name="properties" value="domain" />
+					</param>
+				</param>
+				<property name="monthnum" label="月流水号" builder="TextBuilder"/>
+				<property name="voParamMap.ClientT.Trunk" label="客户名称" builder="TextBuilder" />
+				<property name="voParamMap.SubCompanyT.Trunk" label="分公司" builder="TextBuilder"/>
+				<property name="commodity" class="Commodity" />
+				<property name="money" label="金额" builder="TextBuilder" />
+				<property name="voParamMap.OrderDetail.OrderTicket.number" label="计单号" builder="TextBuilder" />
+				<property name="voParamMap.OrderDetail.voParamMap.OrderT.Ticket" label="计单名称" builder="TextBuilder" />
+			</property>
+		</view>
+		<view name="OutBill" label="付款对账开单" builder="EditViewBuilder">
+			<param name="cfg">
+				<attribute name="before" value="beforeOutBill" />
+			</param>
+			<param name="menu">
+				<attribute name="text" value="提交付款对账" />
+				<attribute name="image" value="mily/img/color.gif" />
+				<param name="listener">
+					<attribute name="class" value="SelectDomainListener" />
+					<attribute name="former" value="selectEdit4Reach" />
+					<attribute name="view-name" value="reachList" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="SelectDomainListener" />
+					<attribute name="former" value="selectEdit4Bill" />
+					<attribute name="view-name" value="detailList" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="ValidateListener" />
+					<attribute name="method" value="validateOutBill" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="PostListener"/>
+					<attribute name="method" value="selectFormer4Bill.revalidate"/>
+				</param>
+				<param name="listener">
+					<attribute name="class" value="PostListener"/>
+					<attribute name="method" value="selectFormer4Reach.revalidate"/>
+				</param>
+				<param name="listener">
+					<attribute name="class" value="ActionServiceListener" />
+					<attribute name="message" value="新增付款对账" />
+					<param name="action">
+						<attribute name="action" value="BillTicket_Save" />
+						<attribute name="setter" value="setSplit4Service" />
+						<attribute name="message" value="已付款按待付款拆分够付金额，已收款用新分支流水号，剩余未付款用原月流水号" />
+					</param>
+					<param name="action">
+						<attribute name="action" value="BillTicket_Save" />
+						<attribute name="setter" value="setReach4Service" />
+						<attribute name="message" value="已付款对账，已付款按待付减少" />
+						<param name="state">
+							<attribute name="name" value="应付款对账" />
+							<attribute name="method" value="setBillState" />
+							<attribute name="select" value="money>0" />
+						</param>
+						<param name="state">
+							<attribute name="id" value="0" />
+							<attribute name="name" value="付款金额对账用完无剩余结束" />
+							<attribute name="method" value="setBillState" />
+							<attribute name="select" value="money=0" />
+						</param>
+					</param>
+					<param name="action">
+						<attribute name="action" value="BillTicket_Save" />
+						<attribute name="setter" value="setWait4Service" />
+						<attribute name="message" value="应付已对账，不需再对账" />
+						<param name="state">
+							<attribute name="id" value="30" />
+							<attribute name="name" value="应付款对账" />
+							<attribute name="method" value="setBillState" />
+						</param>
+					</param>
+				</param>
+				<param name="listener">
+					<attribute name="class" value="PostListener"/>
+					<attribute name="method" value="setReachDetail"/>
+				</param>
+				<param name="listener">
+					<attribute name="class" value="RefreshListener"/>
+				</param>
+				<param name="listener">
+					<attribute name="class" value="PostListener"/>
+					<attribute name="method" value="selectFormer4Bill.resetVersionMap"/>
+				</param>
+				<param name="listener">
+					<attribute name="class" value="PostListener"/>
+					<attribute name="method" value="selectFormer4Reach.resetVersionMap"/>
+				</param>
+				<param name="listener">
+					<attribute name="class" value="RedirectorListener" />
+					<attribute name="url" value="success.jsp"/>
+					<attribute name="expression" value="detailList.size=0"/>
+				</param>
+			</param>
+			<property name="domain" class="BillDetail">
+				<property name="WBillTicket.Ticket" class="WBillTicket" />
+				<property name="supplier" class="Supplier" />
+				<property name="billTicket.remark" label="付款备注" builder="TextAreaBuilder">
+					<param name="cfg">
+						<attribute name="position" value="row" />
+					</param>
+				</property>
+			</property>
+			<property name="reachList" class="BillDetail" label="已付明细" builder="AuditListBuilder">
+				<param name="menu">
+					<attribute name="text" value="添加付款" />
+					<attribute name="image" value="mily/img/color.gif" />
+					<param name="listener">
+						<attribute name="class" value="PostListener"/>
+						<attribute name="method" value="canPaidAdd"/>
+					</param>
+					<param name="listener">
+						<attribute name="class" value="SimpleDialogOpenListener"/>
+						<attribute name="view-name" value="PaidQuery"/>
+					</param>
+				</param>
+				<param name="menu">
+					<attribute name="text" value="移除付款" />
+					<attribute name="image" value="mily/img/color.gif" />
+					<param name="listener">
+						<attribute name="class" value="SelectDeleteListener" />
+					</param>
+					<param name="listener">
+						<attribute name="class" value="ChangeAssociateListener" />
+						<attribute name="method" value="setMoney" />
+						<attribute name="properties" value="domain" />
+					</param>
+				</param>
+				<property name="voParamMap.BillT.Ticket" label="票据名称" builder="TextBuilder"/>
+				<property name="voParamMap.SupplierT.Trunk" label="供应商名称" builder="TextBuilder" />
+				<property name="commodity.name" label="付款名称" builder="TextBuilder" />
+				<property name="money" label="金额" builder="TextBuilder" />
+			</property>
+			<property name="detailList" class="BillDetail" label="应付明细" builder="AuditListBuilder">
+				<param name="menu">
+					<attribute name="text" value="移除明细" />
+					<attribute name="image" value="mily/img/color.gif" />
+					<param name="listener">
+						<attribute name="class" value="SelectDeleteListener" />
+					</param>
+					<param name="listener">
+						<attribute name="class" value="ChangeAssociateListener" />
+						<attribute name="method" value="setMoney" />
+						<attribute name="properties" value="domain" />
+					</param>
+				</param>
+				<property name="monthnum" label="月流水号" builder="TextBuilder"/>
+				<property name="voParamMap.SupplierT.Trunk" label="供应商名称" builder="TextBuilder" />
+				<property name="commodity" class="Commodity" />
+				<property name="money" label="金额" builder="TextBuilder" />
+				<property name="voParamMap.OrderDetail.OrderTicket.number" label="计单号" builder="TextBuilder" />
+				<property name="voParamMap.OrderDetail.voParamMap.OrderT.Ticket" label="计单名称" builder="TextBuilder" />
+			</property>
+		</view>
+		<view name="ShowQuery" builder="EditViewBuilder">
+			<property name="selectedList" class="BillDetail" builder="SqlListBuilder">
+				<fields>z
+					<field id="id" type="Long" label="选择" expression="b.ID" />
+					<field id="SellerId" type="Long" label="商家ID" visible="false" expression="b.sellerId" />
+					<field id="typeName" type="String" label="票据类型" expression="b.typeName" />
+					<field id="monthnum" type="String" label="月流水号" expression="b.monthnum" />
+					<field id="commName" type="String" label="商品名称" expression="b.commName" />
+					<field id="clientName" type="String" label="客户名称" expression="b.clientName" />
+					<field id="supplierName" type="String" label="供应商名称" expression="b.supplierName" />
+					<field id="amount" type="double" label="数量" expression="b.amount" />
+					<field id="money" type="double" label="金额" expression="b.money" />
+					<field id="stateName" type="String" label="流程状态" expression="b.stateName" />
+					<field id="ucreate" type="String" label="开单人" expression="b.ucreate" />
+					<field id="stBill0" type="int" label="票据状态" expression="case when b.stBill=0 then '失效' else null end"/>
+					<field id="stBill" type="int" label="流程状态ID" visible="false" expression="b.stBill"/>
+					<field id="version" type="int" label="版本" visible="false" expression="b.version"/>
+				</fields>
+				<DataSource><![CDATA[
+					FROM sa_BillDetail b
+				]]>
+				</DataSource>
+			</property>
+		</view>
+		<view name="ClientQuery" label0="应收款明细" builder="EditViewBuilder">
+			<param name="menu">
+				<attribute name="text" value="选择应收" />
+				<attribute name="image" value="mily/img/color.gif" />
+				<param name="listener">
+					<attribute name="class" value="SelectDomainListener" />
+					<attribute name="former" value="selectFormer4Bill" />
+					<attribute name="setter" value="setClientSelect"/>
+					<attribute name="view-name" value="selectedList"/>
+					<param name="same">
+						<attribute name="properties" value="clientName" />
+						<attribute name="select" value="self" />
+					</param>
+					<param name="parameter">
+						<attribute name="id" value="ordId" />
+						<attribute name="version" value="ordVersion" />
+						<attribute name="class" value="OrderDetail" />
+					</param>
+				</param>
+				<param name="listener">
+					<attribute name="class" value="PostListener" />
+					<attribute name="method" value="setMoney" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="SimpleDialogCloseListener" />
+				</param>
+			</param>
+			<param name="menu">
+				<attribute name="text" value="全部应收" />
+				<attribute name="image" value="mily/img/color.gif" />
+				<param name="listener">
+					<attribute name="class" value="SelectDomainListener" />
+					<attribute name="former" value="selectFormer4Bill" />
+					<attribute name="setter" value="setClientSelect"/>
+					<attribute name="view-name" value="selectedList"/>
+					<param name="same">
+						<attribute name="properties" value="clientName" />
+					</param>
+					<param name="parameter">
+						<attribute name="id" value="ordId" />
+						<attribute name="version" value="ordVersion" />
+						<attribute name="class" value="OrderDetail" />
+					</param>
+				</param>
+				<param name="listener">
+					<attribute name="class" value="PostListener" />
+					<attribute name="method" value="setMoney" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="SimpleDialogCloseListener" />
+				</param>
+			</param>
+			<param name="menu">
+				<attribute name="text" value="关闭" />
+				<attribute name="image" value="mily/img/color.gif" />
+				<param name="listener">
+					<attribute name="class" value="SimpleDialogCloseListener" />
+				</param>
+			</param>
+			<property name="selectedList" class="BillDetail" builder="SqlListBuilder">
+				<fields>
+					<field id="id" type="Long" label="选择" expression="b.ID" />
+					<field id="SellerId" type="Long" label="商家ID" visible="false" expression="b.sellerId" />
+					<field id="ordId" type="Long" label="订单ID" visible="false" expression="c.id" />
+					<field id="number" type="String" label="订单号" expression="c.number" />
+					<field id="monthnum" type="String" label="月流水号" expression="b.monthnum" />
+					<field id="typeName" type="String" label="票据类型" expression="b.typeName" />
+					<field id="commName" type="String" label="商品名称" expression="b.commName" />
+					<field id="clientName" type="String" label="客户名称" expression="b.clientName" />
+					<field id="subName" type="String" label="分公司名称" expression="c.subName" />
+					<field id="amount" type="double" label="数量" expression="b.amount" />
+					<field id="money" type="double" label="金额" expression="b.money" >
+						<param name="footer">
+							<attribute name="type" value="SUM" />
+							<attribute name="expression" value="sum(b.money)" />
+						</param>
+					</field>
+					<field id="stateName" type="String" label="流程状态" expression="b.stateName" />
+					<field id="ucreate" type="String" label="开单人" expression="b.ucreate" />
+					<field id="stBill" type="int" label="流程状态ID" visible="false" expression="b.stBill"/>
+					<field id="version" type="int" label="应收版本" visible="false" expression="b.version"/>
+					<field id="ordVersion" type="int" label="订单版本" visible="false" expression="c.version"/>
+				</fields>
+				<DataSource><![CDATA[
+					FROM sa_BillDetail b
+					left join sa_OrderDetail c on c.sellerId=b.sellerId and c.stOrder>0 and c.monthnum=b.monthnum
+				]]>
+				</DataSource>
+				<Where><![CDATA[
+					b.stBill=20 and b.typeName='销售出货'
+				]]>
+				</Where>
+				<OrderBy><![CDATA[
+					b.id
+				]]>
+				</OrderBy>
+			</property>
+		</view>
+		<view name="SupplierQuery" label0="应付款明细" builder="EditViewBuilder">
+			<param name="menu">
+				<attribute name="text" value="选择应付" />
+				<attribute name="image" value="mily/img/color.gif" />
+				<param name="listener">
+					<attribute name="class" value="SelectDomainListener" />
+					<attribute name="former" value="selectFormer4Bill" />
+					<attribute name="setter" value="setSupplierSelect"/>
+					<attribute name="view-name" value="selectedList"/>
+					<param name="same">
+						<attribute name="properties" value="supplierName" />
+						<attribute name="select" value="self" />
+					</param>
+					<param name="parameter">
+						<attribute name="id" value="ordId" />
+						<attribute name="version" value="ordVersion" />
+						<attribute name="class" value="OrderDetail" />
+					</param>
+				</param>
+				<param name="listener">
+					<attribute name="class" value="PostListener" />
+					<attribute name="method" value="setMoney" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="SimpleDialogCloseListener" />
+				</param>
+			</param>
+			<param name="menu">
+				<attribute name="text" value="全部应付" />
+				<attribute name="image" value="mily/img/color.gif" />
+				<param name="listener">
+					<attribute name="class" value="SelectDomainListener" />
+					<attribute name="former" value="selectFormer4Bill" />
+					<attribute name="setter" value="setSupplierSelect"/>
+					<attribute name="view-name" value="selectedList"/>
+					<param name="same">
+						<attribute name="properties" value="supplierName" />
+					</param>
+					<param name="parameter">
+						<attribute name="id" value="ordId" />
+						<attribute name="version" value="ordVersion" />
+						<attribute name="class" value="OrderDetail" />
+					</param>
+				</param>
+				<param name="listener">
+					<attribute name="class" value="PostListener" />
+					<attribute name="method" value="setMoney" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="SimpleDialogCloseListener" />
+				</param>
+			</param>
+			<param name="menu">
+				<attribute name="text" value="关闭" />
+				<attribute name="image" value="mily/img/color.gif" />
+				<param name="listener">
+					<attribute name="class" value="SimpleDialogCloseListener" />
+				</param>
+			</param>
+			<property name="selectedList" class="BillDetail" builder="SqlListBuilder">
+				<fields>
+					<field id="id" type="Long" label="选择" expression="b.ID" />
+					<field id="SellerId" type="Long" label="商家ID" visible="false" expression="b.sellerId" />
+					<field id="ordId" type="Long" label="订单ID" visible="false" expression="c.id" />
+					<field id="number" type="String" label="订单号" expression="c.number" />
+					<field id="monthnum" type="String" label="月流水号" expression="b.monthnum" />
+					<field id="typeName" type="String" label="票据类型" expression="b.typeName" />
+					<field id="commName" type="String" label="商品名称" expression="b.commName" />
+					<field id="supplierName" type="String" label="供应商名称" expression="b.supplierName" />
+					<field id="amount" type="double" label="数量" expression="b.amount" />
+					<field id="money" type="double" label="金额" expression="b.money" >
+						<param name="footer">
+							<attribute name="type" value="SUM" />
+							<attribute name="expression" value="sum(b.money)" />
+						</param>
+					</field>
+					<field id="stateName" type="String" label="流程状态" expression="b.stateName" />
+					<field id="ucreate" type="String" label="开单人" expression="b.ucreate" />
+					<field id="stBill" type="int" label="流程状态ID" visible="false" expression="b.stBill"/>
+					<field id="version" type="int" label="版本" visible="false" expression="b.version"/>
+					<field id="ordVersion" type="int" label="订单版本" visible="false" expression="c.version"/>
+				</fields>
+				<DataSource><![CDATA[
+					FROM sa_BillDetail b
+					left join sa_OrderDetail c on c.sellerId=b.sellerId and c.stOrder>0 and c.monthnum=b.monthnum
+				]]>
+				</DataSource>
+				<Where><![CDATA[
+					b.stBill=20 and b.typeName='采购入库'
+				]]>
+				</Where>
+				<OrderBy><![CDATA[
+					b.id
+				]]>
+				</OrderBy>
+			</property>
+		</view>
+		<view name="ReceiptQuery" builder="EditViewBuilder">
+			<param name="menu">
+				<attribute name="text" value="确定" />
+				<attribute name="image" value="mily/img/color.gif" />
+				<param name="listener">
+					<attribute name="class" value="SelectDomainListener" />
+					<attribute name="former" value="selectFormer4Reach" />
+					<attribute name="setter" value="setReachSelected"/>
+					<attribute name="view-name" value="selectedList"/>
+				</param>
+				<param name="listener">
+					<attribute name="class" value="ChangeAssociateListener" />
+					<attribute name="method" value="setMoney" />
+					<attribute name="properties" value="domain" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="SimpleDialogCloseListener" />
+				</param>
+			</param>
+			<param name="menu">
+				<attribute name="text" value="关闭" />
+				<attribute name="image" value="mily/img/color.gif" />
+				<param name="listener">
+					<attribute name="class" value="SimpleDialogCloseListener" />
+				</param>
+			</param>
+			<property name="selectedList" class="BillDetail" builder="SqlListBuilder">
+				<param name="cfg">
+					<attribute name="parameter" value="getParam4Client"/>
+				</param>
+				<fields>
+					<field id="id" type="Long" label="选择" expression="b.ID" />
+					<field id="SellerId" type="Long" label="商家ID" visible="false" expression="b.sellerId" />
+					<field id="billName" type="String" label="票据名称" expression="b.billName" />
+					<field id="typeName" type="String" label="票据类型" expression="b.typeName" />
+					<field id="commName" type="String" label="收款名称" expression="b.commName" />
+					<field id="clientName" type="String" label="客户名称" expression="b.clientName" />
+					<field id="amount" type="double" label="数量" expression="b.amount" />
+					<field id="money" type="double" label="金额" expression="b.money" >
+						<param name="footer">
+							<attribute name="type" value="SUM" />
+							<attribute name="expression" value="sum(b.money)" />
+						</param>
+					</field>
+					<field id="stateName" type="String" label="流程状态" expression="b.stateName" />
+					<field id="ucreate" type="String" label="开单人" expression="b.ucreate" />
+					<field id="stBill" type="int" label="流程状态ID" visible="false" expression="b.stBill"/>
+					<field id="version" type="int" label="版本" visible="false" expression="b.version"/>
+				</fields>
+				<DataSource><![CDATA[
+					FROM sa_BillDetail b
+				]]>
+				</DataSource>
+				<Where><![CDATA[
+					b.stBill=30 and b.monthnum is null and b.clientName={$ClientName}
+				]]>
+				</Where>
+				<OrderBy><![CDATA[
+					b.id
+				]]>
+				</OrderBy>
+			</property>
+		</view>
+		<view name="PaidQuery" builder="EditViewBuilder">
+			<param name="menu">
+				<attribute name="text" value="确定" />
+				<attribute name="image" value="mily/img/color.gif" />
+				<param name="listener">
+					<attribute name="class" value="SelectDomainListener" />
+					<attribute name="former" value="selectFormer4Reach" />
+					<attribute name="setter" value="setReachSelected"/>
+					<attribute name="view-name" value="selectedList"/>
+				</param>
+				<param name="listener">
+					<attribute name="class" value="ChangeAssociateListener" />
+					<attribute name="method" value="setMoney" />
+					<attribute name="properties" value="domain" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="SimpleDialogCloseListener" />
+				</param>
+			</param>
+			<param name="menu">
+				<attribute name="text" value="关闭" />
+				<attribute name="image" value="mily/img/color.gif" />
+				<param name="listener">
+					<attribute name="class" value="SimpleDialogCloseListener" />
+				</param>
+			</param>
+			<property name="selectedList" class="BillDetail" builder="SqlListBuilder">
+				<param name="cfg">
+					<attribute name="parameter" value="getParam4Supplier"/>
+				</param>
+				<fields>
+					<field id="id" type="Long" label="选择" expression="b.ID" />
+					<field id="SellerId" type="Long" label="商家ID" visible="false" expression="b.sellerId" />
+					<field id="billName" type="String" label="票据名称" expression="b.billName" />
+					<field id="typeName" type="String" label="票据类型" expression="b.typeName" />
+					<field id="commName" type="String" label="商品名称" expression="b.commName" />
+					<field id="supplierName" type="String" label="供应商名称" expression="b.supplierName" />
+					<field id="amount" type="double" label="数量" expression="b.amount" />
+					<field id="money" type="double" label="金额" expression="b.money" >
+						<param name="footer">
+							<attribute name="type" value="SUM" />
+							<attribute name="expression" value="sum(b.money)" />
+						</param>
+					</field>
+					<field id="stateName" type="String" label="流程状态" expression="b.stateName" />
+					<field id="ucreate" type="String" label="开单人" expression="b.ucreate" />
+					<field id="stBill" type="int" label="流程状态ID" visible="false" expression="b.stBill"/>
+					<field id="version" type="int" label="版本" visible="false" expression="b.version"/>
+				</fields>
+				<DataSource><![CDATA[
+					FROM sa_BillDetail b
+				]]>
+				</DataSource>
+				<Where><![CDATA[
+					b.stBill=30 and b.monthnum is null and b.supplierName={$SupplierName}
+				]]>
+				</Where>
+				<OrderBy><![CDATA[
+					b.id
+				]]>
+				</OrderBy>
+			</property>
+		</view>
+	</class>
+</mily-mappings>

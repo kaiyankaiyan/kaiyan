@@ -1,0 +1,263 @@
+.center{
+	position:relative;
+	TABLE-LAYOUT: fixed;
+}
+.top{
+	position:relative;
+	TABLE-LAYOUT: fixed;
+}
+.bottom{
+	position:relative;
+	TABLE-LAYOUT: fixed;
+}
+.top_cell{
+	vertical-align:top;
+}
+.roll_table{
+	border:1px solid #CCCCCC;
+	border-collapse: collapse;
+	cell-padding:0px;
+	width:600px;
+	cell-spacing:0px;
+	TABLE-LAYOUT: fixed;
+	float:left;
+}
+.roll_table_header {
+	border:1px solid #CCCCCC;
+	border-collapse: collapse;
+	cell-padding:0px;
+	cell-spacing:0px;
+	width:600px;
+	TABLE-LAYOUT: fixed;
+}
+.floatbar {
+	border-collapse: separate;
+}
+.floatRowitem {
+	z-index: 15;
+	position: absolute;
+	background-color: #E6EEFA;
+}
+.floatColitem {
+	z-index: 12;
+	position: absolute;
+	background-color: #F0F8FF;
+}
+.floatColitem input {
+	background-color: #F0F8FF;
+}
+.ListView_Twleft {
+	background-color:#F0F8FF;
+	position: relative;
+}
+.ListView_Twright {
+	border: solid #CCCCCC;
+	border-width: 0 0 0 0;
+}
+.ListViewBody {
+	border: solid #CCCCCC;
+	border-width: 0 0 0 0;
+	background-color:white;
+}
+.ListBodyExtend {
+	background-color: #E6EEFA;
+	z-index: 30;
+}
+.ListViewBody_trhover {
+	background:#B8D8FE;
+}
+.ListViewBody_trhoverout {
+	background:inherit;
+}
+.ListViewHeaderSelectAll {
+	background:transparent url(../img/header_bg.jpg) repeat-x scroll 0%;
+	border:solid #CCCCCC;
+	border-width:0 1 1 1;
+	padding:2 0 0 0;
+	text-align:center;
+	cursor:pointer;
+	-moz-user-select:none;
+}
+.ListViewHeaderLabel {
+	background:transparent url(../img/header_bg.jpg) repeat-x scroll 0%;
+	border:solid #CCCCCC;
+	border-width:0 1 1 0;
+	padding:2 3 1 3;
+	text-align:center;
+	-moz-user-select:none;
+}
+.ListViewHeaderTwidth {
+	background-color:#FFFFFF;
+	height:1px;
+}
+.ListViewHeaderTwidth td {
+	border:0;
+	height:1px;
+	padding:0;
+	margin:0;
+}
+.ListViewHeaderTwidth input {
+	border:0;
+	height:1px;
+	padding:0;
+	margin:0;
+}
+.ListViewHeaderTwidth_IE {
+	background-color:#FFFFFF;
+	height:1px;
+	font-size:0px;
+	line-height:1px;
+	zoom:0.08
+}
+.ListViewHeaderTwidth_IE td {
+	border:0;
+	height:1px;
+	padding:0;
+	margin:0;
+	font-size:0px;
+	line-height:1px;
+	zoom:0.08
+}
+.ListViewHeaderTwidth_IE input {
+	border:0;
+	height:1px;
+	padding:0;
+	margin:0;
+	font-size:0px;
+	line-height:1px;
+	zoom:0.08
+}
+.ListViewHeaderFilter {
+	background:transparent url(../img/menubar_bg.jpg) repeat-x scroll 0% 0%;
+	border:solid #CCCCCC;
+	border-width: 1 1 1 0;
+	padding: 0;
+}
+.ListViewHeaderFilter input {
+	width:100%;
+	padding:0;
+}
+.ListViewRowTheight {
+	background-color:#E6EEFA;
+	width:1px;
+}
+.ListViewRowTheight input {
+	border:0;
+	width:1px;
+	height:1px;
+	padding:0;
+	background-color:#E6EEFA;
+}
+.ListViewSetting {
+	border:solid #CCCCCC;
+	border-width: 0 1 1 1;
+	vertical-align:middle;
+	cursor:pointer;
+	-moz-user-select:none;
+	text-align: center;
+	background-color:#F0F8FF;
+}
+.ListViewTitle {
+	background:transparent url(../img/listview_title.gif) repeat-x scroll 0pt -1px;
+	color:#15428B;
+	font-weight:bold;
+	line-height:15px;
+	padding:3px 10px 3px 5px;
+}
+.ListViewFooter {
+	border:solid #CCCCCC;
+	border-width: 0 0 0 0;
+}
+.ListViewFooter td {
+	text-align:center;
+	padding:3px 3px 0px 3px;
+	vertical-align: middle;
+	-moz-user-select:none;
+}
+.ListViewCellSelect {
+	border:solid #CCCCCC;
+	border-width: 1;
+	text-align:left;
+	padding: 0 3 2 3;
+}
+.ListViewCell {
+	border:solid #CCCCCC;
+	border-width: 0 1 1 0;
+	text-align:left;
+	padding: 0 2 0 2;
+}
+.ListViewCell .textnote, .PropertyInput .textnote {
+	/*visibility: hidden;*/
+}
+.ListCellTL {
+	border:solid #CCCCCC;
+	border-width: 1 1 0 0;
+	text-align:left;
+	padding: 1;
+}
+.textedited {
+	background-color:#E6EEFA;
+}
+.textnote {
+	border-width:0;
+	height: 20px;
+}
+.ListViewOrderHide {
+	visibility: hidden;
+}
+.ListViewOrderShow {
+	visibility: visible;
+}
+.View{
+	background-color0:#E6EEFA;
+	border-collapse: separate;
+	/*-moz-user-select:none;*/
+}
+.ViewTitle{
+	text-align:center;
+	font-size: 20.6107px;
+	line-height: 2.1425;
+}
+.ViewMenuBar {
+	background:transparent url(../img/menubar_bg.jpg) repeat-x scroll 0% 0%;
+	padding:0px 0px 0px 3px;
+	height:21px;
+	-moz-user-select:none;
+}
+.ViewButtonBar {
+	background:transparent url(../img/menubar_bg.jpg) repeat-x scroll 0% 0%;
+	padding:0px 0px 0px 3px;
+	height:21px;
+	-moz-user-select:none;
+}
+.ViewBody {
+	border-top:1px solid #22716C;
+	border-left:1px solid #22716C;
+	border-right:1px solid #22716C;
+	border-bottom:none;
+	vertical-align:top;
+}
+.ViewButton {
+	background:transparent url(../img/buttonbar_bg.jpg) repeat-x scroll 0% 0%;
+	border: 1px solid #9DCFFE;
+	height:21px;
+	white-space:nowrap;
+}
+.PropertyLabel {
+	padding:0px 0px 0px 5px;
+	text-align:right;
+	vertical-align: top;
+	white-space: nowrap;
+}
+.PropertyValue {
+	border-bottom:solid 1px #0041D9;
+}
+.PropertyInput {
+	margin:0px;
+	padding:0px 0px 0px 0px;
+	text-align:left;
+	vertical-align: top;
+}
+.PropertyComment {
+	color:red;
+}

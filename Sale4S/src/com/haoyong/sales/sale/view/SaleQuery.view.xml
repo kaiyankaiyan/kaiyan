@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mily-mappings package="com.haoyong.sales.sale.form">
+	<import>net.sf.mily.support.form.*</import>
+	<import>com.haoyong.sales.common.listener.*</import>
+	<import>com.haoyong.sales.sale.domain.*</import>
+	<import>com.haoyong.sales.base.domain.*</import>
+	<import>com.haoyong.sales.common.domain.*</import>
+	<!-- 分销查询显图 -->
+	<class name="SaleQueryForm" label="分销查询">
+		<view name="OrderDetailQuery" label="订单查询" builder="EditViewBuilder">
+			<property name="OrderTicketForm" class="OrderTicketForm" builder="ViewFieldBuilder">
+				<param name="cfg">
+					<attribute name="view-name" value="ShowQuery" />
+					<attribute name="position" value="row" />
+				</param>
+			</property>
+		</view>
+		<view name="PurchaseDetailQuery" label="采购查询" builder="EditViewBuilder">
+			<property name="PurchaseTicketForm" class="PurchaseTicketForm" builder="ViewFieldBuilder">
+				<param name="cfg">
+					<attribute name="view-name" value="ShowQuery" />
+					<attribute name="position" value="row" />
+				</param>
+			</property>
+		</view>
+		<view name="PPurchaseDetailQuery" label="生产查询" builder="EditViewBuilder">
+			<property name="PPurchaseTicketForm" class="PPurchaseTicketForm" builder="ViewFieldBuilder">
+				<param name="cfg">
+					<attribute name="view-name" value="ShowQuery" />
+					<attribute name="position" value="row" />
+				</param>
+			</property>
+		</view>
+		<view name="BomDetailQuery" label="生产物料查询" builder="EditViewBuilder">
+			<property name="BOMForm" class="com.haoyong.sales.base.form.BOMForm" builder="ViewFieldBuilder">
+				<param name="cfg">
+					<attribute name="view-name" value="ShowQuery" />
+					<attribute name="position" value="row" />
+				</param>
+			</property>
+		</view>
+		<view name="ReceiptDetailQuery" label="收货查询" builder="EditViewBuilder">
+			<property name="ReceiptTicketForm" class="ReceiptTicketForm" builder="ViewFieldBuilder">
+				<param name="cfg">
+					<attribute name="view-name" value="ShowQuery" />
+					<attribute name="position" value="row" />
+				</param>
+			</property>
+		</view>
+		<view name="SendQuery" label="销售发货查询" builder="EditViewBuilder">
+			<property name="SendTicketForm" class="SendTicketForm" builder="ViewFieldBuilder">
+				<param name="cfg">
+					<attribute name="view-name" value="ShowQuery" />
+					<attribute name="position" value="row" />
+				</param>
+			</property>
+		</view>
+		<view name="BillQuery" label="应收查询" builder="EditViewBuilder">
+			<property name="BillTicketForm" class="BillTicketForm" builder="ViewFieldBuilder">
+				<param name="cfg">
+					<attribute name="view-name" value="ShowQuery" />
+					<attribute name="position" value="row" />
+				</param>
+			</property>
+		</view>
+		<view name="StoreItemQuery" label="库存查询" builder="EditViewBuilder">
+			<property name="storeTicketForm" class="StoreTicketForm" builder="ViewFieldBuilder">
+				<param name="cfg">
+					<attribute name="view-name" value="StoreItemQuery" />
+					<attribute name="position" value="row" />
+				</param>
+			</property>
+		</view>
+		<view name="StoreCompanyQuery" label="分公司库存查询" builder="EditViewBuilder">
+			<property name="storeTicketForm" class="StoreTicketForm" builder="ViewFieldBuilder">
+				<param name="cfg">
+					<attribute name="view-name" value="StoreCompanyQuery" />
+					<attribute name="position" value="row" />
+				</param>
+			</property>
+		</view>
+		<view name="StoreAgentQuery" label="生产留用台账查询" builder="EditViewBuilder">
+			<property name="storeTicketForm" class="StoreTicketForm" builder="ViewFieldBuilder">
+				<param name="cfg">
+					<attribute name="view-name" value="StoreAgentQuery" />
+					<attribute name="position" value="row" />
+				</param>
+			</property>
+		</view>
+		<view name="StoreMonthQuery" label="月出入库查询" builder="EditViewBuilder">
+			<property name="storeTicketForm" class="StoreTicketForm" builder="ViewFieldBuilder">
+				<param name="cfg">
+					<attribute name="view-name" value="StoreMonthQuery" />
+					<attribute name="position" value="row" />
+				</param>
+			</property>
+		</view>
+		<view name="StoreEnoughQuery" label="够用数查询" builder="EditViewBuilder">
+			<property name="storeTicketForm" class="StoreTicketForm" builder="ViewFieldBuilder">
+				<param name="cfg">
+					<attribute name="view-name" value="StoreEnoughQuery" />
+					<attribute name="position" value="row" />
+				</param>
+			</property>
+		</view>
+	</class>
+</mily-mappings>

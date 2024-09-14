@@ -1,0 +1,482 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mily-mappings package="com.haoyong.sales.sale.form">
+	<import>net.sf.mily.support.form.*</import>
+	<import>com.haoyong.sales.common.listener.*</import>
+	<import>com.haoyong.sales.sale.domain.*</import>
+	<import>com.haoyong.sales.base.domain.*</import>
+	<import>com.haoyong.sales.base.form.*</import>
+
+	<class name="PurchaseReturnForm" label="采购退货">
+		<property name="ReturnTicket" visible="false" class="ReturnTicket" builder="EditViewBuilder">
+			<property name="Ticket" class="ReturnTicket">
+				<property name="number" label="退货单号" builder="TextFieldBuilder">
+					<param name="cfg">
+						<attribute name="type" value="Require"/>
+					</param>
+					<param name="button">
+						<attribute name="text" value="生成单号" />
+						<param name="listener">
+							<attribute name="class" value="ChangeAssociateListener" />
+							<attribute name="method" value="setReturnTicketNumber" />
+							<attribute name="properties" value="number" />
+						</param>
+					</param>
+				</property>
+				<property name="number2" label="退入仓库单号" builder="TextFieldBuilder" />
+				<property name="deliverNum" label="货运单号" builder="TextFieldBuilder" />
+				<property name="remark" label="退货备注" builder="TextAreaBuilder" >
+					<param name="cfg">
+						<attribute name="position" value="row"/>
+						<attribute name="type" value="Require"/>
+					</param>
+				</property>
+			</property>
+		</property>
+		<view name="TicketChoose" label="退货单自选" builder="EditViewBuilder">
+			<property name="ticketChooseFormer" Class="ChooseFormer" builder="ViewFieldBuilder">
+				<param name="cfg">
+					<attribute name="view-name" value="Ticket"/>
+					<attribute name="position" value="row"/>
+				</param>
+			</property>
+		</view>
+		<view name="ApplyList" label="退货申请" builder="EditViewBuilder">
+			<param name="menu">
+				<attribute name="text" value="申请退货" />
+				<attribute name="image" value="mily/img/color.gif" />
+				<param name="listener">
+					<attribute name="class" value="SelectDomainListener" />
+					<attribute name="former" value="selectFormer4Purchase" />
+					<attribute name="view-name" value="selectedList" />
+					<param name="validate">
+						<attribute name="properties" value="commName,uneditable,stOrder" />
+						<attribute name="method" value="ticketForm.canApply" />
+					</param>
+				</param>
+				<param name="listener">
+					<attribute name="class" value="ValidateListener" />
+					<attribute name="method" value="validateApply" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="ActionServiceListener" />
+					<attribute name="message" value="开退货申请给采购审核" />
+					<param name="action">
+						<attribute name="action" value="PurchaseTicket_Save" />
+						<attribute name="setter" value="setApplyPurchase4Service" />
+						<attribute name="message" value="退货申请开单" />
+						<param name="state">
+							<attribute name="id" value="70" />
+							<attribute name="name" value="退货申请" />
+							<attribute name="method" value="setPurchaseState" />
+						</param>
+						<param name="user">
+							<attribute name="method" value="setReturnUser" />
+						</param>
+					</param>
+					<param name="action">
+						<attribute name="action" value="OrderTicket_Save" />
+						<attribute name="setter" value="setApplyOrder4Service" />
+						<attribute name="message" value="退货申请开单，仓库要点货出库" />
+						<param name="state">
+							<attribute name="id" value="20" />
+							<attribute name="name" value="退货出仓回供应商申请" />
+							<attribute name="method" value="setOutsfState" />
+						</param>
+						<param name="state">
+							<attribute name="id" value="0" />
+							<attribute name="method" value="setOrderState" />
+						</param>
+					</param>
+					<param name="action">
+						<attribute name="action" value="PurchaseTicket_Effect" />
+						<attribute name="setter" value="setApplyPurchase4Service" />
+						<attribute name="message" value="重新计算够用数" />
+					</param>
+				</param>
+				<param name="listener">
+					<attribute name="class" value="RefreshListener" />
+					<attribute name="before" value="setPurchaseDetailEmpty" />
+				</param>
+			</param>
+			<param name="menu">
+				<attribute name="text" value="不通过确认" />
+				<attribute name="image" value="mily/img/color.gif" />
+				<param name="listener">
+					<attribute name="class" value="SelectDomainListener" />
+					<attribute name="former" value="selectFormer4Purchase" />
+					<param name="validate">
+						<attribute name="properties" value="commName,stPurchase" />
+						<attribute name="method" value="ticketForm.canAuditNoConfirm" />
+					</param>
+				</param>
+				<param name="listener">
+					<attribute name="class" value="PostListener" />
+					<attribute name="method" value="prepareTicket" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="ActionServiceListener" />
+					<attribute name="message" value="采购退货申请审核不通过，确认取消申请吗？" />
+					<param name="action">
+						<attribute name="action" value="PurchaseTicket_Save" />
+						<attribute name="setter" value="setPurchase4Service" />
+						<attribute name="message" value="采购退货申请不通过确认" />
+						<param name="state">
+							<attribute name="id" value="30" />
+							<attribute name="name" value="退货申请不通过确认" />
+							<attribute name="method" value="setPurchaseState" />
+						</param>
+					</param>
+				</param>
+				<param name="listener">
+					<attribute name="class" value="RefreshListener" />
+				</param>
+			</param>
+			<property name="PurchaseDetail.ReturnTicket.Ticket" class="ReturnTicket"/>
+			<property name="OrderDetail" class="OrderDetail">
+				<property name="amount" label="拆分订单数量" builder="TextFieldBuilder" >
+					<param name="cfg">
+						<attribute name="position" value="start-new-row" />
+					</param>
+					<param name="validate">
+						<attribute name="validate"><![CDATA[eval(this.value)>0]]></attribute>
+						<attribute name="message" value="拆分数量要大于0" />
+					</param>
+					<param name="button">
+						<attribute name="text" value="拆分出数量" />
+						<attribute name="image" value="mily/img/color.gif" />
+						<param name="listener">
+							<attribute name="class" value="SelectDomainListener" />
+							<attribute name="former" value="selectFormer4Purchase" />
+							<attribute name="view-name" value="selectedList" />
+							<param name="validate">
+								<attribute name="properties" value="commName,amount" />
+								<attribute name="method" value="ticketForm.canSplit" />
+							</param>
+							<param name="parameter">
+								<attribute name="id" value="billId" />
+								<attribute name="version" value="billVersion" />
+								<attribute name="class" value="BillDetail" />
+							</param>
+						</param>
+						<param name="listener">
+							<attribute name="class" value="ActionServiceListener" />
+							<attribute name="message" value="确认在采购取消审核拆分出此数量的订单连同采购单" />
+							<param name="action">
+								<attribute name="action" value="PurchaseTicket_Save" />
+								<attribute name="setter" value="setSplitNew4Service" />
+								<attribute name="message" value="拆分出数量记新采购，用新月流水号" />
+							</param>
+							<param name="action">
+								<attribute name="action" value="PurchaseTicket_Save" />
+								<attribute name="setter" value="setSplitRemain4Service" />
+								<attribute name="message" value="拆分剩余数量记原采购单" />
+							</param>
+							<param name="action">
+								<attribute name="action" value="BillTicket_Save" />
+								<attribute name="setter" value="setSplitNew4BillService" />
+								<attribute name="message" value="拆分出数量记新应付，用新拆分月流水号" />
+							</param>
+							<param name="action">
+								<attribute name="action" value="BillTicket_Save" />
+								<attribute name="setter" value="setSplitRemain4BillService" />
+								<attribute name="message" value="拆分剩余数量记原应付" />
+							</param>
+						</param>
+						<param name="listener">
+							<attribute name="class" value="RefreshListener" />
+							<attribute name="before" value="setOrderDetailEmpty" />
+						</param>
+					</param>
+				</property>
+			</property>
+			<property name="selectedList" class="OrderDetail" builder="SqlListBuilder">
+				<fields>
+					<field id="id" type="Long" label="选择" expression="c.ID" />
+					<field id="SellerId" type="Long" label="商家ID" visible="false" expression="c.sellerId" />
+					<field id="billId" type="Long" label="应付ID" visible="false" expression="b.id" />
+					<field id="monthnum" type="String" label="月流水号" expression="c.monthnum" />
+					<field id="purName" type="String" label="采购名称" expression="c.purName" />
+					<field id="commName" type="String" label="商品名称" expression="c.commName" />
+					<field id="uneditable" type="String" label="可否处理"><![CDATA[
+						case
+						when (c.stPurchase=72) then '待不通过确认'
+						when (c.stOrder>=50) then '不可，订单红冲处理中'
+						when (c.stOrder>=40) then '不可，订单改单处理中'
+						else null end
+					]]></field>
+					<field id="amount" type="Double" label="数量" expression="c.amount" />
+					<field id="price" type="Double" label="采购价" expression="c.price" />
+					<field id="supplierName" type="String" label="供应商名称" expression="c.supplierName" />
+					<field id="stPurchase" type="int" label="采购流程状态Id" visible="false" expression="c.stPurchase" />
+					<field id="stOrder" type="int" label="订单状态Id" visible="false" expression="c.stOrder" />
+					<field id="arrangeId" type="int" label="订单排单状态Id" visible="false" expression="c.arrangeId" />
+					<field id="stateName" type="String" label="流程状态" expression="c.stateName" />
+					<field id="upurchase" type="String" label="采购人" expression="c.upurchase" />
+					<field id="orderType" type="String" label="订单类型" visible="false" expression="c.orderType" />
+					<field id="receiptId" type="int" label="收货状态ID" visible="false" expression="c.receiptId" />
+					<field id="version" type="int" label="订单版本" visible="false" expression="c.version" />
+					<field id="billVersion" type="int" label="应付版本" visible="false" expression="b.version" />
+				</fields>
+				<DataSource><![CDATA[
+					from sa_OrderDetail c
+					left join sa_BillDetail b on b.sellerId=c.sellerId and b.monthnum=c.monthnum and b.typeName='采购入库' and b.stBill>0
+				]]>
+				</DataSource>
+				<Where><![CDATA[
+					(c.stPurchase=30 or c.stPurchase=72) and c.receiptId=30 and (c.stOrder=0 or c.orderType='备货订单')
+				]]>
+				</Where>
+			</property>
+		</view>
+		<view name="OutstoreList" label="退货出库" builder="EditViewBuilder">
+			<param name="cfg">
+				<attribute name="before" value="beforeWaiting" />
+			</param>
+			<param name="menu">
+				<attribute name="text" value="退货出库" />
+				<attribute name="image" value="mily/img/color.gif" />
+				<param name="listener">
+					<attribute name="class" value="SelectDomainListener" />
+					<attribute name="former" value="selectFormer4Purchase" />
+					<attribute name="view-name" value="selectedList" />
+					<param name="validate">
+						<attribute name="properties" value="commName,uneditable,stOrder" />
+						<attribute name="method" value="ticketForm.canOutstoreYes" />
+					</param>
+					<param name="parameter">
+						<attribute name="id" value="billId" />
+						<attribute name="version" value="billVersion" />
+						<attribute name="class" value="BillDetail" />
+					</param>
+				</param>
+				<param name="listener">
+					<attribute name="class" value="PostListener" />
+					<attribute name="method" value="prepareTicket" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="ValidateListener" />
+					<attribute name="method" value="validateOutstore" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="ActionServiceListener" />
+					<attribute name="type" value="UnTransaction" />
+					<attribute name="message" value="仓库退货出库，验证，退还给供应商" />
+					<param name="action">
+						<attribute name="action" value="OrderTicket_Save" />
+						<attribute name="message" value="Client链接供应商家gen客户订单发货单有拒收退回入库申请" />
+						<attribute name="setter" value="setOrderLink4Service_validate" />
+						<param name="expression">
+							<attribute name="expression" value="Supplier.toSellerId>0 and Supplier.toSellerId!=sellerId" />
+							<attribute name="property" value="selectFormer4Purchase.First" />
+						</param>
+						<param name="before">
+							<attribute name="method" value="OrderLink.actionBefore" />
+						</param>
+						<param name="after">
+							<attribute name="method" value="ActionService4LinkListener.actionAfter" />
+						</param>
+					</param>
+				</param>
+				<param name="listener">
+					<attribute name="class" value="ActionServiceListener" />
+					<attribute name="message" value="仓库退货出库，退还给供应商" />
+					<param name="action">
+						<attribute name="action" value="PurchaseTicket_Save" />
+						<attribute name="setter" value="setOutstoreYes4Service" />
+						<attribute name="message" value="采购退货出库发货，还给供应商" />
+						<param name="state">
+							<attribute name="id" value="0" />
+							<attribute name="name" value="同意退货出库" />
+							<attribute name="method" value="setPurchaseState" />
+						</param>
+						<param name="state">
+							<attribute name="id" value="0" />
+							<attribute name="name" value="同意退货出库" />
+							<attribute name="method" value="setOrderState" />
+						</param>
+						<param name="user">
+							<attribute name="method" value="addReturnUser" />
+						</param>
+					</param>
+					<param name="action">
+						<attribute name="action" value="BillTicket_Save" />
+						<attribute name="setter" value="setBill4Service" />
+						<attribute name="message" value="采购退货出库发货，待应付失效，已付款新负数应付" />
+						<param name="state">
+							<attribute name="id" value="0" />
+							<attribute name="name" value="退货出库同意待应付失效" />
+							<attribute name="method" value="setBillState" />
+						</param>
+						<param name="state">
+							<attribute name="property" value="DiffBillList" />
+							<attribute name="id" value="20" />
+							<attribute name="name" value="已付款退货出库，新差异应付" />
+							<attribute name="method" value="setBillState" />
+						</param>
+					</param>
+					<param name="action">
+						<attribute name="action" value="OrderTicket_Save" />
+						<attribute name="message" value="Client链接供应商家gen客户订单发货单有拒收退回入库申请" />
+						<attribute name="setter" value="setOrderLink4Service" />
+						<param name="expression">
+							<attribute name="expression" value="Supplier.toSellerId>0 and Supplier.toSellerId!=sellerId" />
+							<attribute name="property" value="selectFormer4Purchase.First" />
+						</param>
+						<param name="before">
+							<attribute name="method" value="OrderLink.actionBefore" />
+						</param>
+						<param name="after">
+							<attribute name="method" value="ActionService4LinkListener.actionAfter" />
+						</param>
+					</param>
+				</param>
+				<param name="listener">
+					<attribute name="class" value="ActionServiceListener" />
+					<attribute name="type" value="UnTransaction" />
+					<param name="action">
+						<attribute name="action" value="OrderTicket_Count" />
+						<attribute name="property" value="SelectFormer4Purchase.selectedList" />
+						<attribute name="message" value="订单全单统计" />
+					</param>
+				</param>
+				<param name="listener">
+					<attribute name="class" value="RefreshListener" />
+					<attribute name="before" value="setPurchaseDetailEmpty" />
+				</param>
+			</param>
+			<param name="menu">
+				<attribute name="text" value="不同意" />
+				<attribute name="image" value="mily/img/color.gif" />
+				<param name="listener">
+					<attribute name="class" value="SelectDomainListener" />
+					<attribute name="former" value="selectFormer4Purchase" />
+					<attribute name="view-name" value="selectedList" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="PostListener" />
+					<attribute name="method" value="prepareTicket" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="ActionServiceListener" />
+					<attribute name="message" value="仓库不同意退货，继续为备料库存" />
+					<attribute name="action" value="PurchaseTicket_Save" />
+					<attribute name="setter" value="setOutstore4Service" />
+					<param name="state">
+						<attribute name="id" value="30" />
+						<attribute name="name" value="仓库不同意退货" />
+						<attribute name="method" value="setPurchaseState" />
+					</param>
+				</param>
+				<param name="listener">
+					<attribute name="class" value="RefreshListener" />
+				</param>
+			</param>
+			<property name="PurchaseDetail.ReturnTicket.deliverNum" label="货运单号" builder="TextFieldBuilder"/>
+			<property name="OrderDetail" class="OrderDetail">
+				<property name="amount" label="拆分订单数量" builder="TextFieldBuilder" >
+					<param name="cfg">
+						<attribute name="position" value="start-new-row" />
+					</param>
+					<param name="validate">
+						<attribute name="validate"><![CDATA[eval(this.value)>0]]></attribute>
+						<attribute name="message" value="拆分数量要大于0" />
+					</param>
+					<param name="button">
+						<attribute name="text" value="拆分出数量" />
+						<attribute name="image" value="mily/img/color.gif" />
+						<param name="listener">
+							<attribute name="class" value="SelectDomainListener" />
+							<attribute name="former" value="selectFormer4Purchase" />
+							<attribute name="view-name" value="selectedList" />
+							<param name="validate">
+								<attribute name="properties" value="commName,amount" />
+								<attribute name="method" value="ticketForm.canSplit" />
+							</param>
+							<param name="parameter">
+								<attribute name="id" value="billId" />
+								<attribute name="version" value="billVersion" />
+								<attribute name="class" value="BillDetail" />
+							</param>
+						</param>
+						<param name="listener">
+							<attribute name="class" value="ActionServiceListener" />
+							<attribute name="message" value="确认在采购取消审核拆分出此数量的订单连同采购单" />
+							<param name="action">
+								<attribute name="action" value="PurchaseTicket_Save" />
+								<attribute name="setter" value="setSplitNew4Service" />
+								<attribute name="message" value="拆分出数量记新采购，用新月流水号" />
+							</param>
+							<param name="action">
+								<attribute name="action" value="PurchaseTicket_Save" />
+								<attribute name="setter" value="setSplitRemain4Service" />
+								<attribute name="message" value="拆分剩余数量记原采购单" />
+							</param>
+							<param name="action">
+								<attribute name="action" value="BillTicket_Save" />
+								<attribute name="setter" value="setSplitNew4BillService" />
+								<attribute name="message" value="拆分出数量记新应付，用新拆分月流水号" />
+							</param>
+							<param name="action">
+								<attribute name="action" value="BillTicket_Save" />
+								<attribute name="setter" value="setSplitRemain4BillService" />
+								<attribute name="message" value="拆分剩余数量记原应付" />
+							</param>
+						</param>
+						<param name="listener">
+							<attribute name="class" value="RefreshListener" />
+							<attribute name="before" value="setOrderDetailEmpty" />
+						</param>
+					</param>
+				</property>
+			</property>
+			<property name="selectedList" class="OrderDetail" builder="SqlListBuilder">
+				<param name="remind">
+					<attribute name="id" value="id"/>
+					<attribute name="value" value=">0"/>
+				</param>
+				<param name="select">
+					<attribute name="id" value="id" />
+					<attribute name="value" value=">0" />
+				</param>
+				<fields>
+					<field id="id" type="Long" label="选择" expression="c.ID" />
+					<field id="SellerId" type="Long" label="商家ID" visible="false" expression="c.sellerId" />
+					<field id="billId" type="Long" label="应付ID" visible="false" expression="b.id" />
+					<field id="monthnum" type="String" label="月流水号" expression="c.monthnum" />
+					<field id="purName" type="String" label="采购名称" expression="c.purName" />
+					<field id="commName" type="String" label="商品名称" expression="c.commName" />
+					<field id="uneditable" type="String" label="可否处理"><![CDATA[
+						case
+						when (c.stOrder>=50) then '不可，订单红冲中'
+						when (c.stOrder>=40) then '不可，订单改单中'
+						else null end
+					]]></field>
+					<field id="amount" type="Double" label="数量" expression="c.amount" />
+					<field id="price" type="Double" label="采购价" expression="c.price" />
+					<field id="supplierName" type="String" label="供应商名称" expression="c.supplierName" />
+					<field id="returnName" type="String" label="退货名称" expression="CONCAT_WS(',',c.returnName,c.returnOther)" />
+					<field id="stPurchase" type="int" label="采购流程状态Id" visible="false" expression="c.stPurchase" />
+					<field id="stOrder" type="int" label="订单状态Id" visible="false" expression="c.stOrder" />
+					<field id="arrangeId" type="int" label="订单排单状态Id" visible="false" expression="c.arrangeId" />
+					<field id="notes" type="String" label="改单待确认" visible="false" expression="c.notes" />
+					<field id="stateName" type="String" label="流程状态" expression="c.stateName" />
+					<field id="arrangeType" type="String" label="安排方式" expression="c.arrangeType" />
+					<field id="upurchase" type="String" label="采购人" expression="c.upurchase" />
+					<field id="orderType" type="String" label="订单类型" visible="false" expression="c.orderType" />
+					<field id="receiptId" type="int" label="收货状态ID" visible="false" expression="c.receiptId" />
+					<field id="billVersion" type="int" label="应付版本" visible="false" expression="b.version" />
+					<field id="version" type="int" label="版本" visible="false" expression="c.version" />
+				</fields>
+				<DataSource><![CDATA[
+					from sa_OrderDetail c
+					left join sa_BillDetail b on b.sellerId=c.sellerId and b.monthnum=c.monthnum and b.typeName='采购入库' and b.stBill>0
+				]]>
+				</DataSource>
+				<Where><![CDATA[
+					c.stPurchase=75
+				]]>
+				</Where>
+			</property>
+		</view>
+	</class>
+</mily-mappings>

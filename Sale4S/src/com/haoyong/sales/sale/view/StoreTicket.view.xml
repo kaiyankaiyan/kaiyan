@@ -1,0 +1,1849 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mily-mappings package="com.haoyong.sales.sale.form">
+	<import>net.sf.mily.support.form.*</import>
+	<import>com.haoyong.sales.common.listener.*</import>
+	<import>com.haoyong.sales.sale.domain.*</import>
+	<import>com.haoyong.sales.base.domain.*</import>
+	<import>com.haoyong.sales.base.form.*</import>
+
+	<class name="StoreTicketForm" label="库存统计">
+		<view name="ColumnList" label="统计列标" builder="EditViewBuilder">
+			<property name="CommColForm" Class="CommColForm" builder="ViewFieldBuilder">
+				<param name="cfg">
+					<attribute name="view-name" value="List"/>
+					<attribute name="position" value="row"/>
+				</param>
+			</property>
+		</view>
+		<view name="RestoreList" label="库存重算" builder="EditViewBuilder">
+			<param name="cfg">
+				<attribute name="freezable" value="true" />
+			</param>
+			<param name="menu">
+				<attribute name="text" value="计算库存" />
+				<attribute name="image" value="mily/img/color.gif" />
+				<param name="listener">
+					<attribute name="class" value="SelectDomainListener" />
+					<attribute name="former" value="selectFormer4Purchase" />
+					<attribute name="select" value="all" />
+					<attribute name="validate" value="false" />
+					<attribute name="view-name" value="selectFormer4Purchase.selectedList" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="ChangeBuilderListener" />
+					<attribute name="builder" value="SqlCrossBuilder" />
+					<attribute name="properties" value="selectFormer4Purchase.selectedList" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="SelectCrossListener" />
+					<attribute name="view-name" value="selectFormer4Purchase.selectedList" />
+					<attribute name="former" value="selectCross4Store" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="SelectDomainListener" />
+					<attribute name="former" value="selectFormer4StoreItem" />
+					<attribute name="select" value="all" />
+					<attribute name="validate" value="false" />
+					<attribute name="view-name" value="selectFormer4StoreItem.selectedList" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="PostListener" />
+					<attribute name="method" value="setRestoreCrossCount" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="RefreshListener" />
+					<attribute name="view-name" value="StoreCountList" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="SelectCrossListener" />
+					<attribute name="view-name" value="StoreCountList" />
+					<attribute name="former" value="selectCross4Store" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="PostListener" />
+					<attribute name="method" value="getRestoreFromCross" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="ActionServiceListener" />
+					<attribute name="action" value="StoreTicket_Restore" />
+					<attribute name="setter" value="setRestore4Service" />
+					<attribute name="message" value="货品库存数量重新统计" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="RefreshListener" />
+					<attribute name="view-name" value="selectFormer4StoreItem.selectedList" />
+				</param>
+			</param>
+			<property name="selectFormer4Purchase.selectedList" label="实时采购在库明细" class="OrderDetail" builder="SqlListBuilder">
+				<param name="cfg">
+					<attribute name="parameter" value="getParam4Restore"/>
+					<attribute name="row-fields" value="instore;commNumber;commName;commOther" />
+					<attribute name="rowcount-fields" value="id|max;amount|sum;pmoney|sum;backAmount|sum" />
+				</param>
+				<fields>
+					<field id="id0" type="Long" label="选择" expression="c.ID" />
+					<field id="id" type="Long" label="采购ID" expression="c.ID" />
+					<field id="SellerId" type="Long" label="商家ID" visible="false" expression="c.sellerId" />
+					<field id="number" type="String" label="订单号" expression="c.number" />
+					<field id="monthnum" type="String" label="月流水号" expression="c.monthnum" />
+					<field id="purName" type="String" label="采购名称" expression="c.purName" />
+					<field id="commNumber" type="String" label="商品编号" expression="c.commNumber" />
+					<field id="commName" type="String" label="商品名称" expression="c.commName" />
+					<field id="commOther" type="String" label="商品名称2" expression="c.commOther" />
+					<field id="instore" type="String" label="入库分账" expression="c.instore" />
+					<field id="amount" type="Double" label="库存数量" expression="c.amount" />
+					<field id="backAmount" type="Double" label="可用数量"><![CDATA[
+						case when c.stOrder>0 then 0 else c.amount end
+					]]></field>
+					<field id="price" type="Double" label="采购价" expression="c.price" />
+					<field id="pmoney" type="Double" label="采购合价" expression="c.pmoney" />
+					<field id="clientName" type="String" label="客户名称" expression="c.clientName" />
+					<field id="subName" type="String" label="分公司名称" expression="c.subName" />
+					<field id="orderName" type="String" label="订单名称" expression="CONCAT_WS(',',c.orderName,c.orderType,c.orderName2)" />
+					<field id="arrangeType" type="String" label="发货方式" expression="c.arrangeType" />
+					<field id="supplyType" type="String" label="供货方式" expression="c.supplyType" />
+					<field id="upurchase" type="String" label="采购人" expression="c.upurchase" />
+					<field id="modifytime" type="DateTime" label="编辑时间" expression="c.modifytime" />
+					<field id="version" type="int" label="版本" visible="false" expression="c.version" />
+				</fields>
+				<DataSource><![CDATA[
+					from sa_OrderDetail c
+				]]>
+				</DataSource>
+				<Where><![CDATA[
+					c.stPurchase=30 and c.receiptId=30 and c.arrangeType='普通' and {$fromTime}{$limitCommName}
+				]]>
+				</Where>
+			</property>
+			<property name="StoreCountList" label="实时库存合计" class="StoreItem" builder="EntityCrossBuilder">
+				<param name="cfg">
+					<attribute name="row-fields" value="instore;" />
+					<attribute name="col-fields" value="" />
+					<attribute name="cross" value="amount|sum" />
+					<attribute name="rowcount-fields" value="commodity.id|min;amount|sum;money|sum;backAmount|sum" />
+					<attribute name="colcount-fields" value="amount|sum" />
+				</param>
+				<property name="id" label="库存ID" builder="TextFieldBuilder"/>
+				<property name="instore" label="库存分账" builder="TextBuilder"/>
+				<property name="backAmount" label="备料数量" builder="TextBuilder"/>
+				<property name="commodity.id" label="序号" builder="TextBuilder"/>
+				<property name="commodity" class="Commodity"/>
+				<property name="price" label="采购价" builder="TextFieldBuilder"/>
+				<property name="money" label="采购合价" builder="TextFieldBuilder"/>
+				<property name="amount" label="库存数量" builder="TextFieldBuilder"/>
+			</property>
+			<property name="selectFormer4StoreItem.selectedList" label="库存明细" class="StoreItem" builder="SqlListBuilder">
+				<param name="cfg">
+					<attribute name="parameter" value="getParam4Restore"/>
+				</param>
+				<fields>
+					<field id="id" type="Long" label="选择" expression="c.ID" />
+					<field id="SellerId" type="Long" label="商家ID" visible="false" expression="c.sellerId" />
+					<field id="commNumber" type="String" label="商品编号" expression="c.commNumber" />
+					<field id="commName" type="String" label="商品名称" expression="c.commName" />
+					<field id="commOther" type="String" label="商品名称2" expression="c.commOther" />
+					<field id="instore" type="String" label="库存分账" expression="c.instore" />
+					<field id="amount" type="Double" label="库存数量" expression="c.amount" />
+					<field id="price" type="Double" label="成本价" expression="c.price" />
+					<field id="money" type="Double" label="成本合价" expression="c.money" />
+					<field id="a01" type="double" label="库存01" expression="c.a01" >
+						<param name="format">
+							<attribute name="properties" value="c01,a01" />
+							<attribute name="method" value="getColumnStore" />
+						</param>
+					</field>
+					<field id="a02" type="double" label="库存02" expression="c.a02" >
+						<param name="format">
+							<attribute name="properties" value="c02,a02" />
+							<attribute name="method" value="getColumnStore" />
+						</param>
+					</field>
+					<field id="a03" type="double" label="库存03" expression="c.a03" >
+						<param name="format">
+							<attribute name="properties" value="c03,a03" />
+							<attribute name="method" value="getColumnStore" />
+						</param>
+					</field>
+					<field id="a04" type="double" label="库存04" expression="c.a04" >
+						<param name="format">
+							<attribute name="properties" value="c04,a04" />
+							<attribute name="method" value="getColumnStore" />
+						</param>
+					</field>
+					<field id="a05" type="double" label="库存05" expression="c.a05" >
+						<param name="format">
+							<attribute name="properties" value="c05,a05" />
+							<attribute name="method" value="getColumnStore" />
+						</param>
+					</field>
+					<field id="a06" type="double" label="库存06" expression="c.a06" >
+						<param name="format">
+							<attribute name="properties" value="c06,a06" />
+							<attribute name="method" value="getColumnStore" />
+						</param>
+					</field>
+					<field id="a07" type="double" label="库存07" expression="c.a07" >
+						<param name="format">
+							<attribute name="properties" value="c07,a07" />
+							<attribute name="method" value="getColumnStore" />
+						</param>
+					</field>
+					<field id="a08" type="double" label="库存08" expression="c.a08" >
+						<param name="format">
+							<attribute name="properties" value="c08,a08" />
+							<attribute name="method" value="getColumnStore" />
+						</param>
+					</field>
+					<field id="a09" type="double" label="库存09" expression="c.a09" >
+						<param name="format">
+							<attribute name="properties" value="c09,a09" />
+							<attribute name="method" value="getColumnStore" />
+						</param>
+					</field>
+					<field id="a10" type="double" label="库存10" expression="c.a10" >
+						<param name="format">
+							<attribute name="properties" value="c10,a10" />
+							<attribute name="method" value="getColumnStore" />
+						</param>
+					</field>
+					<field id="a11" type="double" label="库存11" expression="c.a11" >
+						<param name="format">
+							<attribute name="properties" value="c11,a11" />
+							<attribute name="method" value="getColumnStore" />
+						</param>
+					</field>
+					<field id="a12" type="double" label="库存12" expression="c.a12" >
+						<param name="format">
+							<attribute name="properties" value="c12,a12" />
+							<attribute name="method" value="getColumnStore" />
+						</param>
+					</field>
+					<field id="modifytime" type="DateTime" label="编辑时间" expression="c.modifytime" />
+					<field id="c01" type="String" label="名称01" visible="false" expression="c.c01" />
+					<field id="c02" type="String" label="名称02" visible="false" expression="c.c02" />
+					<field id="c03" type="String" label="名称03" visible="false" expression="c.c03" />
+					<field id="c04" type="String" label="名称04" visible="false" expression="c.c04" />
+					<field id="c05" type="String" label="名称05" visible="false" expression="c.c05" />
+					<field id="c06" type="String" label="名称06" visible="false" expression="c.c06" />
+					<field id="c07" type="String" label="名称07" visible="false" expression="c.c07" />
+					<field id="c08" type="String" label="名称08" visible="false" expression="c.c08" />
+					<field id="c09" type="String" label="名称09" visible="false" expression="c.c09" />
+					<field id="c10" type="String" label="名称10" visible="false" expression="c.c10" />
+					<field id="c11" type="String" label="名称11" visible="false" expression="c.c11" />
+					<field id="c12" type="String" label="名称12" visible="false" expression="c.c12" />
+					<field id="version" type="int" label="版本" visible="false" expression="c.version" />
+				</fields>
+				<DataSource><![CDATA[
+					from sa_StoreItem c
+				]]>
+				</DataSource>
+				<Where><![CDATA[
+					{$limitCommName}
+				]]>
+				</Where>
+			</property>
+		</view>
+		<view name="EnoughList" label="够用数计算" builder="EditViewBuilder">
+			<param name="menu">
+				<attribute name="text" value="计算够用数" />
+				<attribute name="image" value="mily/img/color.gif" />
+				<param name="listener">
+					<attribute name="class" value="SelectDomainListener" />
+					<attribute name="former" value="selectFormer4Enough" info="原有够用明细" />
+					<attribute name="select" value="all" />
+					<attribute name="validate" value="false" />
+					<attribute name="view-name" value="selectFormer4Enough.selectedList" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="ChangeBuilderListener" />
+					<attribute name="builder" value="SqlCrossBuilder" info="现有数量查询改为统计" />
+					<attribute name="properties" value="selectCross4Store.selectedList,selectCross4KeepBom.selectedList,selectCross4Request.selectedList,selectCross4Onroad.selectedList,selectCross4Order.selectedList,selectCross4Bom.selectedList,selectCross4LockBom.selectedList,selectCross4LockSend.selectedList" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="SelectCrossListener" />
+					<attribute name="view-name" value="selectCross4Store.selectedList" />
+					<attribute name="former" value="selectCross4Store" info="读库存数统计" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="SelectCrossListener" />
+					<attribute name="view-name" value="selectCross4KeepBom.selectedList" />
+					<attribute name="former" value="selectCross4KeepBom" info="读原物料车间留用数统计" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="SelectCrossListener" />
+					<attribute name="view-name" value="selectCross4Onroad.selectedList" />
+					<attribute name="former" value="selectCross4Onroad" info="读在途数统计" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="SelectCrossListener" />
+					<attribute name="view-name" value="selectCross4Request.selectedList" />
+					<attribute name="former" value="selectCross4Request" info="读请购数统计" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="SelectCrossListener" />
+					<attribute name="view-name" value="selectCross4Order.selectedList" />
+					<attribute name="former" value="selectCross4Order" info="读要发货订单数统计" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="SelectCrossListener" />
+					<attribute name="view-name" value="selectCross4Bom.selectedList" />
+					<attribute name="former" value="selectCross4Bom" info="读订单待生产BOM物料统计" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="SelectCrossListener" />
+					<attribute name="view-name" value="selectCross4LockBom.selectedList" />
+					<attribute name="former" value="selectCross4LockBom" info="读生产中物料统计" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="SelectCrossListener" />
+					<attribute name="view-name" value="selectCross4LockSend.selectedList" />
+					<attribute name="former" value="selectCross4LockSend" info="读订单有库存可发货数统计" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="PostListener" />
+					<attribute name="method" value="setEnoughCounts" info="准备合并统计数量的明细" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="RefreshListener" />
+					<attribute name="view-name" value="EnoughCountList" info="统计n个数量" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="SelectCrossListener" />
+					<attribute name="view-name" value="EnoughCountList" />
+					<attribute name="former" value="selectCross4EnoughCount" info="读n个数量统计结果" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="PostListener" />
+					<attribute name="method" value="getStoreEnoughs" info="分析要update\create\delete的够用明细" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="ActionServiceListener" />
+					<attribute name="action" value="StoreTicket_Enough" />
+					<attribute name="setter" value="setEnough4Service" />
+					<attribute name="message" value="保存到数据库" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="RefreshListener" />
+					<attribute name="view-name" value="selectFormer4Enough.selectedList" />
+				</param>
+			</param>
+			<property name="selectCross4Store.selectedList" label="现有库存" class="OrderDetail" builder="SqlListBuilder">
+				<param name="cfg">
+					<attribute name="freezable" value="false" />
+					<attribute name="parameter" value="getParam4Restore"/>
+					<attribute name="row-fields" value="instore;commNumber;commName;commOther" />
+					<attribute name="rowcount-fields" value="amount|sum;id|max" />
+				</param>
+				<fields>
+					<field id="id0" type="Long" label="选择" expression="c.ID" />
+					<field id="id" type="Long" label="库存ID" expression="c.ID" />
+					<field id="SellerId" type="Long" label="商家ID" visible="false" expression="c.sellerId" />
+					<field id="number" type="String" label="订单号" expression="c.number" />
+					<field id="monthnum" type="String" label="月流水号" expression="c.monthnum" />
+					<field id="purName" type="String" label="采购名称" expression="c.purName" />
+					<field id="commNumber" type="String" label="商品编号" expression="c.commNumber" />
+					<field id="commName" type="String" label="商品名称" expression="c.commName" />
+					<field id="commOther" type="String" label="商品名称其它" expression="c.commOther" />
+					<field id="instore" type="String" label="库存分账" expression="c.instore" />
+					<field id="amount" type="Double" label="库存数量" expression="c.amount" />
+					<field id="price" type="Double" label="采购价" expression="c.price" />
+					<field id="arrangeType" type="String" label="发货方式" expression="c.arrangeType" />
+					<field id="supplyType" type="String" label="供货方式" expression="c.supplyType" />
+					<field id="upurchase" type="String" label="采购人" expression="c.upurchase" />
+					<field id="modifytime" type="DateTime" label="编辑时间" expression="c.modifytime" />
+					<field id="version" type="int" label="版本" visible="false" expression="c.version" />
+				</fields>
+				<DataSource><![CDATA[
+					from sa_OrderDetail c
+				]]>
+				</DataSource>
+				<Where><![CDATA[
+					c.stPurchase=30 and c.receiptId=30 and {$fromTime}{$limitCommName}
+				]]>
+				</Where>
+			</property>
+			<property name="selectCross4KeepBom.selectedList" label="车间原物料台账库存" class="BomDetail" builder="SqlListBuilder">
+				<param name="cfg">
+					<attribute name="freezable" value="false" />
+					<attribute name="parameter" value="getParam4Restore"/>
+					<attribute name="row-fields" value="instore;commNumber;commName;commOther" />
+					<attribute name="rowcount-fields" value="keepAmount|sum;id|max" />
+				</param>
+				<fields>
+					<field id="id0" type="Long" label="选择" expression="c.ID" />
+					<field id="id" type="Long" label="物料ID" expression="c.ID" />
+					<field id="SellerId" type="Long" label="商家ID" visible="false" expression="c.sellerId" />
+					<field id="number" type="String" label="订单号" expression="c.number" />
+					<field id="monthnum" type="String" label="订单月流水" expression="c.monthnum" />
+					<field id="commNumber" type="String" label="商品编号" expression="c.commNumber" />
+					<field id="commName" type="String" label="商品名称" expression="c.commName" />
+					<field id="commOther" type="String" label="商品名称其它" expression="c.commOther" />
+					<field id="instore" type="String" label="入库分账" expression="c.supplierName" />
+					<field id="keepAmount" type="double" label="需求数量" expression="c.keepAmount" />
+					<field id="version" type="int" label="物料版本" visible="false" expression="c.version" />
+				</fields>
+				<DataSource><![CDATA[
+					from sa_BomDetail c
+				]]>
+				</DataSource>
+				<Where><![CDATA[
+					c.stBom=30 and c.keepAmount>0 and {$fromTime}{$limitCommName}
+				]]>
+				</Where>
+			</property>
+			<property name="selectCross4Request.selectedList" label="在请购订单" class="OrderDetail" builder="SqlListBuilder">
+				<param name="cfg">
+					<attribute name="freezable" value="false" />
+					<attribute name="parameter" value="getParam4Restore"/>
+					<attribute name="row-fields" value="instore;commNumber;commName;commOther" />
+					<attribute name="rowcount-fields" value="amount|sum;id|max" />
+				</param>
+				<fields>
+					<field id="id0" type="Long" label="选择" expression="c.ID" />
+					<field id="id" type="Long" label="订单ID" expression="c.ID" />
+					<field id="SellerId" type="Long" label="商家ID" visible="false" expression="c.sellerId" />
+					<field id="number" type="String" label="订单号" expression="c.number" />
+					<field id="monthnum" type="String" label="月流水号" expression="c.monthnum" />
+					<field id="orderName" type="String" label="订单名称" expression="CONCAT_WS(',',c.orderName,c.orderType,c.orderName2)" />
+					<field id="commNumber" type="String" label="商品编号" expression="c.commNumber" />
+					<field id="commName" type="String" label="商品名称" expression="c.commName" />
+					<field id="commOther" type="String" label="商品名称其它" expression="c.commOther" />
+					<field id="instore" type="String" label="入库分账" expression="c.instore" />
+					<field id="amount" type="Double" label="请购数量" expression="c.amount" />
+					<field id="uorder" type="String" label="订单人" expression="c.uorder" />
+					<field id="version" type="int" label="版本" visible="false" expression="c.version" />
+				</fields>
+				<DataSource><![CDATA[
+					from sa_OrderDetail c
+				]]>
+				</DataSource>
+				<Where><![CDATA[
+					c.stOrder>=30 and c.sendId=0 and {$fromTime}{$limitCommName}
+				]]>
+				</Where>
+			</property>
+			<property name="selectCross4Onroad.selectedList" label="在途采购单" class="OrderDetail" builder="SqlListBuilder">
+				<param name="cfg">
+					<attribute name="freezable" value="false" />
+					<attribute name="parameter" value="getParam4Restore"/>
+					<attribute name="row-fields" value="instore;commNumber;commName;commOther" />
+					<attribute name="rowcount-fields" value="amount|sum;id|max" />
+				</param>
+				<fields>
+					<field id="id0" type="Long" label="选择" expression="c.ID" />
+					<field id="id" type="Long" label="在途ID" expression="c.ID" />
+					<field id="SellerId" type="Long" label="商家ID" visible="false" expression="c.sellerId" />
+					<field id="number" type="String" label="订单号" expression="c.number" />
+					<field id="monthnum" type="String" label="月流水号" expression="c.monthnum" />
+					<field id="clientName" type="String" label="客户名称" expression="CONCAT_WS(',',c.clientName,c.clientOther)" />
+					<field id="purName" type="String" label="采购名称" expression="c.purName" />
+					<field id="commNumber" type="String" label="商品编号" expression="c.commNumber" />
+					<field id="commName" type="String" label="商品名称" expression="c.commName" />
+					<field id="commOther" type="String" label="商品名称其它" expression="c.commOther" />
+					<field id="instore" type="String" label="入库分账" expression="c.instore" />
+					<field id="amount" type="Double" label="在途数量" expression="c.amount" />
+					<field id="price" type="Double" label="采购价" expression="c.price" />
+					<field id="arrangeType" type="String" label="发货方式" expression="c.arrangeType" />
+					<field id="upurchase" type="String" label="采购人" expression="c.upurchase" />
+					<field id="version" type="int" label="版本" visible="false" expression="c.version" />
+				</fields>
+				<DataSource><![CDATA[
+					from sa_OrderDetail c
+				]]>
+				</DataSource>
+				<Where><![CDATA[
+					c.stPurchase>=30 and (c.receiptId<30 or (c.receiptId=30 and c.stPurchase=32))
+					and c.arrangeType='普通' and {$fromTime}{$limitCommName}
+				]]>
+				</Where>
+			</property>
+			<property name="selectCross4Order.selectedList" label="未出货订单" class="OrderDetail" builder="SqlListBuilder">
+				<param name="cfg">
+					<attribute name="freezable" value="false" />
+					<attribute name="parameter" value="getParam4Restore"/>
+					<attribute name="row-fields" value="outstore;commNumber;commName;commOther" />
+					<attribute name="rowcount-fields" value="amount|sum;id|max" />
+				</param>
+				<fields>
+					<field id="id0" type="Long" label="选择" expression="c.ID" />
+					<field id="id" type="Long" label="订单ID" expression="c.ID" />
+					<field id="SellerId" type="Long" label="商家ID" visible="false" expression="c.sellerId" />
+					<field id="number" type="String" label="订单号" expression="c.number" />
+					<field id="monthnum" type="String" label="月流水号" expression="c.monthnum" />
+					<field id="orderName" type="String" label="订单名称" expression="CONCAT_WS(',',c.orderName,c.orderType,c.orderName2)" />
+					<field id="commNumber" type="String" label="商品编号" expression="c.commNumber" />
+					<field id="commName" type="String" label="商品名称" expression="c.commName" />
+					<field id="commOther" type="String" label="商品名称其它" expression="c.commOther" />
+					<field id="outstore" type="String" label="出库分账" expression="c.instore" />
+					<field id="amount" type="Double" label="数量" expression="c.amount" />
+					<field id="uorder" type="String" label="订单人" expression="c.uorder" />
+					<field id="version" type="int" label="版本" visible="false" expression="c.version" />
+				</fields>
+				<DataSource><![CDATA[
+					from sa_OrderDetail c
+				]]>
+				</DataSource>
+				<Where><![CDATA[
+					c.stOrder>=30 and c.sendId<30 and c.orderType!='备货订单' and c.arrangeType!='直发' and c.arrangeType!='当地购' and {$fromTime}{$limitCommName}
+				]]>
+				</Where>
+			</property>
+			<property name="selectCross4Bom.selectedList" label="订单物料需求" class="BomDetail" builder="SqlListBuilder">
+				<param name="cfg">
+					<attribute name="freezable" value="false" />
+					<attribute name="parameter" value="getParam4Restore"/>
+					<attribute name="row-fields" value="outstore;commNumber;commName;commOther" />
+					<attribute name="rowcount-fields" value="needAmount|sum;id|max" />
+				</param>
+				<fields>
+					<field id="id0" type="Long" label="选择" expression="c.ID" />
+					<field id="id" type="Long" label="物料ID" expression="c.ID" />
+					<field id="SellerId" type="Long" label="商家ID" visible="false" expression="c.sellerId" />
+					<field id="monthnum" type="String" label="订单月流水" expression="c.monthnum" />
+					<field id="commNumber" type="String" label="商品编号" expression="c.commNumber" />
+					<field id="commName" type="String" label="商品名称" expression="c.commName" />
+					<field id="commOther" type="String" label="商品名称其它" expression="c.commOther" />
+					<field id="outstore" type="String" label="出库分账" expression="null" />
+					<field id="amount" type="double" label="需求数量" expression="c.amount" />
+					<field id="gotAmount" type="double" label="配给数量" expression="c.gotAmount" />
+					<field id="notAmount" type="double" label="差额数量" expression="c.notAmount" />
+					<field id="needAmount" type="double" label="计算需求数量" ><![CDATA[case when(c.gotAmount<c.amount) then c.amount else c.gotAmount end]]></field>
+					<field id="version" type="int" label="物料版本" visible="false" expression="c.version" />
+				</fields>
+				<DataSource><![CDATA[
+					from sa_BomDetail c
+				]]>
+				</DataSource>
+				<Where><![CDATA[
+					c.stBom=10 and {$fromTime}{$limitCommName}
+				]]>
+				</Where>
+			</property>
+			<property name="selectCross4LockBom.selectedList" label="生产占用物料" class="BomDetail" builder="SqlListBuilder">
+				<param name="cfg">
+					<attribute name="freezable" value="false" />
+					<attribute name="parameter" value="getParam4Restore"/>
+					<attribute name="row-fields" value="outstore;commNumber;commName;commOther" />
+					<attribute name="rowcount-fields" value="needAmount|sum;id|max" />
+				</param>
+				<fields>
+					<field id="id0" type="Long" label="选择" expression="c.ID" />
+					<field id="id" type="Long" label="物料ID" expression="c.ID" />
+					<field id="SellerId" type="Long" label="商家ID" visible="false" expression="c.sellerId" />
+					<field id="monthnum" type="String" label="订单月流水" expression="c.monthnum" />
+					<field id="commNumber" type="String" label="商品编号" expression="c.commNumber" />
+					<field id="commName" type="String" label="商品名称" expression="c.commName" />
+					<field id="commOther" type="String" label="商品名称其它" expression="c.commOther" />
+					<field id="outstore" type="String" label="出库分账" expression="null" />
+					<field id="amount" type="double" label="需求数量" expression="c.amount" />
+					<field id="gotAmount" type="double" label="配给数量" expression="c.gotAmount" />
+					<field id="notAmount" type="double" label="差额数量" expression="c.notAmount" />
+					<field id="needAmount" type="double" label="计算需求数量" ><![CDATA[case when(c.gotAmount<c.amount) then c.amount else c.gotAmount end]]></field>
+					<field id="version" type="int" label="物料版本" visible="false" expression="c.version" />
+				</fields>
+				<DataSource><![CDATA[
+					from sa_BomDetail c
+				]]>
+				</DataSource>
+				<Where><![CDATA[
+					c.stBom=20 and {$fromTime}{$limitCommName}
+				]]>
+				</Where>
+			</property>
+			<property name="selectCross4LockSend.selectedList" label="有货待发订单" class="OrderDetail" builder="SqlListBuilder">
+				<param name="cfg">
+					<attribute name="freezable" value="false" />
+					<attribute name="parameter" value="getParam4Restore"/>
+					<attribute name="row-fields" value="instore;commNumber;commName;commOther" />
+					<attribute name="rowcount-fields" value="amount|sum;id|max" />
+				</param>
+				<fields>
+					<field id="id0" type="Long" label="选择" expression="c.ID" />
+					<field id="id" type="Long" label="在途ID" expression="c.ID" />
+					<field id="SellerId" type="Long" label="商家ID" visible="false" expression="c.sellerId" />
+					<field id="number" type="String" label="订单号" expression="c.number" />
+					<field id="monthnum" type="String" label="月流水号" expression="c.monthnum" />
+					<field id="purName" type="String" label="采购名称" expression="c.purName" />
+					<field id="commNumber" type="String" label="商品编号" expression="c.commNumber" />
+					<field id="commName" type="String" label="商品名称" expression="c.commName" />
+					<field id="commOther" type="String" label="商品名称其它" expression="c.commOther" />
+					<field id="instore" type="String" label="入库分账" expression="c.instore" />
+					<field id="amount" type="Double" label="库存占用数量" expression="c.amount" >
+						<param name="footer">
+							<attribute name="type" value="SUM" />
+							<attribute name="expression" value="sum(c.amount)" />
+						</param>
+					</field>
+					<field id="arrangeType" type="String" label="发货方式" expression="c.arrangeType" />
+					<field id="upurchase" type="String" label="采购人" expression="c.upurchase" />
+					<field id="version" type="int" label="版本" visible="false" expression="c.version" />
+				</fields>
+				<DataSource><![CDATA[
+					from sa_OrderDetail c
+				]]>
+				</DataSource>
+				<Where><![CDATA[
+					c.stOrder>=30 and c.sendId=20 and c.receiptId=30 and c.stPurchase=30 and {$fromTime}{$limitCommName}
+				]]>
+				</Where>
+			</property>
+			<property name="EnoughCountList" name1="storeAll" label="够用数统计" class="StoreEnough" builder="EntityCrossBuilder">
+				<param name="cfg">
+					<attribute name="freezable" value="false" />
+					<attribute name="row-fields" value="instore;" />
+					<attribute name="rowcount-fields" value="commodity.id|min;storeAmount|sum;requestAmount|sum;onroadAmount|sum;orderAmount|sum;amount|sum;lockAmount|sum" />
+					<attribute name="info" value="够用数amount = storeAmount + requestAmount + onroadAmount - orderAmount - orderBomAmount - orderLockBomAmount" />
+					<attribute name="info" value="可用数 = storeAmount - 锁定数" />
+					<attribute name="info" value="订单数 = orderAmount + orderBomAmount + orderLockBomAmount" />
+					<attribute name="info" value="锁定数 = orderStoreLockUnsend + orderLockBomAmount" />
+				</param>
+				<property name="id" label="ID" builder="TextBuilder"/>
+				<property name="instore" label="入库分账" builder="TextBuilder"/>
+				<property name="commodity" class="Commodity"/>
+				<property name="commodity.id" label="序号" builder="TextBuilder"/>
+				<property name="storeAmount" label="库存数量" builder="TextBuilder"/>
+				<property name="requestAmount" label="请购数量" builder="TextBuilder"/>
+				<property name="onroadAmount" label="在途数量" builder="TextBuilder"/>
+				<property name="orderAmount" label="订单需求" builder="TextBuilder"/>
+				<property name="lockAmount" label="占用数量" builder="TextBuilder"/>
+				<property name="amount" label="够用数量" builder="TextBuilder"/>
+			</property>
+			<property name="selectFormer4Enough.selectedList" label="够用库存明细" class="StoreEnough" builder="SqlListBuilder">
+				<param name="cfg">
+					<attribute name="freezable" value="false" />
+					<attribute name="parameter" value="getParam4Restore"/>
+				</param>
+				<fields>
+					<field id="id" type="Long" label="选择" expression="c.ID" />
+					<field id="SellerId" type="Long" label="商家ID" visible="false" expression="c.sellerId" />
+					<field id="commNumber" type="String" label="商品编号" expression="c.commNumber" />
+					<field id="commName" type="String" label="商品名称" expression="c.commName" />
+					<field id="commOther" type="String" label="商品名称其它" expression="c.commOther" />
+					<field id="instore" type="String" label="入库分账" expression="c.instore" />
+					<field id="storeAmount" type="Double" label="库存数量" expression="c.storeAmount" />
+					<field id="requestAmount" type="Double" label="请购数量" expression="c.requestAmount" />
+					<field id="onroadAmount" type="Double" label="在途数量" expression="c.onroadAmount" />
+					<field id="orderAmount" type="Double" label="订单需求" expression="c.orderAmount" />
+					<field id="amount" type="Double" label="够用数量" expression="c.amount" />
+					<field id="lockAmount" type="Double" label="锁定库存数" expression="c.lockAmount" />
+					<field id="freeAmount" type="Double" label="可用库存数" expression="c.freeAmount" />
+					<field id="version" type="int" label="版本" visible="false" expression="c.version" />
+				</fields>
+				<DataSource><![CDATA[
+					from sa_StoreEnough c
+				]]>
+				</DataSource>
+				<Where><![CDATA[
+					{$limitCommName}
+				]]>
+				</Where>
+			</property>
+		</view>
+		<view name="MonthList" label="月出入库计算" builder="EditViewBuilder">
+			<param name="cfg">
+				<attribute name="freezable" value="false" />
+			</param>
+			<param name="menu">
+				<attribute name="text" value="手动计算当月出入库数" />
+				<attribute name="image" value="mily/img/color.gif" />
+				<param name="listener">
+					<attribute name="class" value="PostListener" />
+					<attribute name="setter" value="setMonth4CurrentDraw" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="SelectDomainListener" />
+					<attribute name="former" value="selectFormer4MonthPrevious" />
+					<attribute name="select" value="all" />
+					<attribute name="validate" value="false" />
+					<attribute name="view-name" value="selectFormer4MonthPrevious.selectedList" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="SelectDomainListener" />
+					<attribute name="former" value="selectFormer4MonthStart" />
+					<attribute name="select" value="all" />
+					<attribute name="validate" value="false" />
+					<attribute name="view-name" value="selectFormer4MonthStart.selectedList" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="ChangeBuilderListener" />
+					<attribute name="builder" value="SqlCrossBuilder" />
+					<attribute name="properties" value="selectCross4InStore.selectedList,selectCross4OutStore.selectedList,selectCross4OutBom.selectedList,selectCross4StoreEnd.selectedList" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="SelectCrossListener" />
+					<attribute name="view-name" value="selectCross4InStore.selectedList" />
+					<attribute name="former" value="selectCross4InStore" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="SelectCrossListener" />
+					<attribute name="view-name" value="selectCross4OutStore.selectedList" />
+					<attribute name="former" value="selectCross4OutStore" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="SelectCrossListener" />
+					<attribute name="view-name" value="selectCross4OutBom.selectedList" />
+					<attribute name="former" value="selectCross4OutBom" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="SelectCrossListener" />
+					<attribute name="view-name" value="selectCross4StoreEnd.selectedList" />
+					<attribute name="former" value="selectCross4StoreEnd" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="PostListener" />
+					<attribute name="method" value="setMonthCounts" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="RefreshListener" />
+					<attribute name="view-name" value="MonthCountList" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="SelectCrossListener" />
+					<attribute name="view-name" value="MonthCountList" />
+					<attribute name="former" value="selectCross4MonthCount" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="PostListener" />
+					<attribute name="method" value="getStoreMonths" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="ActionServiceListener" />
+					<attribute name="action" value="StoreTicket_Month" />
+					<attribute name="setter" value="setMonth4Service" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="RefreshListener" />
+					<attribute name="view-name" value="selectFormer4MonthStart.selectedList" />
+				</param>
+			</param>
+			<param name="menu">
+				<attribute name="text" value="定时月初计算上月出入库数" />
+				<attribute name="image" value="mily/img/color.gif" />
+				<param name="listener">
+					<attribute name="class" value="SelectDomainListener" />
+					<attribute name="former" value="selectFormer4MonthPrevious" />
+					<attribute name="select" value="all" />
+					<attribute name="validate" value="false" />
+					<attribute name="view-name" value="selectFormer4MonthPrevious.selectedList" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="SelectDomainListener" />
+					<attribute name="former" value="selectFormer4MonthStart" />
+					<attribute name="select" value="all" />
+					<attribute name="validate" value="false" />
+					<attribute name="view-name" value="selectFormer4MonthStart.selectedList" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="ChangeBuilderListener" />
+					<attribute name="builder" value="SqlCrossBuilder" />
+					<attribute name="properties" value="selectCross4InStore.selectedList,selectCross4OutStore.selectedList,selectCross4OutBom.selectedList,selectCross4StoreEnd.selectedList" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="SelectCrossListener" />
+					<attribute name="view-name" value="selectCross4InStore.selectedList" />
+					<attribute name="former" value="selectCross4InStore" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="SelectCrossListener" />
+					<attribute name="view-name" value="selectCross4OutStore.selectedList" />
+					<attribute name="former" value="selectCross4OutStore" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="SelectCrossListener" />
+					<attribute name="view-name" value="selectCross4OutBom.selectedList" />
+					<attribute name="former" value="selectCross4OutBom" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="SelectCrossListener" />
+					<attribute name="view-name" value="selectCross4StoreEnd.selectedList" />
+					<attribute name="former" value="selectCross4StoreEnd" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="PostListener" />
+					<attribute name="method" value="setMonthCounts" />
+				</param> 
+				<param name="listener">
+					<attribute name="class" value="RefreshListener" />
+					<attribute name="view-name" value="MonthCountList" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="SelectCrossListener" />
+					<attribute name="view-name" value="MonthCountList" />
+					<attribute name="former" value="selectCross4MonthCount" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="PostListener" />
+					<attribute name="method" value="getStoreMonths" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="ActionServiceListener" />
+					<attribute name="action" value="StoreTicket_Month" />
+					<attribute name="setter" value="setMonth4Service" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="RefreshListener" />
+					<attribute name="view-name" value="selectFormer4MonthStart.selectedList" />
+				</param>
+			</param>
+			<property name="selectCross4InStore.selectedList" label="月入库明细" class="OrderDetail" builder="SqlListBuilder">
+				<param name="cfg">
+					<attribute name="parameter" value="getParam4Month"/>
+					<attribute name="row-fields" value="instore;commNumber;commName;commOther" />
+					<attribute name="rowcount-fields" value="amount|sum;id|max" />
+				</param>
+				<fields>
+					<field id="id0" type="Long" label="选择" expression="c.id" />
+					<field id="id" type="Long" label="入库ID" expression="c.id" />
+					<field id="SellerId" type="Long" label="商家ID" visible="false" expression="c.sellerId" />
+					<field id="monthnum" type="String" label="月流水号" expression="c.monthnum" />
+					<field id="commNumber" type="String" label="商品编号" expression="c.commNumber" />
+					<field id="commName" type="String" label="商品名称" expression="c.commName" />
+					<field id="commOther" type="String" label="商品名称其它" expression="c.commOther" />
+					<field id="instore" type="String" label="入库分账" expression="c.instore" />
+					<field id="amount" type="Double" label="入库数量" expression="c.amount" />
+					<field id="price" type="Double" label="采购价" expression="c.price" />
+					<field id="version" type="int" label="版本" visible="false" expression="c.version" />
+				</fields>
+				<DataSource><![CDATA[
+					from sa_OrderDetail c
+				]]>
+				</DataSource>
+				<Where><![CDATA[
+					c.receiptId=30 and {$startDate}<c.receiptDate and c.receiptDate<{$endDate}
+				]]>
+				</Where>
+			</property>
+			<property name="selectCross4OutStore.selectedList" label="月出库订单明细" class="OrderDetail" builder="SqlListBuilder">
+				<param name="cfg">
+					<attribute name="parameter" value="getParam4Month"/>
+					<attribute name="row-fields" value="outstore;commNumber;commName;commOther" />
+					<attribute name="rowcount-fields" value="amount|sum;id|max" />
+				</param>
+				<fields>
+					<field id="id0" type="Long" label="选择" expression="c.id" />
+					<field id="id" type="Long" label="出库ID" expression="c.id" />
+					<field id="SellerId" type="Long" label="商家ID" visible="false" expression="c.sellerId" />
+					<field id="monthnum" type="String" label="月流水号" expression="c.monthnum" />
+					<field id="commNumber" type="String" label="商品编号" expression="c.commNumber" />
+					<field id="commName" type="String" label="商品名称" expression="c.commName" />
+					<field id="commOther" type="String" label="商品名称其它" expression="c.commOther" />
+					<field id="outstore" type="String" label="出库分账" expression="c.outstore" />
+					<field id="amount" type="Double" label="销售出货数量" expression="c.amount" />
+					<field id="price" type="Double" label="出库价" expression="c.price" />
+					<field id="version" type="int" label="版本" visible="false" expression="c.version" />
+				</fields>
+				<DataSource><![CDATA[
+					from sa_OrderDetail c
+				]]>
+				</DataSource>
+				<Where><![CDATA[
+					{$startDate}<c.sendDate and c.sendDate<{$endDate}
+				]]>
+				</Where>
+			</property>
+			<property name="selectCross4OutBom.selectedList" label="月出库物料明细" class="BomDetail" builder="SqlListBuilder">
+				<param name="cfg">
+					<attribute name="parameter" value="getParam4Month"/>
+					<attribute name="row-fields" value="outstore;commNumber;commName;commOther" />
+					<attribute name="rowcount-fields" value="OutstoreAmount|sum;id|max" />
+				</param>
+				<fields>
+					<field id="id0" type="Long" label="选择" expression="c.id" />
+					<field id="id" type="Long" label="出库ID" expression="c.id" />
+					<field id="SellerId" type="Long" label="商家ID" visible="false" expression="c.sellerId" />
+					<field id="monthnum" type="String" label="月流水号" expression="c.monthnum" />
+					<field id="commNumber" type="String" label="商品编号" expression="c.commNumber" />
+					<field id="commName" type="String" label="物料名称" expression="c.commName" />
+					<field id="commOther" type="String" label="商品名称其它" expression="c.commOther" />
+					<field id="outstore" type="String" label="出库分账" expression="null" />
+					<field id="ocuupyAmount" type="Double" label="领料数" expression="c.occupyAmount" />
+					<field id="OutstoreAmount" type="Double" label="出库数量" expression="c.outstore-c.instore" />
+					<field id="price" type="Double" label="采购价" expression="c.price" />
+					<field id="version" type="int" label="版本" visible="false" expression="c.version" />
+				</fields>
+				<DataSource><![CDATA[
+					from sa_BomDetail c
+				]]>
+				</DataSource>
+				<Where><![CDATA[
+					{$startDate}<c.sendDate and c.sendDate<{$endDate}
+				]]>
+				</Where>
+			</property>
+			<property name="selectCross4StoreEnd.selectedList" label="月终库存明细" class="OrderDetail" builder="SqlListBuilder">
+				<param name="cfg">
+					<attribute name="parameter" value="getParam4Month" />
+					<attribute name="row-fields" value="instore;commNumber;commName;commOther" />
+					<attribute name="rowcount-fields" value="amount|sum;id|max" />
+				</param>
+				<fields>
+					<field id="id0" type="Long" label="选择" expression="c.id" />
+					<field id="id" type="Long" label="库存ID" expression="c.id" />
+					<field id="SellerId" type="Long" label="商家ID" visible="false" expression="c.sellerId" />
+					<field id="monthnum" type="String" label="月流水号" expression="c.monthnum" />
+					<field id="commNumber" type="String" label="商品编号" expression="c.commNumber" />
+					<field id="commName" type="String" label="商品名称" expression="c.commName" />
+					<field id="commOther" type="String" label="商品名称其它" expression="c.commOther" />
+					<field id="instore" type="String" label="入库分账" expression="c.instore" />
+					<field id="amount" type="Double" label="库存数量" expression="c.amount" />
+					<field id="price" type="Double" label="采购价" expression="c.price" />
+					<field id="version" type="int" label="版本" visible="false" expression="c.version" />
+				</fields>
+				<DataSource><![CDATA[
+					from sa_OrderDetail c
+				]]>
+				</DataSource>
+				<Where><![CDATA[
+					c.amount>0 and c.receiptId=30
+				]]>
+				</Where>
+			</property>
+			<property name="selectFormer4MonthPrevious.selectedList" label="上次月终库存明细" class="StoreMonth" builder="SqlListBuilder">
+				<param name="cfg">
+					<attribute name="parameter" value="getParam4Month"/>
+				</param>
+				<fields>
+					<field id="id" type="Long" label="选择" expression="c.id" />
+					<field id="SellerId" type="Long" label="商家ID" visible="false" expression="c.sellerId" />
+					<field id="monthi" type="String" label="统计月份" expression="c.monthi" />
+					<field id="commNumber" type="String" label="商品编号" expression="c.commNumber" />
+					<field id="commName" type="String" label="商品名称" expression="c.commName" />
+					<field id="commOther" type="String" label="商品名称其它" expression="c.commOther" />
+					<field id="instore" type="String" label="入库分账" expression="c.instore" />
+					<field id="endAmount" type="Double" label="月终数量" expression="c.endAmount" />
+					<field id="endPrice" type="Double" label="月终单价" expression="c.endPrice" />
+					<field id="endMoney" type="Double" label="月终金额" expression="c.endMoney" />
+					<field id="version" type="int" label="版本" visible="false" expression="c.version" />
+				</fields>
+				<DataSource><![CDATA[
+					from sa_StoreMonth c
+				]]>
+				</DataSource>
+				<Where><![CDATA[
+					c.monthi={$previous}
+				]]>
+				</Where>
+			</property>
+			<property name="MonthCountList" label="出入数统计" class="StoreMonth" builder="EntityCrossBuilder">
+				<param name="cfg">
+					<attribute name="row-fields" value="instore;" />
+					<attribute name="rowcount-fields" value="commodity.id|min;startAmount|sum;inAmount|sum;outAmount|sum;endAmount|sum;startMoney|sum;inMoney|sum;outMoney|sum;endMoney|sum" />
+				</param>
+				<property name="id" label="ID" builder="TextBuilder"/>
+				<property name="instore" label="库存分账" builder="TextBuilder" />
+				<property name="commodity" class="Commodity"/>
+				<property name="commodity.id" label="序号" builder="TextBuilder"/>
+				<property name="startAmount" label="月初数量" builder="TextBuilder"/>
+				<property name="inAmount" label="入库数量" builder="TextBuilder"/>
+				<property name="outAmount" label="出库数量" builder="TextBuilder"/>
+				<property name="endAmount" label="月终数量" builder="TextBuilder"/>
+				<property name="startMoney" label="月初金额" builder="TextBuilder"/>
+				<property name="inMoney" label="入库金额" builder="TextBuilder"/>
+				<property name="outMoney" label="出库金额" builder="TextBuilder"/>
+				<property name="endMoney" label="月终金额" builder="TextBuilder"/>
+			</property>
+			<property name="selectFormer4MonthStart.selectedList" label="此次月初库存明细" class="StoreMonth" builder="SqlListBuilder">
+				<param name="cfg">
+					<attribute name="parameter" value="getParam4Month"/>
+				</param>
+				<fields>
+					<field id="id" type="Long" label="选择" expression="c.id" />
+					<field id="SellerId" type="Long" label="商家ID" visible="false" expression="c.sellerId" />
+					<field id="monthi" type="String" label="统计月份" expression="c.monthi" />
+					<field id="commNumber" type="String" label="商品编号" expression="c.commNumber" />
+					<field id="commName" type="String" label="商品名称" expression="c.commName" />
+					<field id="commOther" type="String" label="商品名称其它" expression="c.commOther" />
+					<field id="instore" type="String" label="入库分账" expression="c.instore" />
+					<field id="startAmount" type="Double" label="月初数量" expression="c.startAmount" />
+					<field id="startPrice" type="Double" label="月初价" expression="c.startPrice" />
+					<field id="startMoney" type="Double" label="月初金额" expression="c.startMoney" />
+					<field id="inAmount" type="Double" label="入库数量" expression="c.inAmount" />
+					<field id="inPrice" type="Double" label="入库价" expression="c.inPrice" />
+					<field id="inMoney" type="Double" label="入库金额" expression="c.inMoney" />
+					<field id="outAmount" type="Double" label="出库数量" expression="c.outAmount" />
+					<field id="outPrice" type="Double" label="出库价" expression="c.outPrice" />
+					<field id="outMoney" type="Double" label="出库金额" expression="c.outMoney" />
+					<field id="endAmount" type="Double" label="月终数量" expression="c.endAmount" />
+					<field id="endPrice" type="Double" label="月终价" expression="c.endPrice" />
+					<field id="endMoney" type="Double" label="月终金额" expression="c.endMoney" />
+					<field id="version" type="int" label="版本" visible="false" expression="c.version" />
+				</fields>
+				<DataSource><![CDATA[
+					from sa_StoreMonth c
+				]]>
+				</DataSource>
+				<Where><![CDATA[
+					c.monthi={$startDate}
+				]]>
+				</Where>
+			</property>
+		</view>
+		<view name="InExtraList" label="任意入库" builder="EditViewBuilder">
+			<param name="cfg">
+				<attribute name="before" value="beforeInstoreExtra" />
+				<attribute name="freezable" value="false" />
+			</param>
+			<param name="menu">
+				<attribute name="text" value="添加备货库存" />
+				<attribute name="image" value="mily/img/color.gif" />
+				<param name="listener">
+					<attribute name="class" value="SelectDomainListener" />
+					<attribute name="former" value="selectFormer4Purchase" />
+					<attribute name="select" value="all" />
+					<attribute name="validate" value="false" />
+					<attribute name="view-name" value="selectedList" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="PostListener" />
+					<attribute name="method" value="setInExtraDetailList" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="ChangeBuilderListener" />
+					<attribute name="builder" value="EntityCrossBuilder" />
+					<attribute name="properties" value="detailList" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="SelectCrossListener" />
+					<attribute name="view-name" value="detailList" />
+					<attribute name="former" value="selectCross4Store" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="PostListener" />
+					<attribute name="method" value="getInExtraFromCross" />
+				</param>
+			</param>
+			<param name="menu">
+				<attribute name="text" value="添加备货库存action" />
+				<attribute name="image" value="mily/img/color.gif" />
+				<param name="listener">
+					<attribute name="class" value="SelectDomainListener" />
+					<attribute name="former" value="selectFormer4Purchase" />
+					<attribute name="select" value="all" />
+					<attribute name="validate" value="false" />
+					<attribute name="view-name" value="selectedList" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="PostListener" />
+					<attribute name="method" value="setInExtraDetailList" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="ChangeBuilderListener" />
+					<attribute name="builder" value="EntityCrossBuilder" />
+					<attribute name="properties" value="detailList" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="SelectCrossListener" />
+					<attribute name="view-name" value="detailList" />
+					<attribute name="former" value="selectCross4Store" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="PostListener" />
+					<attribute name="method" value="getInExtraFromCross" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="ActionServiceListener" />
+					<attribute name="message" value="确认新增库存明细数量" />
+					<param name="action">
+						<attribute name="action" value="StoreTicket_Extra" />
+						<attribute name="setter" value="setInExtra4Service" />
+						<attribute name="message" value="新增导入库存明细"/>
+						<param name="state">
+							<attribute name="property" value="CreateList" />
+							<attribute name="id" value="30" />
+							<attribute name="name" value="导入库存" />
+							<attribute name="method" value="setReceiptState" />
+						</param>
+						<param name="state">
+							<attribute name="property" value="CreateList" />
+							<attribute name="id" value="30" />
+							<attribute name="method" value="setPurchaseState" />
+						</param>
+						<param name="user">
+							<attribute name="property" value="CreateList" />
+							<attribute name="method" value="setReceiptUser" />
+						</param>
+					</param>
+					<param name="action">
+						<attribute name="action" value="ReceiptTicket_Effect"/>
+						<attribute name="setter" value="setExtraCount4Service"/>
+						<attribute name="message" value="事务后重计算库存量"/>
+					</param>
+				</param>
+				<param name="listener">
+					<attribute name="class" value="RefreshListener" />
+					<attribute name="view-name" value="selectedList" />
+				</param>
+			</param>
+			<property name="detailList" label="待入库" class="OrderDetail" builder="AuditListBuilder">
+				<param name="cfg">
+					<attribute name="row-fields" value="instore;purchaseTicket.number;" />
+					<attribute name="col-fields" value="commodity.id;id" />
+					<attribute name="cross" value="amount|sum" />
+					<attribute name="rowcount-fields" value="commodity.id|min;amount|sum;receiptTicket.storeMoney|sum" />
+				</param>
+				<property name="id" label="待入库ID" builder="TextBuilder"/>
+				<property name="monthnum" label="月流水号" builder="TextBuilder"/>
+				<property name="stPurchase" label="采购状态" builder="TextBuilder"/>
+				<property name="receiptId" label="收货状态" builder="TextBuilder"/>
+				<property name="commodity.id" label="额外序号" builder="TextBuilder"/>
+				<property name="commodity" class="Commodity"/>
+				<property name="amount" label="入库数量|加后库存数" builder="TextBuilder"/>
+				<property name="OrderTicket.number" label="订单号" builder="TextBuilder"/>
+				<property name="purchaseTicket.number" label="采购单号" builder="TextBuilder"/>
+				<property name="price" label="采购价" builder="TextBuilder"/>
+				<property name="instore" label="入库分账" builder="TextBuilder"/>
+				<property name="receiptTicket.storePrice" label="入库成本价格" builder="TextBuilder"/>
+				<property name="receiptTicket.storeMoney" label="入库成本金额" builder="TextBuilder"/>
+			</property>
+			<property name="selectedList" label="现有库存" class="OrderDetail" builder="SqlListBuilder">
+				<param name="menu">
+					<attribute name="text" value="选择库存" />
+					<attribute name="image" value="mily/img/color.gif" />
+					<attribute name="show" value="false" />
+					<param name="listener">
+						<attribute name="class" value="SelectDomainListener" />
+						<attribute name="former" value="selectFormer4Purchase" />
+					</param>
+				</param>
+				<fields>
+					<field id="id0" type="Long" label="选择" expression="c.ID" />
+					<field id="id" type="Long" label="库存ID" expression="c.ID" />
+					<field id="SellerId" type="Long" label="商家ID" visible="false" expression="c.sellerId" />
+					<field id="monthnum" type="String" label="月流水号" expression="c.monthnum" />
+					<field id="commNumber" type="String" label="商品编号" expression="c.commNumber" />
+					<field id="commName" type="String" label="商品名称" expression="c.commName" />
+					<field id="instore" type="String" label="库存分账" expression="c.instore" />
+					<field id="amount" type="Double" label="库存数量" expression="c.amount" >
+						<param name="footer">
+							<attribute name="type" value="SUM" />
+							<attribute name="expression" value="sum(c.amount)" />
+						</param>
+					</field>
+					<field id="price" type="Double" label="采购价" expression="c.price" />
+					<field id="pmoney" type="Double" label="采购合价" expression="c.pmoney" />
+					<field id="storePrice" type="Double" label="库存单价" expression="c.storePrice" />
+					<field id="purName" type="String" label="采购名称" expression="c.purName" />
+					<field id="receiptName" type="String" label="收货名称" expression="c.receiptName" />
+					<field id="modifytime" type="DateTime" label="编辑时间" expression="c.modifytime" />
+					<field id="version" type="int" label="版本" visible="false" expression="c.version" />
+				</fields>
+				<DataSource><![CDATA[
+					from sa_OrderDetail c
+				]]>
+				</DataSource>
+				<Where><![CDATA[
+					c.receiptId=30 and c.stPurchase>0 and c.stOrder=0 and c.arrangeType='普通'
+				]]>
+				</Where>
+				<OrderBy><![CDATA[
+					c.commName,c.purName,c.id
+				]]>
+				</OrderBy>
+			</property>
+		</view>
+		<view name="OutExtraList" label="任意出库" builder="EditViewBuilder">
+			<param name="cfg">
+				<attribute name="before" value="beforeOutstoreExtra" />
+				<attribute name="freezable" value="false" />
+			</param>
+			<param name="menu">
+				<attribute name="text" value="减少备货库存" />
+				<attribute name="image" value="mily/img/color.gif" />
+				<param name="listener">
+					<attribute name="class" value="SelectDomainListener" />
+					<attribute name="former" value="selectFormer4Purchase" />
+					<attribute name="select" value="all" />
+					<attribute name="validate" value="false" />
+					<attribute name="view-name" value="selectedList" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="PostListener" />
+					<attribute name="method" value="setOutExtraDetailList" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="ChangeBuilderListener" />
+					<attribute name="builder" value="EntityCrossBuilder" />
+					<attribute name="properties" value="detailList" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="SelectCrossListener" />
+					<attribute name="view-name" value="detailList" />
+					<attribute name="former" value="selectCross4Store" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="PostListener" />
+					<attribute name="method" value="getOutExtraFromCross" />
+				</param>
+			</param>
+			<param name="menu">
+				<attribute name="text" value="减少备货库存action" />
+				<attribute name="image" value="mily/img/color.gif" />
+				<param name="listener">
+					<attribute name="class" value="SelectDomainListener" />
+					<attribute name="former" value="selectFormer4Purchase" />
+					<attribute name="select" value="all" />
+					<attribute name="validate" value="false" />
+					<attribute name="view-name" value="selectedList" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="PostListener" />
+					<attribute name="method" value="setOutExtraDetailList" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="ChangeBuilderListener" />
+					<attribute name="builder" value="EntityCrossBuilder" />
+					<attribute name="properties" value="detailList" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="SelectCrossListener" />
+					<attribute name="view-name" value="detailList" />
+					<attribute name="former" value="selectCross4Store" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="PostListener" />
+					<attribute name="method" value="getOutExtraFromCross" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="ActionServiceListener" />
+					<attribute name="message" value="减少备货库存" />
+					<param name="action">
+						<attribute name="action" value="StoreTicket_Extra" />
+						<attribute name="setter" value="setOutExtra4Service" />
+						<attribute name="message" value="减少备货库存"/>
+						<param name="state">
+							<attribute name="property" value="DeleteList" />
+							<attribute name="id" value="0" />
+							<attribute name="name" value="库存出库完失效" />
+							<attribute name="method" value="setPurchaseState" />
+						</param>
+					</param>
+					<param name="action">
+						<attribute name="action" value="ReceiptTicket_Effect"/>
+						<attribute name="setter" value="setExtraCount4Service"/>
+						<attribute name="message" value="备货库存减少重计算库存数、够用数"/>
+					</param>
+				</param>
+				<param name="listener">
+					<attribute name="class" value="RefreshListener" />
+					<attribute name="view-name" value="selectedList" />
+				</param>
+			</param>
+			<property name="detailList" label="待出库" class="OrderDetail" builder="AuditListBuilder">
+				<param name="cfg">
+					<attribute name="row-fields" value="instore;" />
+					<attribute name="col-fields" value="commodity.id;id" />
+					<attribute name="cross" value="amount|sum" />
+					<attribute name="freezable" value="true" />
+				</param>
+				<property name="id" label="库存ID" builder="TextBuilder"/>
+				<property name="monthnum" label="月流水号" builder="TextBuilder"/>
+				<property name="commodity.id" label="额外序号" builder="TextBuilder"/>
+				<property name="commodity" class="Commodity"/>
+				<property name="price" label="采购价" builder="TextBuilder"/>
+				<property name="instore" label="入库分账" builder="TextBuilder"/>
+				<property name="amount" label="出库数量" builder="TextBuilder"/>
+			</property>
+			<property name="selfForm" Class="StoreTicketForm" builder="ViewFieldBuilder">
+				<param name="cfg">
+					<attribute name="view-name" value="InExtraList.selectedList"/>
+					<attribute name="position" value="row"/>
+				</param>
+			</property>
+		</view>
+		<view name="InAgentList" label="添加生产留用" builder="EditViewBuilder">
+			<param name="cfg">
+				<attribute name="before" value="beforeInstoreAgent" />
+				<attribute name="freezable" value="false" />
+			</param>
+			<param name="menu">
+				<attribute name="text" value="添加留用台账" />
+				<attribute name="image" value="mily/img/color.gif" />
+				<param name="listener">
+					<attribute name="class" value="SelectDomainListener" />
+					<attribute name="former" value="selectFormer4Bom" />
+					<attribute name="select" value="all" />
+					<attribute name="validate" value="false" />
+					<attribute name="view-name" value="selectFormer4Bom.selectedList" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="PostListener" />
+					<attribute name="method" value="setInAgentList" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="ChangeBuilderListener" />
+					<attribute name="builder" value="EntityCrossBuilder" />
+					<attribute name="properties" value="agentList" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="SelectCrossListener" />
+					<attribute name="view-name" value="agentList" />
+					<attribute name="former" value="selectCross4Agent" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="PostListener" />
+					<attribute name="method" value="getInAgentFromCross" />
+				</param>
+			</param>
+			<param name="menu">
+				<attribute name="text" value="添加留用台账action" />
+				<attribute name="image" value="mily/img/color.gif" />
+				<param name="listener">
+					<attribute name="class" value="SelectDomainListener" />
+					<attribute name="former" value="selectFormer4Bom" />
+					<attribute name="select" value="all" />
+					<attribute name="validate" value="false" />
+					<attribute name="view-name" value="selectFormer4Bom.selectedList" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="PostListener" />
+					<attribute name="method" value="setInAgentList" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="ChangeBuilderListener" />
+					<attribute name="builder" value="EntityCrossBuilder" />
+					<attribute name="properties" value="agentList" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="SelectCrossListener" />
+					<attribute name="view-name" value="agentList" />
+					<attribute name="former" value="selectCross4Agent" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="PostListener" />
+					<attribute name="method" value="getInAgentFromCross" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="ActionServiceListener" />
+					<attribute name="message" value="确认新增库存明细数量" />
+					<param name="action">
+						<attribute name="action" value="BomTicket_Save" />
+						<attribute name="setter" value="setAgentAdd4Service" />
+						<attribute name="message" value="新增台账库存明细"/>
+						<param name="state">
+							<attribute name="id" value="30" />
+							<attribute name="method" value="setAgentState" />
+							<attribute name="property" value="CreateList" />
+						</param>
+					</param>
+				</param>
+				<param name="listener">
+					<attribute name="class" value="RefreshListener" />
+					<attribute name="view-name" value="selectFormer4Bom.selectedList" />
+				</param>
+			</param>
+			<property name="BomDetail.Supplier.name" label="生产方" builder="TextBuilder"/>
+			<property name="agentList" label="待入库" class="BomDetail" builder="AuditListBuilder">
+				<param name="cfg">
+					<attribute name="row-fields" value="" />
+					<attribute name="col-fields" value="commodity.id;id" />
+					<attribute name="cross" value="bomTicket.keepAmount|sum" />
+					<attribute name="rowcount-fields" value="commodity.id|min;bomTicket.keepAmount|sum;money|sum" />
+				</param>
+				<property name="id" label="待入库ID" builder="TextBuilder"/>
+				<property name="stBom" label="台账状态" builder="TextBuilder"/>
+				<property name="commodity.id" label="额外序号" builder="TextBuilder"/>
+				<property name="commodity" class="Commodity"/>
+				<property name="price" label="成本价" builder="TextBuilder"/>
+				<property name="bomTicket.keepAmount" label="入库数量|加后库存数" builder="TextBuilder"/>
+				<property name="money" label="成本金额" builder="TextBuilder"/>
+			</property>
+			<property name="selectFormer4Bom.selectedList" label="现有库存" class="BomDetail" builder="SqlListBuilder">
+				<param name="cfg">
+					<attribute name="parameter" value="getParam4Agent"/>
+				</param>
+				<fields>
+					<field id="id" type="Long" label="选择" expression="c.ID" />
+					<field id="id0" type="Long" label="台账ID" expression="c.ID" />
+					<field id="SellerId" type="Long" label="商家ID" visible="false" expression="c.sellerId" />
+					<field id="supplierName" type="String" label="生产方" expression="c.supplierName" />
+					<field id="commNumber" type="String" label="商品编号" expression="c.commNumber" />
+					<field id="commName" type="String" label="商品名称" expression="c.commName" />
+					<field id="keepAmount" type="Double" label="留用数量" expression="c.keepAmount" >
+						<param name="footer">
+							<attribute name="type" value="SUM" />
+							<attribute name="expression" value="sum(c.keepAmount)" />
+						</param>
+					</field>
+					<field id="price" type="Double" label="单价" expression="c.price" />
+					<field id="version" type="int" label="版本" visible="false" expression="c.version" />
+				</fields>
+				<DataSource><![CDATA[
+					from sa_BomDetail c
+				]]>
+				</DataSource>
+				<Where><![CDATA[
+					c.stBom>0 and c.keepAmount>0 and c.supplierName='{$agent}' and {$limitCommName}
+				]]>
+				</Where>
+				<OrderBy><![CDATA[
+					c.id desc
+				]]>
+				</OrderBy>
+			</property>
+		</view>
+		<view name="OutAgentList" label="减少生产留用" builder="EditViewBuilder">
+			<param name="cfg">
+				<attribute name="before" value="beforeOutstoreAgent" />
+				<attribute name="freezable" value="false" />
+			</param>
+			<param name="menu">
+				<attribute name="text" value="减少留用台账" />
+				<attribute name="image" value="mily/img/color.gif" />
+				<param name="listener">
+					<attribute name="class" value="SelectDomainListener" />
+					<attribute name="former" value="selectFormer4Bom" />
+					<attribute name="select" value="all" />
+					<attribute name="validate" value="false" />
+					<attribute name="view-name" value="selectFormer4Bom.selectedList" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="PostListener" />
+					<attribute name="method" value="setOutAgentList" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="ChangeBuilderListener" />
+					<attribute name="builder" value="EntityCrossBuilder" />
+					<attribute name="properties" value="agentList" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="SelectCrossListener" />
+					<attribute name="view-name" value="agentList" />
+					<attribute name="former" value="selectCross4Agent" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="PostListener" />
+					<attribute name="method" value="getOutAgentFromCross" />
+				</param>
+			</param>
+			<param name="menu">
+				<attribute name="text" value="减少留用台账action" />
+				<attribute name="image" value="mily/img/color.gif" />
+				<param name="listener">
+					<attribute name="class" value="SelectDomainListener" />
+					<attribute name="former" value="selectFormer4Bom" />
+					<attribute name="select" value="all" />
+					<attribute name="validate" value="false" />
+					<attribute name="view-name" value="selectFormer4Bom.selectedList" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="PostListener" />
+					<attribute name="method" value="setOutAgentList" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="ChangeBuilderListener" />
+					<attribute name="builder" value="EntityCrossBuilder" />
+					<attribute name="properties" value="agentList" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="SelectCrossListener" />
+					<attribute name="view-name" value="agentList" />
+					<attribute name="former" value="selectCross4Agent" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="PostListener" />
+					<attribute name="method" value="getOutAgentFromCross" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="ActionServiceListener" />
+					<attribute name="message" value="减少备货车间台账" />
+					<param name="action">
+						<attribute name="action" value="BomTicket_Save" />
+						<attribute name="setter" value="setAgentAdd4Service" />
+						<attribute name="message" value="减少备货车间台账"/>
+					</param>
+				</param>
+				<param name="listener">
+					<attribute name="class" value="RefreshListener" />
+					<attribute name="view-name" value="selectFormer4Bom.selectedList" />
+				</param>
+			</param>
+			<property name="BomDetail.Supplier.name" label="生产方" builder="TextBuilder"/>
+			<property name="agentList" label="待出库" class="BomDetail" builder="AuditListBuilder">
+				<param name="cfg">
+					<attribute name="row-fields" value="" />
+					<attribute name="col-fields" value="commodity.id;id" />
+					<attribute name="cross" value="bomTicket.keepAmount|sum" />
+					<attribute name="freezable" value="true" />
+				</param>
+				<property name="id" label="库存ID" builder="TextBuilder"/>
+				<property name="commodity.id" label="额外序号" builder="TextBuilder"/>
+				<property name="commodity" class="Commodity"/>
+				<property name="price" label="单价" builder="TextBuilder"/>
+				<property name="bomTicket.keepAmount" label="出库数量" builder="TextBuilder"/>
+			</property>
+			<property name="selectFormer4Bom.selectedList" label="现有库存" class="BomDetail" builder="SqlListBuilder">
+				<param name="cfg">
+					<attribute name="parameter" value="getParam4Agent"/>
+				</param>
+				<fields>
+					<field id="id" type="Long" label="选择" expression="c.ID" />
+					<field id="id0" type="Long" label="库存ID" expression="c.ID" />
+					<field id="SellerId" type="Long" label="商家ID" visible="false" expression="c.sellerId" />
+					<field id="supplierName" type="String" label="生产方" expression="c.supplierName" />
+					<field id="commNumber" type="String" label="商品编号" expression="c.commNumber" />
+					<field id="commName" type="String" label="商品名称" expression="c.commName" />
+					<field id="keepAmount" type="Double" label="库存数量" expression="c.keepAmount" >
+						<param name="footer">
+							<attribute name="type" value="SUM" />
+							<attribute name="expression" value="sum(c.keepAmount)" />
+						</param>
+					</field>
+					<field id="price" type="Double" label="单价" expression="c.price" />
+					<field id="version" type="int" label="版本" visible="false" expression="c.version" />
+				</fields>
+				<DataSource><![CDATA[
+					from sa_BomDetail c
+				]]>
+				</DataSource>
+				<Where><![CDATA[
+					c.stBom>0 and c.keepAmount>0 and c.supplierName='{$agent}' and {$limitCommName}
+				]]>
+				</Where>
+				<OrderBy><![CDATA[
+					c.id desc
+				]]>
+				</OrderBy>
+			</property>
+		</view>
+		<view name="StoreAgentQuery" builder="EditViewBuilder">
+			<param name="menu">
+				<attribute name="text" value="选择台账" />
+				<attribute name="image" value="mily/img/color.gif" />
+				<attribute name="show" value="false" />
+				<param name="listener">
+					<attribute name="class" value="SelectDomainListener" />
+					<attribute name="former" value="selectFormer4Bom" />
+					<attribute name="view-name" value="selectedList" />
+				</param>
+			</param>
+			<property name="selectedList" class="BomDetail" builder="SqlListBuilder">
+				<fields>
+					<field id="id" type="Long" label="选择" expression="s.ID" />
+					<field id="id0" type="Long" label="台账Id" expression="s.ID" />
+					<field id="SellerId" type="Long" label="商家ID" visible="false" expression="s.sellerId" />
+					<field id="supplierName" type="String" label="生产方" expression="s.supplierName" />
+					<field id="monthnum" type="String" label="月流水号" expression="s.monthnum" />
+					<field id="commNumber" type="String" label="商品编号" expression="s.commNumber" />
+					<field id="commName" type="String" label="商品名称" expression="s.commName" />
+					<field id="keepAmount" type="double" label="留用数量" expression="s.keepAmount" />
+					<field id="price" type="double" label="单价" expression="s.price" />
+					<field id="version" type="int" label="版本" visible="false" expression="s.version" />
+				</fields>
+				<DataSource><![CDATA[
+					from sa_BomDetail s
+				]]>
+				</DataSource>
+				<Where><![CDATA[
+					s.stBom=30 and s.keepAmount>0
+				]]>
+				</Where>
+			</property>
+		</view>
+		<view name="StoreItemQuery" label0="本商家库存查询" builder="EditViewBuilder">
+			<property name="selectedList" class="StoreItem" builder="SqlListBuilder">
+				<fields>
+					<field id="id" type="Long" label="选择" expression="s.ID" />
+					<field id="SellerId" type="Long" label="商家ID" visible="false" expression="s.sellerId" />
+					<field id="instore" type="String" label="库存分账" expression="s.instore" />
+					<field id="commNumber" type="String" label="商品编号" expression="s.commNumber" />
+					<field id="commName" type="String" label="商品名称" expression="s.commName" />
+					<field id="price" type="double" label="成本价" expression="s.price" />
+					<field id="money" type="double" label="成本合价" expression="s.money" />
+					<field id="amount" type="double" label="库存数量" expression="s.amount" />
+					<field id="a01" type="double" label="库存01" expression="s.a01" >
+						<param name="format">
+							<attribute name="properties" value="c01,a01" />
+							<attribute name="method" value="getColumnStore" />
+						</param>
+					</field>
+					<field id="a02" type="double" label="库存02" expression="s.a02" >
+						<param name="format">
+							<attribute name="properties" value="c02,a02" />
+							<attribute name="method" value="getColumnStore" />
+						</param>
+					</field>
+					<field id="a03" type="double" label="库存03" expression="s.a03" >
+						<param name="format">
+							<attribute name="properties" value="c03,a03" />
+							<attribute name="method" value="getColumnStore" />
+						</param>
+					</field>
+					<field id="a04" type="double" label="库存04" expression="s.a04" >
+						<param name="format">
+							<attribute name="properties" value="c04,a04" />
+							<attribute name="method" value="getColumnStore" />
+						</param>
+					</field>
+					<field id="a05" type="double" label="库存05" expression="s.a05" >
+						<param name="format">
+							<attribute name="properties" value="c05,a05" />
+							<attribute name="method" value="getColumnStore" />
+						</param>
+					</field>
+					<field id="a06" type="double" label="库存06" expression="s.a06" >
+						<param name="format">
+							<attribute name="properties" value="c06,a06" />
+							<attribute name="method" value="getColumnStore" />
+						</param>
+					</field>
+					<field id="a07" type="double" label="库存07" expression="s.a07" >
+						<param name="format">
+							<attribute name="properties" value="c07,a07" />
+							<attribute name="method" value="getColumnStore" />
+						</param>
+					</field>
+					<field id="a08" type="double" label="库存08" expression="s.a08" >
+						<param name="format">
+							<attribute name="properties" value="c08,a08" />
+							<attribute name="method" value="getColumnStore" />
+						</param>
+					</field>
+					<field id="a09" type="double" label="库存09" expression="s.a09" >
+						<param name="format">
+							<attribute name="properties" value="c09,a09" />
+							<attribute name="method" value="getColumnStore" />
+						</param>
+					</field>
+					<field id="a10" type="double" label="库存10" expression="s.a10" >
+						<param name="format">
+							<attribute name="properties" value="c10,a10" />
+							<attribute name="method" value="getColumnStore" />
+						</param>
+					</field>
+					<field id="a11" type="double" label="库存11" expression="s.a11" >
+						<param name="format">
+							<attribute name="properties" value="c11,a11" />
+							<attribute name="method" value="getColumnStore" />
+						</param>
+					</field>
+					<field id="a12" type="double" label="库存12" expression="s.a12" >
+						<param name="format">
+							<attribute name="properties" value="c12,a12" />
+							<attribute name="method" value="getColumnStore" />
+						</param>
+					</field>
+					<field id="modifytime" type="DateTime" label="编辑时间" expression="s.modifytime" />
+					<field id="c01" type="String" label="名称01" visible="false" expression="s.c01" />
+					<field id="c02" type="String" label="名称02" visible="false" expression="s.c02" />
+					<field id="c03" type="String" label="名称03" visible="false" expression="s.c03" />
+					<field id="c04" type="String" label="名称04" visible="false" expression="s.c04" />
+					<field id="c05" type="String" label="名称05" visible="false" expression="s.c05" />
+					<field id="c06" type="String" label="名称06" visible="false" expression="s.c06" />
+					<field id="c07" type="String" label="名称07" visible="false" expression="s.c07" />
+					<field id="c08" type="String" label="名称08" visible="false" expression="s.c08" />
+					<field id="c09" type="String" label="名称09" visible="false" expression="s.c09" />
+					<field id="c10" type="String" label="名称10" visible="false" expression="s.c10" />
+					<field id="c11" type="String" label="名称11" visible="false" expression="s.c11" />
+					<field id="c12" type="String" label="名称12" visible="false" expression="s.c12" />
+					<field id="version" type="int" label="版本" visible="false" expression="s.version" />
+				</fields>
+				<DataSource><![CDATA[
+					from sa_StoreItem s
+				]]>
+				</DataSource>
+			</property>
+		</view>
+		<view name="StoreCompanyQuery" label0="分公司库存查询" builder="EditViewBuilder">
+			<property name="selectedList" class="StoreItem" builder="SqlListBuilder">
+				<fields>
+					<field id="id" type="Long" label="选择" expression="s.ID" />
+					<field id="SellerId" type="Long" label="商家ID" visible="false" expression="sub.sellerId" />
+					<field id="subName" type="String" label="分公司名称" expression="sub.name" />
+					<field id="commNumber" type="String" label="商品编号" expression="s.commNumber" />
+					<field id="commName" type="String" label="商品名称" expression="s.commName" />
+					<field id="price" type="double" label="成本价" expression="s.price" />
+					<field id="money" type="double" label="成本合价" expression="s.money" />
+					<field id="amount" type="double" label="库存数量" expression="s.amount" />
+					<field id="a01" type="double" label="库存01" expression="s.a01" >
+						<param name="format">
+							<attribute name="properties" value="c01,a01" />
+							<attribute name="method" value="getColumnStore" />
+						</param>
+					</field>
+					<field id="a02" type="double" label="库存02" expression="s.a02" >
+						<param name="format">
+							<attribute name="properties" value="c02,a02" />
+							<attribute name="method" value="getColumnStore" />
+						</param>
+					</field>
+					<field id="a03" type="double" label="库存03" expression="s.a03" >
+						<param name="format">
+							<attribute name="properties" value="c03,a03" />
+							<attribute name="method" value="getColumnStore" />
+						</param>
+					</field>
+					<field id="a04" type="double" label="库存04" expression="s.a04" >
+						<param name="format">
+							<attribute name="properties" value="c04,a04" />
+							<attribute name="method" value="getColumnStore" />
+						</param>
+					</field>
+					<field id="a05" type="double" label="库存05" expression="s.a05" >
+						<param name="format">
+							<attribute name="properties" value="c05,a05" />
+							<attribute name="method" value="getColumnStore" />
+						</param>
+					</field>
+					<field id="a06" type="double" label="库存06" expression="s.a06" >
+						<param name="format">
+							<attribute name="properties" value="c06,a06" />
+							<attribute name="method" value="getColumnStore" />
+						</param>
+					</field>
+					<field id="a07" type="double" label="库存07" expression="s.a07" >
+						<param name="format">
+							<attribute name="properties" value="c07,a07" />
+							<attribute name="method" value="getColumnStore" />
+						</param>
+					</field>
+					<field id="a08" type="double" label="库存08" expression="s.a08" >
+						<param name="format">
+							<attribute name="properties" value="c08,a08" />
+							<attribute name="method" value="getColumnStore" />
+						</param>
+					</field>
+					<field id="a09" type="double" label="库存09" expression="s.a09" >
+						<param name="format">
+							<attribute name="properties" value="c09,a09" />
+							<attribute name="method" value="getColumnStore" />
+						</param>
+					</field>
+					<field id="a10" type="double" label="库存10" expression="s.a10" >
+						<param name="format">
+							<attribute name="properties" value="c10,a10" />
+							<attribute name="method" value="getColumnStore" />
+						</param>
+					</field>
+					<field id="a11" type="double" label="库存11" expression="s.a11" >
+						<param name="format">
+							<attribute name="properties" value="c11,a11" />
+							<attribute name="method" value="getColumnStore" />
+						</param>
+					</field>
+					<field id="a12" type="double" label="库存12" expression="s.a12" >
+						<param name="format">
+							<attribute name="properties" value="c12,a12" />
+							<attribute name="method" value="getColumnStore" />
+						</param>
+					</field>
+					
+					<field id="c01" type="String" label="名称01" visible="false" expression="s.c01" />
+					<field id="c02" type="String" label="名称02" visible="false" expression="s.c02" />
+					<field id="c03" type="String" label="名称03" visible="false" expression="s.c03" />
+					<field id="c04" type="String" label="名称04" visible="false" expression="s.c04" />
+					<field id="c05" type="String" label="名称05" visible="false" expression="s.c05" />
+					<field id="c06" type="String" label="名称06" visible="false" expression="s.c06" />
+					<field id="c07" type="String" label="名称07" visible="false" expression="s.c07" />
+					<field id="c08" type="String" label="名称08" visible="false" expression="s.c08" />
+					<field id="c09" type="String" label="名称09" visible="false" expression="s.c09" />
+					<field id="c10" type="String" label="名称10" visible="false" expression="s.c10" />
+					<field id="c11" type="String" label="名称11" visible="false" expression="s.c11" />
+					<field id="c12" type="String" label="名称12" visible="false" expression="s.c12" />
+					<field id="version" type="int" label="版本" visible="false" expression="s.version" />
+				</fields>
+				<DataSource><![CDATA[
+					from bs_Company sub
+					join sa_StoreItem s on s.sellerId=sub.fromSellerId and sub.dtype=3
+				]]>
+				</DataSource>
+				<OrderBy><![CDATA[
+					sub.id, s.id
+				]]>
+				</OrderBy>
+			</property>
+		</view>
+		<view name="StoreMonthQuery" builder="EditViewBuilder">
+			<param name="menu">
+				<attribute name="text" value="即刻计算当月出入库数" />
+				<attribute name="image" value="mily/img/color.gif" />
+				<param name="listener">
+					<attribute name="class" value="ForwardListener" />
+					<attribute name="view-name" value="MonthList" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="PostListener" />
+					<attribute name="setter" value="setMonthCurrentFirer" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="ForwardListener" />
+					<attribute name="view-name" value="StoreMonthQuery" />
+				</param>
+			</param>
+			<property name="selectedList" class="StoreMonth" builder="SqlListBuilder">
+				<fields>
+					<field id="id" type="Long" label="选择" expression="c.id" />
+					<field id="SellerId" type="Long" label="商家ID" visible="false" expression="c.sellerId" />
+					<field id="monthi" type="String" label="统计月份" expression="c.monthi" />
+					<field id="commNumber" type="String" label="商品编号" expression="c.commNumber" />
+					<field id="commName" type="String" label="商品名称" expression="c.commName" />
+					<field id="startAmount" type="Double" label="月初数量" expression="c.startAmount" />
+					<field id="startPrice" type="Double" label="月初价" expression="c.startPrice" />
+					<field id="startMoney" type="Double" label="月初金额" expression="c.startMoney" />
+					<field id="inAmount" type="Double" label="入库数量" expression="c.inAmount" />
+					<field id="outAmount" type="Double" label="出库数量" expression="c.outAmount" />
+					<field id="endAmount" type="Double" label="月终数量" expression="c.endAmount" />
+					<field id="inPrice" type="Double" label="入库价" expression="c.inPrice" />
+					<field id="outPrice" type="Double" label="出库价" expression="c.outPrice" />
+					<field id="endPrice" type="Double" label="月终价" expression="c.endPrice" />
+					<field id="inMoney" type="Double" label="入库金额" expression="c.inMoney" />
+					<field id="outMoney" type="Double" label="出库金额" expression="c.outMoney" />
+					<field id="endMoney" type="Double" label="月终金额" expression="c.endMoney" />
+					<field id="version" type="int" label="版本" visible="false" expression="c.version" />
+				</fields>
+				<DataSource><![CDATA[
+					from sa_StoreMonth c
+				]]>
+				</DataSource>
+			</property>
+		</view>
+		<view name="StoreEnoughQuery" builder="EditViewBuilder">
+			<param name="menu">
+				<attribute name="text" value="选择够用明细" />
+				<attribute name="image" value="mily/img/color.gif" />
+				<attribute name="show" value="false" />
+				<param name="listener">
+					<attribute name="class" value="SelectDomainListener" />
+					<attribute name="former" value="selectFormer4Enough" />
+					<attribute name="view-name" value="selectedList" />
+				</param>
+			</param>
+			<property name="selectedList" class="StoreEnough" builder="SqlListBuilder">
+				<fields>
+					<field id="id" type="Long" label="选择" expression="s.ID" />
+					<field id="SellerId" type="Long" label="商家ID" visible="false" expression="s.sellerId" />
+					<field id="instore" type="String" label="库存分账" expression="s.instore" />
+					<field id="commNumber" type="String" label="商品编号" expression="s.commNumber" />
+					<field id="commName" type="String" label="商品名称" expression="s.commName" />
+					<field id="storeAmount" type="Double" label="库存数量" expression="s.storeAmount" >
+						<param name="footer">
+							<attribute name="type" value="SUM" />
+							<attribute name="expression" value="sum(s.storeAmount)" />
+						</param>
+					</field>
+					<field id="requestAmount" type="Double" label="请购数量" expression="s.requestAmount" >
+						<param name="footer">
+							<attribute name="type" value="SUM" />
+							<attribute name="expression" value="sum(s.requestAmount)" />
+						</param>
+					</field>
+					<field id="onroadAmount" type="Double" label="在途数量" expression="s.onroadAmount" >
+						<param name="footer">
+							<attribute name="type" value="SUM" />
+							<attribute name="expression" value="sum(s.onroadAmount)" />
+						</param>
+					</field>
+					<field id="orderAmount" type="Double" label="订单需求" expression="s.orderAmount" />
+					<field id="amount" type="Double" label="够用数量" expression="s.amount" />
+					<field id="lockAmount" type="Double" label="锁定库存数" expression="s.lockAmount" />
+					<field id="freeAmount" type="Double" label="可用库存数" expression="s.freeAmount" />
+					<field id="modifytime" type="DateTime" label="编辑时间" expression="s.modifytime" />
+					<field id="version" type="int" label="版本" visible="false" expression="s.version" />
+				</fields>
+				<DataSource><![CDATA[
+					from sa_StoreEnough s
+				]]>
+				</DataSource>
+			</property>
+		</view>
+	</class>
+</mily-mappings>

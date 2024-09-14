@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mily-mappings package="com.haoyong.sales.base.form">
+	<import>net.sf.mily.support.form.*</import>
+	<import>com.haoyong.sales.common.listener.*</import>
+	<import>com.haoyong.sales.base.domain.*</import>
+	<import>com.haoyong.sales.sale.form.*</import>
+	<class name="BaseImportForm" label="基础数据导入">
+		<view name="User" label="用户导入" builder="EditViewBuilder">
+			<property name="UserForm" class="UserForm" builder="ViewFieldBuilder">
+				<param name="cfg">
+					<attribute name="view-name" value="ImportUser" />
+					<attribute name="position" value="row" />
+				</param>
+			</property>
+		</view>
+		<view name="Commodity" label="商品导入" builder="EditViewBuilder">
+			<property name="CommodityForm" class="CommodityForm" builder="ViewFieldBuilder">
+				<param name="cfg">
+					<attribute name="view-name" value="Import" />
+					<attribute name="position" value="row" />
+				</param>
+			</property>
+		</view>
+		<view name="Storehouse" label="仓库导入" builder="EditViewBuilder">
+			<property name="StorehouseForm" class="StorehouseForm" builder="ViewFieldBuilder">
+				<param name="cfg">
+					<attribute name="view-name" value="Import" />
+					<attribute name="position" value="row" />
+				</param>
+			</property>
+		</view>
+		<view name="Supplier" label="供应商导入" builder="EditViewBuilder">
+			<property name="SupplierForm" class="SupplierForm" builder="ViewFieldBuilder">
+				<param name="cfg">
+					<attribute name="view-name" value="Import" />
+					<attribute name="position" value="row" />
+				</param>
+			</property>
+		</view>
+		<view name="Client" label="客户导入" builder="EditViewBuilder">
+			<property name="ClientForm" class="ClientForm" builder="ViewFieldBuilder">
+				<param name="cfg">
+					<attribute name="view-name" value="Import" />
+					<attribute name="position" value="row" />
+				</param>
+			</property>
+		</view>
+		<view name="SubCompany" label="分公司导入" builder="EditViewBuilder">
+			<property name="SubCompanyForm" class="SubCompanyForm" builder="ViewFieldBuilder">
+				<param name="cfg">
+					<attribute name="view-name" value="Import" />
+					<attribute name="position" value="row" />
+				</param>
+			</property>
+		</view>
+		<view name="Store" label="库存导入" builder="EditViewBuilder">
+			<property name="PurchaseTicketForm" class="PurchaseTicketForm" builder="ViewFieldBuilder">
+				<param name="cfg">
+					<attribute name="view-name" value="Import" />
+					<attribute name="position" value="row" />
+				</param>
+			</property>
+		</view>
+	</class>
+</mily-mappings>

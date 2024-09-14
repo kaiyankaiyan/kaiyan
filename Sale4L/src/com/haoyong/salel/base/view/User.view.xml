@@ -1,0 +1,473 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mily-mappings package="com.haoyong.salel.base.form">
+	<import>net.sf.mily.support.form.*</import>
+	<import>com.haoyong.salel.common.listener.*</import>
+	<import>com.haoyong.salel.base.domain.*</import>
+	<class name="UserForm" label="用户">
+		<view name="DeptUserList" label="部门用户" builder="EditViewBuilder">
+			<param name="menu">
+				<attribute name="text" value="新增" />
+				<attribute name="image" value="mily/img/color.gif" />
+				<param name="listener">
+					<attribute name="class" value="PostListener" />
+					<attribute name="method" value="prepareCreate4Dept" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="ForwardListener"/>
+					<attribute name="view-name" value="DeptUser"/>
+				</param>
+			</param>
+			<param name="menu">
+				<attribute name="text" value="编辑" />
+				<attribute name="image" value="mily/img/color.gif" />
+				<param name="listener">
+					<attribute name="class" value="SelectDomainListener" />
+					<attribute name="view-name" value="selectedList" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="PostListener" />
+					<attribute name="method" value="prepareEdit" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="ForwardListener" />
+					<attribute name="view-name" value="DeptUser" />
+				</param>
+			</param>
+			<param name="menu">
+				<attribute name="text" value="删除" />
+				<attribute name="image" value="mily/img/color.gif" />
+				<param name="listener">
+					<attribute name="class" value="SelectDomainListener" />
+					<attribute name="former" value="selectFormer4User" />
+					<attribute name="view-name" value="selectedList" />
+					<param name="validate">
+						<attribute name="properties" value="userId" />
+						<attribute name="method" value="ticketForm.canDeleteUser" />
+					</param>
+				</param>
+				<param name="listener">
+					<attribute name="class" value="ActionServiceListener" />
+					<attribute name="action" value="User_Delete" />
+					<attribute name="setter" value="setUserL4Service" />
+					<attribute name="message" value="确认删除此部门？" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="RefreshListener" />
+				</param>
+			</param>
+			<param name="menu">
+				<attribute name="text" value="重置密码" />
+				<attribute name="image" value="mily/img/color.gif" />
+				<param name="listener">
+					<attribute name="class" value="SelectDomainListener" />
+					<attribute name="former" value="selectFormer4User" />
+					<attribute name="view-name" value="selectedList" />
+					<param name="validate">
+						<attribute name="properties" value="userId" />
+						<attribute name="method" value="ticketForm.canResetUser" />
+					</param>
+				</param>
+				<param name="listener">
+					<attribute name="class" value="PostListener" />
+					<attribute name="method" value="setUserReset" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="ActionServiceListener" />
+					<attribute name="message" value="确认要重置此用户密码？" />
+					<attribute name="action" value="User_Save" />
+					<attribute name="setter" value="setUserL4Service" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="RefreshListener" />
+				</param>
+			</param>
+			<property name="selectedList" class="User" builder="SqlListBuilder">
+				<fields>
+					<field id="id" type="Long" label="选择" expression="c.ID" />
+					<field id="deptName" type="String" label="部门名称" expression="c.deptName" />
+					<field id="userId" type="String" label="用户登录名" expression="c.userId" />
+					<field id="userName" type="String" label="用户名称" expression="c.userName" />
+					<field id="version" type="int" label="用户版本" visible="false" expression="c.version" />
+				</fields>
+				<DataSource><![CDATA[
+					from bs_user c
+				]]>
+				</DataSource>
+				<Where><![CDATA[
+					c.linkType=0
+				]]>
+				</Where>
+			</property>
+		</view>
+		<view name="RoleUserList" label="岗位用户" builder="EditViewBuilder">
+			<param name="menu">
+				<attribute name="text" value="新增" />
+				<attribute name="image" value="mily/img/color.gif" />
+				<param name="listener">
+					<attribute name="class" value="PostListener" />
+					<attribute name="method" value="prepareCreate4Role" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="ForwardListener"/>
+					<attribute name="view-name" value="RoleUser"/>
+				</param>
+			</param>
+			<param name="menu">
+				<attribute name="text" value="编辑" />
+				<attribute name="image" value="mily/img/color.gif" />
+				<param name="listener">
+					<attribute name="class" value="SelectDomainListener" />
+					<attribute name="view-name" value="selectedList" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="PostListener" />
+					<attribute name="method" value="prepareEdit" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="ForwardListener" />
+					<attribute name="view-name" value="RoleUser" />
+				</param>
+			</param>
+			<param name="menu">
+				<attribute name="text" value="删除" />
+				<attribute name="image" value="mily/img/color.gif" />
+				<param name="listener">
+					<attribute name="class" value="SelectDomainListener" />
+					<attribute name="former" value="selectFormer4User" />
+					<attribute name="view-name" value="selectedList" />
+					<param name="validate">
+						<attribute name="properties" value="userId" />
+						<attribute name="method" value="ticketForm.canDeleteUser" />
+					</param>
+				</param>
+				<param name="listener">
+					<attribute name="class" value="ActionServiceListener" />
+					<attribute name="action" value="User_Delete" />
+					<attribute name="setter" value="setUserL4Service" />
+					<attribute name="message" value="确认删除此岗位？" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="RefreshListener" />
+				</param>
+			</param>
+			<property name="selectedList" class="User" builder="SqlListBuilder">
+				<fields>
+					<field id="id" type="Long" label="选择" expression="c.ID" />
+					<field id="deptName" type="String" label="岗位名称" expression="c.deptName" />
+					<field id="userName" type="String" label="用户名称" expression="c.userName" />
+					<field id="version" type="int" label="用户版本" visible="false" expression="c.version" />
+				</fields>
+				<DataSource><![CDATA[
+					from bs_user c
+				]]>
+				</DataSource>
+				<Where><![CDATA[
+					c.linkType=1
+				]]>
+				</Where>
+			</property>
+		</view>
+		<view name="RolePrivilegeList" label="角色授权" builder="EditViewBuilder">
+			<param name="menu">
+				<attribute name="text" value="授权" />
+				<attribute name="image" value="mily/img/color.gif" />
+				<param name="listener">
+					<attribute name="class" value="SelectDomainListener" />
+					<attribute name="view-name" value="selectedList" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="PostListener"/>
+					<attribute name="method" value="prepareRolePrivilege"/>
+				</param>
+				<param name="listener">
+					<attribute name="class" value="ForwardListener"/>
+					<attribute name="view-name" value="RolePrivilege"/>
+				</param>
+			</param>
+			<property name="selectedList" class="User" builder="SqlListBuilder">
+				<fields>
+					<field id="id" type="String" label="选择" expression="c.id" />
+					<field id="deptName" type="String" label="部门名称" expression="case when c.linktype=0 then c.deptName else null end" />
+					<field id="roleName" type="String" label="岗位名称" expression="case when c.linktype=1 then c.deptName else null end" />
+					<field id="version" type="int" label="用户版本" visible="false" expression="c.version" />
+				</fields>
+				<DataSource><![CDATA[
+					from bs_user c
+					join (select t.deptName, min(t.id) as id from bs_user t where t.linkType<=1 group by t.deptName) tt on tt.id=c.id
+				]]>
+				</DataSource>
+				<Where><![CDATA[
+					c.deptName is not null
+				]]>
+				</Where>
+			</property>
+		</view>
+		<view name="RoleActorList" label="角色共享" builder="EditViewBuilder">
+			<param name="menu">
+				<attribute name="text" value="共享" />
+				<attribute name="image" value="mily/img/color.gif" />
+				<param name="listener">
+					<attribute name="class" value="SelectDomainListener" />
+					<attribute name="view-name" value="selectedList" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="PostListener"/>
+					<attribute name="method" value="prepareRoleActor"/>
+				</param>
+				<param name="listener">
+					<attribute name="class" value="ForwardListener"/>
+					<attribute name="view-name" value="RoleActor"/>
+				</param>
+			</param>
+			<property name="selectedList" class="User" builder="SqlListBuilder">
+				<fields>
+					<field id="id" type="String" label="选择" expression="c.id" />
+					<field id="deptName" type="String" label="角色名称" expression="c.deptName" />
+					<field id="version" type="int" label="用户版本" visible="false" expression="c.version" />
+				</fields>
+				<DataSource><![CDATA[
+					from bs_user c
+					join (select t.deptName, min(t.id) as id from bs_user t where t.linkType=11 group by t.deptName) tt on tt.id=c.id
+				]]>
+				</DataSource>
+				<Where><![CDATA[
+					c.deptName is not null
+				]]>
+				</Where>
+			</property>
+		</view>
+		<view name="DeptUser" builder="EditViewBuilder">
+			<param name="menu">
+				<attribute name="text" value="提交" />
+				<attribute name="image" value="mily/img/color.gif" />
+				<param name="listener">
+					<attribute name="class" value="ValidateListener" />
+					<attribute name="method" value="validateDeptUser" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="ActionServiceListener" />
+					<attribute name="action" value="User_Save" />
+					<attribute name="setter" value="setUserA4Service" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="ForwardListener" />
+					<attribute name="getter" value="getForwardFromBuilder" />
+				</param>
+			</param>
+			<param name="menu">
+				<attribute name="text" value="取消" />
+				<attribute name="image" value="mily/img/color.gif" />
+				<param name="listener">
+					<attribute name="class" value="ForwardListener" />
+					<attribute name="getter" value="getForwardFromBuilder" />
+				</param>
+			</param>
+			<property name="domain" class="User" builder="EditViewBuilder">
+				<property name="deptName" label="部门名称" builder="TextFieldBuilder" />
+				<property name="userId" label="登录名" builder="TextFieldBuilder" >
+  					<param name="validate">
+						<attribute name="require" value="true"/>
+						<attribute name="message" value="4位以上长度小写字母" />
+						<attribute name="validate"><![CDATA[(this.value.match(/^[a-z]{4,}$/g) && 1)==1;]]></attribute>
+					</param>
+				</property>
+				<property name="userName" label="用户名" builder="TextFieldBuilder" >
+  					<param name="validate">
+						<attribute name="require" value="true"/>
+					</param>
+				</property>
+				<property name="password" label="登录密码" builder="PasswordFieldBuilder" >
+  					<param name="validate">
+						<attribute name="require" value="true"/>
+					</param>
+				</property>
+			</property>
+		</view>
+		<view name="RoleUser" builder="EditViewBuilder">
+			<param name="menu">
+				<attribute name="text" value="提交" />
+				<attribute name="image" value="mily/img/color.gif" />
+				<param name="listener">
+					<attribute name="class" value="ValidateListener" />
+					<attribute name="method" value="validateRoleUser" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="ActionServiceListener" />
+					<attribute name="action" value="User_Save" />
+					<attribute name="setter" value="setUserA4Service" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="ForwardListener" />
+					<attribute name="getter" value="getForwardFromBuilder" />
+				</param>
+			</param>
+			<param name="menu">
+				<attribute name="text" value="取消" />
+				<attribute name="image" value="mily/img/color.gif" />
+				<param name="listener">
+					<attribute name="class" value="ForwardListener" />
+					<attribute name="getter" value="getForwardFromBuilder" />
+				</param>
+			</param>
+			<property name="domain" class="User" builder="EditViewBuilder">
+				<property name="deptName" label="岗位名称" builder="TextFieldBuilder" />
+				<property name="userName" label="用户名" builder="TextFieldBuilder" >
+  					<param name="validate">
+						<attribute name="require" value="true"/>
+					</param>
+				</property>
+			</property>
+		</view>
+		<view name="ImportUser" builder="EditViewBuilder">
+			<param name="menu">
+				<attribute name="text" value="导入格式化" />
+				<attribute name="image" value="mily/img/color.gif" />
+				<param name="listener">
+					<attribute name="class" value="ValidateListener" />
+					<attribute name="method" value="validateToImport"/>
+				</param>
+				<param name="listener">
+					<attribute name="class" value="PostListener" />
+					<attribute name="method" value="setImportFormated"/>
+				</param>
+				<param name="listener">
+					<attribute name="class" value="RefreshListener" />
+				</param>
+			</param>
+			<param name="menu">
+				<attribute name="text" value="导入提交" />
+				<attribute name="image" value="mily/img/color.gif" />
+				<param name="listener">
+					<attribute name="class" value="ValidateListener" />
+					<attribute name="method" value="validateImport"/>
+				</param>
+				<param name="listener">
+					<attribute name="class" value="ActionServiceListener" />
+					<attribute name="action" value="User_Save"/>
+					<attribute name="setter" value="setImport4Service"/>
+				</param>
+				<param name="listener">
+					<attribute name="class" value="RedirectorListener" />
+					<attribute name="url" value="success.jsp"/>
+				</param>
+			</param>
+			<property name="domain.voParamMap.Remark" label="单元格内容" builder="TextAreaBuilder">
+				<param name="cfg">
+					<attribute name="position" value="row" />
+				</param>
+			</property>
+			<property name="domain" label="标题行配置" class="User" builder="EditListBuilder">
+				<param name="menu">
+					<attribute name="text" value="默认依次顺序" />
+					<attribute name="image" value="mily/img/color.gif" />
+					<param name="listener">
+						<attribute name="class" value="PostListener" />
+						<attribute name="method" value="setImportLabelIndex" />
+					</param>
+					<param name="listener">
+						<attribute name="class" value="RefreshListener" />
+					</param>
+				</param>
+				<param name="cfg">
+					<attribute name="property" value="Choose-Edit" />
+				</param>
+				<property name="voParamMap.note" label="标题名" builder="TextBuilder"/>
+			</property>
+			<property name="importList" label="格式化整理" class="User" builder="EditListBuilder">
+				<param name="menu">
+					<attribute name="text" value="删除行" />
+					<attribute name="image" value="mily/img/color.gif" />
+					<param name="listener">
+						<attribute name="class" value="SelectDeleteListener" />
+					</param>
+				</param>
+				<param name="cfg">
+					<attribute name="property" value="Choose-Edit" />
+				</param>
+				<property name="voParamMap.error" label="导入行错误" builder="TextFieldBuilder"/>
+			</property>
+		</view>
+		<view name="RolePrivilege" builder="EditViewBuilder">
+			<param name="menu">
+				<attribute name="text" value="提交授权" />
+				<attribute name="image" value="mily/img/color.gif" />
+				<param name="listener">
+					<attribute name="class" value="ValidateListener" />
+					<attribute name="method" value="validateRolePrivilege"/>
+				</param>
+				<param name="listener">
+					<attribute name="class" value="PostListener" />
+					<attribute name="method" value="setRoleRightList"/>
+				</param>
+				<param name="listener">
+					<attribute name="class" value="ActionServiceListener" />
+					<attribute name="action" value="User_RolePrivilege"/>
+					<attribute name="message" value="确认角色授权功能点"/>
+					<attribute name="setter" value="setRolePrivilege4Service"/>
+				</param>
+				<param name="listener">
+					<attribute name="class" value="ForwardListener" />
+					<attribute name="getter" value="getForwardFromBuilder" />
+				</param>
+			</param>
+			<param name="menu">
+				<attribute name="text" value="清空授权" />
+				<attribute name="image" value="mily/img/color.gif" />
+				<param name="listener">
+					<attribute name="class" value="PostListener" />
+					<attribute name="method" value="setRoleRightEmpty"/>
+				</param>
+			</param>
+			<property name="rightList" label0="角色权限树" builder="HyperlinkBuilder">
+				<param name="cfg">
+					<attribute name="setter" value="setRolePrivilegeLink" />
+					<attribute name="position" value="row" />
+				</param>
+			</property>
+		</view>
+		<view name="RoleActor" builder="EditViewBuilder">
+			<param name="menu">
+				<attribute name="text" value="提交共享" />
+				<attribute name="image" value="mily/img/color.gif" />
+				<param name="listener">
+					<attribute name="class" value="ValidateListener" />
+					<attribute name="method" value="validateRoleActor"/>
+				</param>
+				<param name="listener">
+					<attribute name="class" value="PostListener" />
+					<attribute name="method" value="setRoleActorList"/>
+				</param>
+				<param name="listener">
+					<attribute name="class" value="ActionServiceListener" />
+					<attribute name="action" value="User_RoleActor"/>
+					<attribute name="message" value="确认角色授权功能点"/>
+					<attribute name="setter" value="setRoleActor4Service"/>
+				</param>
+				<param name="listener">
+					<attribute name="class" value="ForwardListener" />
+					<attribute name="getter" value="getForwardFromBuilder" />
+				</param>
+			</param>
+			<param name="menu">
+				<attribute name="text" value="清空共享" />
+				<attribute name="image" value="mily/img/color.gif" />
+				<param name="listener">
+					<attribute name="class" value="PostListener" />
+					<attribute name="method" value="setRoleActorEmpty"/>
+				</param>
+			</param>
+			<property name="actorList" label="接受共享部门" builder="HyperlinkBuilder">
+				<param name="cfg">
+					<attribute name="setter" value="setRoleActorLink" />
+					<attribute name="position" value="row" />
+				</param>
+			</property>
+			<property name="rightList" label="角色拥有的权限" builder="HyperlinkBuilder">
+				<param name="cfg">
+					<attribute name="setter" value="setRoleActor4RightLink" />
+					<attribute name="position" value="row" />
+				</param>
+			</property>
+		</view>
+	</class>
+</mily-mappings>

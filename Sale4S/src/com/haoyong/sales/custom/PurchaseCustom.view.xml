@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mily-mappings package="com.haoyong.sales.sale.form">
+	<import>net.sf.mily.support.form.*</import>
+	<import>com.haoyong.sales.common.listener.*</import>
+	<import>com.haoyong.sales.sale.domain.*</import>
+	<import>com.haoyong.sales.base.domain.*</import>
+	<import>com.haoyong.sales.base.form.*</import>
+	<import>com.haoyong.sales.custom.*</import>
+	<class name="PurchaseCustomForm" label="采购单">
+		<view name="CommonList" label="普通开单" builder="EditViewBuilder">
+			<param name="cfg">
+				<attribute name="before" value="beforeWaiting" />
+			</param>
+			<param name="menu">
+				<attribute name="text" value="开单" />
+				<attribute name="image" value="mily/img/color.gif" />
+				<param name="listener">
+					<attribute name="class" value="SelectDomainListener" />
+					<attribute name="former" value="PurchaseTicketForm.selectFormer4Bom" />
+					<attribute name="view-name" value="selectFormer4Bom.selectedList" />
+					<param name="same">
+						<attribute name="properties" value="commName" />
+						<attribute name="select" value="self" />
+					</param>
+					<param name="parameter">
+						<attribute name="id" value="ordId" />
+						<attribute name="version" value="ordVersion" />
+						<attribute name="class" value="OrderDetail" />
+					</param>
+				</param>
+				<param name="listener">
+					<attribute name="class" value="PostListener" />
+					<attribute name="method" value="PurchaseTicketForm.prepareTicket4Bom" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="ForwardListener" />
+					<attribute name="view-name" value="BomPurchase" />
+				</param>
+			</param>
+			<param name="menu">
+				<attribute name="text" value="同商品开单" />
+				<attribute name="image" value="mily/img/color.gif" />
+				<param name="listener">
+					<attribute name="class" value="SelectDomainListener" />
+					<attribute name="former" value="selectFormer4Bom" />
+					<attribute name="view-name" value="selectFormer4Bom.selectedList" />
+					<param name="same">
+						<attribute name="properties" value="commName" />
+					</param>
+					<param name="parameter">
+						<attribute name="id" value="ordId" />
+						<attribute name="version" value="ordVersion" />
+						<attribute name="class" value="OrderDetail" />
+					</param>
+				</param>
+				<param name="listener">
+					<attribute name="class" value="PostListener" />
+					<attribute name="method" value="PurchaseTicketForm.prepareTicket4Bom" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="ForwardListener" />
+					<attribute name="view-name" value="BomPurchase" />
+				</param>
+			</param>
+			<property name="selectFormer4Bom.selectedList" class="BomDetail" builder="SqlListBuilder">
+				<param name="remind">
+					<attribute name="id" value="id"/>
+					<attribute name="value" value=">0"/>
+				</param>
+				<param name="select">
+					<attribute name="id" value="id"/>
+					<attribute name="value" value=">0"/>
+				</param>
+				<fields>
+					<field id="id" type="Long" label="物料ID" expression="b.ID" />
+					<field id="bomId" type="Long" label="物料明细ID" visible="false" expression="b.ID" />
+					<field id="SellerId" type="Long" label="商家ID" visible="false" expression="b.sellerId" />
+					<field id="ordId" type="Long" label="订单ID" visible="false" expression="c.ID" />
+					<field id="number" type="String" label="订单号" expression="b.number" />
+					<field id="monthnum" type="String" label="月流水号" expression="b.monthnum" />
+					<field id="outMonthnum" type="String" label="出库流水" expression="b.outMonthnum" />
+					<field id="commNumber" type="String" label="商品编号" expression="b.commNumber" />
+					<field id="commName" type="String" label="商品名称" expression="b.commName" />
+					<field id="level" type="int" label="BOM层级" expression="b.level" />
+					<field id="arrange" type="String" label="物料安排" expression="b.arrange" />
+					<field id="ticketAmount" type="Double" label="请购数量" visible="false" expression="b.amount" />
+					<field id="amount" type="Double" label="需求数量" expression="b.amount" >
+						<param name="footer">
+							<attribute name="type" value="SUM" />
+							<attribute name="expression" value="sum(b.amount)" />
+						</param>
+					</field>
+					<field id="gotAmount" type="Double" label="配给数量" expression="b.gotAmount" />
+					<field id="notAmount" type="Double" label="差额数量" expression="b.notAmount" />
+					<field id="clientName" type="String" label="客户名称" expression="b.clientName" />
+					<field id="subName" type="String" label="分公司名称" expression="b.subName" />
+					<field id="stateName" type="String" label="流程名称" expression="b.stateName" />
+					<field id="stBom" type="int" label="物料流程ID" expression="b.stBom" />
+					<field id="version" type="int" label="物料版本" visible="false" expression="b.version" />
+					<field id="ordVersion" type="int" label="订单版本" visible="false" expression="c.version" />
+				</fields>
+				<DataSource><![CDATA[
+					from sa_BomDetail b
+					left join sa_OrderDetail c on c.sellerId=b.sellerId and c.monthnum=b.monthnum
+				]]>
+				</DataSource>
+				<Where><![CDATA[
+					b.stBom=10 and b.arrange='去请购' and b.stPurchase=0 and b.supplyType='采购'
+				]]>
+				</Where>
+			</property>
+		</view>
+		<view name="BomPurchase" builder="EditViewBuilder">
+			<property name="PurchaseTicketForm" class="PurchaseTicketForm" builder="ViewFieldBuilder">
+				<param name="cfg">
+					<attribute name="view-name" value="BomPurchase"/>
+					<attribute name="position" value="row"/>
+				</param>
+			</property>
+		</view>
+	</class>
+</mily-mappings>

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mily-mappings package="com.haoyong.sales.base.form">
+	<import>net.sf.mily.support.form.*</import>
+	<import>com.haoyong.sales.common.listener.*</import>
+	<import>com.haoyong.sales.base.domain.*</import>
+	<!-- 商品库存统计列标题 -->
+	<class name="CommColForm" label="商品库存统计列标题">
+		<view name="List" label="大类建档" builder="EditViewBuilder">
+			<param name="menu">
+				<attribute name="text" value="保存" />
+				<attribute name="image" value="mily/img/color.gif" />
+				<param name="listener">
+					<attribute name="class" value="ValidateListener" />
+					<attribute name="method" value="validateSetting" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="ActionServiceListener" />
+					<attribute name="action" value="TypeInfos_Save" />
+					<attribute name="setter" value="setSetting4Service" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="PostListener" />
+					<attribute name="method" value="infoSetting" />
+				</param>
+			</param>
+			<property name="ColList" class="CommCol" label="列标题" builder="EditListBuilder">
+				<param name="menu">
+					<attribute name="text" value="转行标题" />
+					<attribute name="image" value="mily/img/color.gif" />
+					<param name="listener">
+						<attribute name="class" value="SelectDomainListener" />
+					</param>
+					<param name="listener">
+						<attribute name="class" value="PostListener" />
+						<attribute name="method" value="asRow" />
+					</param>
+					<param name="listener">
+						<attribute name="class" value="RefreshListener" />
+						<attribute name="view-name" value="List" />
+					</param>
+				</param>
+				<property name="name" label="名称" builder="TextBuilder"/>
+				<property name="label" label="商品信息标题" builder="TextBuilder"/>
+			</property>
+			<property name="RowList" class="CommCol" label="行标题" builder="EditListBuilder">
+				<param name="menu">
+					<attribute name="text" value="转列标题" />
+					<attribute name="image" value="mily/img/color.gif" />
+					<param name="listener">
+						<attribute name="class" value="SelectDomainListener" />
+					</param>
+					<param name="listener">
+						<attribute name="class" value="PostListener" />
+						<attribute name="method" value="asCol" />
+					</param>
+					<param name="listener">
+						<attribute name="class" value="RefreshListener" />
+						<attribute name="view-name" value="List" />
+					</param>
+				</param>
+				<property name="name" label="名称" builder="TextBuilder"/>
+				<property name="label" label="商品信息标题" builder="TextBuilder"/>
+			</property>
+		</view>
+	</class>
+</mily-mappings>

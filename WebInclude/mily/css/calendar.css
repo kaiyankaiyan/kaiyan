@@ -1,0 +1,87 @@
+#calendar {
+	display: none;
+	width: 210px;
+	position: absolute;
+	z-index: 21;
+	outline-color:#FF9900;
+	outline-style:solid;
+	outline-width:1px;
+}
+.tableborder {
+	width: 100%;
+	background:white none repeat scroll 0%;
+	border:0px none;
+}
+.calendarbutton {
+	background:transparent url(../img/calendar.jpg) no-repeat center;
+	border:1px solid #CCCCCC;
+	width:16px;
+}
+#calendar_year {
+	background: #FFFFFF none repeat scroll 0%;
+	display: none;
+	line-height: 130%;
+	padding: 4px;
+	position: absolute;
+	z-index: 22;
+}
+#calendar_month {
+	background: #FFFFFF none repeat scroll 0%;
+	border: 1px solid #FF9900;
+	display: none;
+	line-height: 130%;
+	padding: 4px;
+	position: absolute;
+	z-index: 23;
+}
+#calendar_hour {
+	background: #FFFFFF none repeat scroll 0%;
+	border: 1px solid #FF9900;
+	display: none;
+	line-height: 130%;
+	padding: 4px;
+	position: absolute;
+	z-index: 24;
+}
+#calendar_minute {
+	background: #FFFFFF none repeat scroll 0%;
+	border: 1px solid #FF9900;
+	display: none;
+	line-height: 130%;
+	padding: 4px;
+	position: absolute;
+	z-index: 25;
+}
+
+#calendar_year .col {
+	background: #FFFFFF none repeat scroll 0%;
+	border: 1px solid #FF9900;
+	float: left;
+	margin-left: 1px;
+}
+#calendar td, #calendar_year td, #calendar_month td, #calendar_hour td, #calendar_minute td {
+	padding: 2px 4px;
+	text-align: center;
+}
+.calendar_checked {
+	color: #FF0000;
+}
+.calendar_expire {
+	color: #999999;
+}
+.calendar_default {
+	color: #000000;
+}
+.calendar_today {
+	color:#00BB00;
+	border: 1px solid #FF9900;
+	text-align: center;
+}
+.category {
+	background-color:#F3F4EC;
+	color:#666666;
+}
+#calendar a:link,#calendar a:visited,#calendar a:active {
+	color:#0041D9;
+	text-decoration:none;
+}

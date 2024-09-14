@@ -1,0 +1,35 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+<mily-configuration>
+	<!-- mapping resource path -->
+	<mappings dyna-load="true">
+		<!-- default import package and classes -->
+		<import>java.util.*</import>
+		<import>net.sf.mily.webObject.*</import>
+		<import>net.sf.mily.listener.*</import>
+		<view-sources>
+			<resource path="net/sf/mily/webObject/form/SqlListBuilderSetting.view.xml"/>
+<!-- serve 领域类 -->
+			<resource path="com/haoyong/salel/serve/view/StartServer.view.xml" />
+<!-- base 领域类 -->
+			<resource path="com/haoyong/salel/base/view/BaseQuery.view.xml" />
+			<resource path="com/haoyong/salel/base/view/Province.view.xml" />
+			<resource path="com/haoyong/salel/base/view/City.view.xml" />
+			<resource path="com/haoyong/salel/base/view/Seller.view.xml" />
+			<resource path="com/haoyong/salel/base/view/User.view.xml" />
+		</view-sources>
+	</mappings>
+	<!-- ui installer properties -->
+	<ui>
+		<properties name="net.sf.mily.cfg.UIInstaller" />
+		<properties name="net.sf.mily.cfg.ExUIInstaller" />
+	</ui>
+	<!-- other settings -->
+	<options>
+		<!-- Echo all ajax response to stdout  -->
+		<property name="show-response">false</property>
+		<property name="locale">SIMPLIFIED_CHINESE</property>
+		<property name="title">广州浩用进销平台</property>
+		<property name="query-executor">net.sf.mily.common.JdbcQueryExecutor</property>
+		<property name="session-provider">com.haoyong.salel.common.dao.SLoginSessionProvider</property>
+	</options>
+</mily-configuration>

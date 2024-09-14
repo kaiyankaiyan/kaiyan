@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mily-mappings package="com.haoyong.sales.base.form">
+	<import>net.sf.mily.support.form.*</import>
+	<import>com.haoyong.sales.common.listener.*</import>
+	<import>com.haoyong.sales.base.domain.*</import>
+	<class name="SellerForm" label="商家">
+		<view name="List" label="商家数据清理" builder="EditViewBuilder">
+			<param name="menu">
+				<attribute name="text" value="删除商家全部单据" />
+				<attribute name="image" value="mily/img/color.gif" />
+				<param name="listener">
+					<attribute name="class" value="PostListener" />
+					<attribute name="method" value="setDeleteTickets4Service" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="RedirectorListener" />
+					<attribute name="url" value="success.jsp" />
+				</param>
+			</param>
+			<param name="menu">
+				<attribute name="text" value="建立全套测试数据" />
+				<attribute name="image" value="mily/img/color.gif" />
+				<param name="listener">
+					<attribute name="class" value="PostListener" />
+					<attribute name="method" value="testCase" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="RedirectorListener" />
+					<attribute name="url" value="success.jsp" />
+				</param>
+			</param>
+			<param name="menu">
+				<attribute name="text" value="待处理提醒" />
+				<attribute name="image" value="mily/img/color.gif" />
+				<param name="listener">
+					<attribute name="class" value="PostListener" />
+					<attribute name="method" value="testRemind" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="RedirectorListener" />
+					<attribute name="url" value="success.jsp" />
+				</param>
+			</param>
+			<param name="menu">
+				<attribute name="text" value="测试方法" />
+				<attribute name="image" value="mily/img/color.gif" />
+				<param name="listener">
+					<attribute name="class" value="PostListener" />
+					<attribute name="method" value="testTemp" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="RedirectorListener" />
+					<attribute name="url" value="success.jsp" />
+				</param>
+			</param>
+		</view>
+		<view name="Server" label="服务端设置" builder="EditViewBuilder">
+			<property name="attrMap.p1" label="更新数据库结构" builder="TextBuilder">
+				<param name="button">
+					<attribute name="text" value="Seller更新" />
+					<attribute name="image" value="mily/img/color.gif" />
+					<param name="listener">
+						<attribute name="class" value="PostListener" />
+						<attribute name="method" value="fireSchemaUpdate" />
+					</param>
+				</param>
+				<param name="button">
+					<attribute name="text" value="Derby更新" />
+					<attribute name="image" value="mily/img/color.gif" />
+					<param name="listener">
+						<attribute name="class" value="PostListener" />
+						<attribute name="method" value="fireDerbyUpdate" />
+					</param>
+				</param>
+			</property>
+		</view>
+		<view name="Derby" label="Derby查询" builder="EditViewBuilder">
+			<property name="attrMap.DerbyExecute" label="D.Update" builder="TextAreaBuilder">
+				<param name="button">
+					<attribute name="text" value="执行" />
+					<attribute name="image" value="mily/img/color.gif" />
+					<param name="listener">
+						<attribute name="class" value="PostListener" />
+						<attribute name="method" value="setDerbyExecute" />
+					</param>
+					<param name="listener">
+						<attribute name="class" value="ChangeAssociateListener" />
+						<attribute name="properties" value="attrMap.DerbySelectList" />
+					</param>
+				</param>
+			</property>
+			<property name="attrMap.DerbySelect" label="D.Select" builder="TextAreaBuilder">
+				<param name="button">
+					<attribute name="text" value="查询" />
+					<attribute name="image" value="mily/img/color.gif" />
+					<param name="listener">
+						<attribute name="class" value="PostListener" />
+						<attribute name="method" value="setDerbySelect" />
+					</param>
+					<param name="listener">
+						<attribute name="class" value="ChangeAssociateListener" />
+						<attribute name="properties" value="attrMap.DerbySelectList" />
+					</param>
+				</param>
+			</property>
+			<property name="attrMap.DerbySellerSelect" label="Seller.excuteSelect" builder="TextAreaBuilder">
+				<param name="button">
+					<attribute name="text" value="查询" />
+					<attribute name="image" value="mily/img/color.gif" />
+					<param name="listener">
+						<attribute name="class" value="PostListener" />
+						<attribute name="method" value="setDerbySellerSelect" />
+					</param>
+					<param name="listener">
+						<attribute name="class" value="ChangeAssociateListener" />
+						<attribute name="properties" value="attrMap.DerbySelectList" />
+					</param>
+				</param>
+			</property>
+			<property name="attrMap.DerbySellerUpdate" label="Seller.excuteUpdate" builder="TextAreaBuilder">
+				<param name="button">
+					<attribute name="text" value="更新" />
+					<attribute name="image" value="mily/img/color.gif" />
+					<param name="listener">
+						<attribute name="class" value="PostListener" />
+						<attribute name="method" value="setDerbySellerUpdate" />
+					</param>
+					<param name="listener">
+						<attribute name="class" value="ChangeAssociateListener" />
+						<attribute name="properties" value="attrMap.DerbySelectList" />
+					</param>
+				</param>
+			</property>
+			<property name="attrMap.DerbySelectList" label="执行查询结果" builder="TextBuilder">
+				<param name="cfg">
+					<attribute name="position" value="row" />
+				</param>
+			</property>
+		</view>
+	</class>
+</mily-mappings>

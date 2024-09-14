@@ -1,0 +1,438 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mily-mappings package="com.haoyong.sales.sale.form">
+	<import>net.sf.mily.support.form.*</import>
+	<import>com.haoyong.sales.common.listener.*</import>
+	<import>com.haoyong.sales.sale.domain.*</import>
+	<import>com.haoyong.sales.base.form.*</import>
+	<class name="QuestionForm" label="疑问列表">
+		<view name="QuestionList" label="提问列表" builder="EditViewBuilder">
+			<param name="cfg">
+				<attribute name="before" value="beforeQuestionList" />
+			</param>
+			<param name="menu">
+				<attribute name="text" value="新增"/>
+				<attribute name="image" value="mily/img/color.gif"/>
+				<param name="listener">
+					<attribute name="class" value="PostListener" />
+					<attribute name="method" value="prepareQuestion"/>
+				</param>
+				<param name="listener">
+					<attribute name="class" value="ForwardListener"/>
+					<attribute name="view-name" value="Question"/>
+				</param>
+			</param>
+			<param name="menu">
+				<attribute name="text" value="编辑"/>
+				<attribute name="image" value="mily/img/color.gif"/>
+				<param name="listener">
+					<attribute name="class" value="SelectDomainListener" />
+					<attribute name="former" value="selectFormer4Question" />
+					<attribute name="view-name" value="selectedList" />
+					<param name="validate">
+						<attribute name="properties" value="stQuestion" />
+						<attribute name="method" value="ticketForm.canEdit" />
+					</param>
+				</param>
+				<param name="listener">
+					<attribute name="class" value="PostListener" />
+					<attribute name="method" value="prepareEdit"/>
+				</param>
+				<param name="listener">
+					<attribute name="class" value="ForwardListener"/>
+					<attribute name="view-name" value="Question"/>
+				</param>
+			</param>
+			<param name="menu">
+				<attribute name="text" value="关闭"/>
+				<attribute name="image" value="mily/img/color.gif"/>
+				<param name="listener">
+					<attribute name="class" value="SelectDomainListener" />
+					<attribute name="former" value="selectFormer4Question" />
+					<attribute name="view-name" value="selectedList" />
+					<param name="validate">
+						<attribute name="properties" value="stQuestion" />
+						<attribute name="method" value="ticketForm.canClose" />
+					</param>
+				</param>
+				<param name="listener">
+					<attribute name="class" value="ActionServiceListener" />
+					<attribute name="action" value="Question_Save" />
+					<attribute name="setter" value="setQuestionL4Service" />
+					<attribute name="message" value="确认关闭提问不用解决" />
+					<param name="state">
+						<attribute name="id" value="30" />
+						<attribute name="name" value="关闭提问" />
+						<attribute name="method" value="setQuestionState" />
+					</param>
+				</param>
+				<param name="listener">
+					<attribute name="class" value="RefreshListener"/>
+				</param>
+			</param>
+			<param name="menu">
+				<attribute name="text" value="回复"/>
+				<attribute name="image" value="mily/img/color.gif"/>
+				<param name="listener">
+					<attribute name="class" value="SelectDomainListener" />
+					<attribute name="former" value="selectFormer4Question" />
+					<attribute name="view-name" value="selectedList" />
+					<param name="validate">
+						<attribute name="properties" value="stQuestion" />
+						<attribute name="method" value="ticketForm.canReply" />
+					</param>
+				</param>
+				<param name="listener">
+					<attribute name="class" value="PostListener" />
+					<attribute name="method" value="prepareReply"/>
+				</param>
+				<param name="listener">
+					<attribute name="class" value="ForwardListener"/>
+					<attribute name="view-name" value="Reply"/>
+				</param>
+			</param>
+			<param name="menu">
+				<attribute name="text" value="启用"/>
+				<attribute name="image" value="mily/img/color.gif"/>
+				<param name="listener">
+					<attribute name="class" value="SelectDomainListener" />
+					<attribute name="former" value="selectFormer4Question" />
+					<attribute name="view-name" value="selectedList" />
+					<param name="validate">
+						<attribute name="properties" value="stQuestion" />
+						<attribute name="method" value="ticketForm.canOpen" />
+					</param>
+				</param>
+				<param name="listener">
+					<attribute name="class" value="PostListener" />
+					<attribute name="method" value="prepareEdit"/>
+				</param>
+				<param name="listener">
+					<attribute name="class" value="ForwardListener"/>
+					<attribute name="view-name" value="Question"/>
+				</param>
+			</param>
+			<param name="menu">
+				<attribute name="text" value="查看"/>
+				<attribute name="image" value="mily/img/color.gif"/>
+				<param name="listener">
+					<attribute name="class" value="SelectDomainListener" />
+					<attribute name="former" value="selectFormer4Question" />
+					<attribute name="view-name" value="selectedList" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="PostListener" />
+					<attribute name="method" value="prepareEdit"/>
+				</param>
+				<param name="listener">
+					<attribute name="class" value="ForwardListener"/>
+					<attribute name="view-name" value="Show"/>
+				</param>
+			</param>
+			<property name="Question.stQuestion" label="选择处理状态" builder="RadioButtonGroupBuilder">
+				<param name="cfg">
+					<attribute name="type" value="Require"/>
+				</param>
+				<param name="options">
+					<attribute name="collection" value="getStateOptions"/>
+					<attribute name="value-property" value="key"/>
+					<attribute name="text-property" value="value"/>
+				</param>
+				<param name="listener">
+					<attribute name="class" value="ChangeAssociateListener"/>
+					<attribute name="properties" value="selectedList"/>
+				</param>
+			</property>
+			<property name="selectedList" class="Question" builder="SqlListBuilder">
+				<param name="cfg">
+					<attribute name="select" value="Single"/>
+					<attribute name="parameter" value="getParam4Question"/>
+				</param>
+				<fields>
+					<field id="id" type="Long" label="选择" expression="q.ID" />
+					<field id="idd" type="Long" label="ID" expression="q.ID" />
+					<field id="SellerId" type="Long" label="商家ID" visible="false" expression="q.sellerId" />
+					<field id="rightName" type="String" label="功能点" expression="q.rightName" />
+					<field id="handler" type="String" label="指定处理人" expression="q.handler" />
+					<field id="title" type="String" label="提问描述" expression="q.title" />
+					<field id="questioner" type="String" label="提问人" expression="q.questioner" />
+					<field id="replier" type="String" label="回复人" expression="q.replier" />
+					<field id="stateName" type="String" label="流程状态" expression="q.stateName" />
+					<field id="stQuestion" type="int" label="流程状态ID" visible="false" expression="q.stQuestion"/>
+					<field id="version" type="int" label="版本" visible="false" expression="q.version"/>
+				</fields>
+				<DataSource><![CDATA[
+					FROM sa_Question q 
+				]]>
+				</DataSource>
+				<Where><![CDATA[
+					q.stQuestion<={$stateId}
+				]]>
+				</Where>
+			</property>
+		</view>
+		<view name="Question" builder="EditViewBuilder">
+			<param name="menu">
+				<attribute name="text" value="提交"/>
+				<attribute name="image" value="mily/img/color.gif"/>
+				<param name="listener">
+					<attribute name="class" value="ValidateListener"/>
+					<attribute name="method" value="validateQuestion"/>
+				</param>
+				<param name="listener">
+					<attribute name="class" value="ActionServiceListener" />
+					<attribute name="action" value="Question_Save" />
+					<attribute name="setter" value="setQuestion4Service" />
+					<attribute name="message" value="提交提问" />
+					<param name="state">
+						<attribute name="id" value="10" />
+						<attribute name="name" value="提问" />
+						<attribute name="method" value="setQuestionState" />
+					</param>
+					<param name="user">
+						<attribute name="method" value="setQuestionUser" />
+					</param>
+				</param>
+				<param name="listener">
+					<attribute name="class" value="ForwardListener"/>
+					<attribute name="view-name" value="QuestionList"/>
+				</param>
+			</param>
+			<param name="menu">
+				<attribute name="text" value="返回"/>
+				<attribute name="image" value="mily/img/color.gif"/>
+				<param name="listener">
+					<attribute name="class" value="ForwardListener"/>
+					<attribute name="view-name" value="QuestionList"/>
+				</param>
+			</param>
+			<property name="domain.rightName" label="功能点" builder="TextFieldBuilder">
+				<param name="validate">
+					<attribute name="require" value="true"/>
+				</param>
+				<param name="listener">
+					<attribute name="class" value="ChangeAssociateListener"/>
+					<attribute name="properties" value="domain.rightName"/>
+					<attribute name="getter" value="getRightSearchName"/>
+				</param>
+				<param name="listener">
+					<attribute name="class" value="SimpleDialogOpenListener"/>
+					<attribute name="view-name" value="RightQuery"/>
+					<attribute name="expression" value="isDialogOpen=true"/>
+				</param>
+				<param name="button">
+					<attribute name="text" value="选择"/>
+					<param name="listener">
+						<attribute name="class" value="SimpleDialogOpenListener"/>
+						<attribute name="view-name" value="RightQuery"/>
+					</param>
+				</param>
+			</property>
+			<property name="domain.questioner" label="提问人" builder="TextFieldBuilder">
+				<param name="validate">
+					<attribute name="require" value="true"/>
+				</param>
+				<param name="listener">
+					<attribute name="class" value="ChangeAssociateListener"/>
+					<attribute name="properties" value="domain.questioner"/>
+					<attribute name="getter" value="getUserSearch"/>
+					<attribute name="setter" value="setUserSelect4Questioner"/>
+				</param>
+				<param name="listener">
+					<attribute name="class" value="SimpleDialogOpenListener"/>
+					<attribute name="view-name" value="UserQuery"/>
+					<attribute name="expression" value="isDialogOpen=true"/>
+				</param>
+				<param name="button">
+					<attribute name="text" value="选择"/>
+					<param name="listener">
+						<attribute name="class" value="SimpleDialogOpenListener"/>
+						<attribute name="view-name" value="UserQuery"/>
+					</param>
+				</param>
+			</property>
+			<property name="domain.replier" label="回复人" builder="TextBuilder"/>
+			<property name="domain.title" label="提问描述" builder="TextAreaBuilder" >
+				<param name="validate">
+					<attribute name="require" value="true"/>
+					<attribute name="editable" value="true"/>
+				</param>
+				<param name="cfg">
+					<attribute name="position" value="row" />
+				</param>
+			</property>
+			<property name="domain.question" label="提问附加" builder="HtmlFieldBuilder" >
+				<param name="cfg">
+					<attribute name="position" value="row" />
+				</param>
+				<param name="validate">
+					<attribute name="editable" value="true"/>
+				</param>
+			</property>
+			<property name="domain.reply" label="回复内容" builder="HtmlFieldBuilder" >
+				<param name="cfg">
+					<attribute name="position" value="row" />
+				</param>
+				<param name="validate">
+					<attribute name="editable" value="false"/>
+				</param>
+			</property>
+		</view>
+		<view name="Show" builder="EditViewBuilder">
+			<param name="menu">
+				<attribute name="text" value="返回"/>
+				<attribute name="image" value="mily/img/color.gif"/>
+				<param name="listener">
+					<attribute name="class" value="ForwardListener"/>
+					<attribute name="getter" value="getForwardFromBuilder"/>
+				</param>
+			</param>
+			<property name="domain" class="Question">
+				<property name="rightName" label="功能点" builder="TextBuilder" />
+				<property name="title" label="提问描述" builder="TextAreaBuilder" >
+					<param name="cfg">
+						<attribute name="position" value="row" />
+					</param>
+					<param name="validate">
+						<attribute name="editable" value="false"/>
+					</param>
+				</property>
+				<property name="questioner" label="提问人" builder="TextBuilder" />
+				<property name="handler" label="指定处理人" builder="TextBuilder"/>
+				<property name="question" label="提问附加" builder="HtmlFieldBuilder" >
+					<param name="cfg">
+						<attribute name="position" value="row" />
+					</param>
+					<param name="validate">
+						<attribute name="editable" value="false"/>
+					</param>
+				</property>
+				<property name="replier" label="回复人" builder="TextBuilder" />
+				<property name="reply" label="回复内容" builder="HtmlFieldBuilder" >
+					<param name="cfg">
+						<attribute name="position" value="row" />
+					</param>
+					<param name="validate">
+						<attribute name="editable" value="false"/>
+					</param>
+				</property>
+			</property>
+		</view>
+		<view name="Reply" builder="EditViewBuilder">
+			<param name="menu">
+				<attribute name="text" value="已解决提交"/>
+				<attribute name="image" value="mily/img/color.gif"/>
+				<param name="listener">
+					<attribute name="class" value="ValidateListener"/>
+					<attribute name="method" value="validateReply"/>
+				</param>
+				<param name="listener">
+					<attribute name="class" value="ActionServiceListener" />
+					<attribute name="action" value="Question_Save" />
+					<attribute name="setter" value="setQuestion4Service" />
+					<attribute name="message" value="确认解决了提问" />
+					<param name="state">
+						<attribute name="id" value="20" />
+						<attribute name="name" value="解决" />
+						<attribute name="method" value="setQuestionState" />
+					</param>
+					<param name="user">
+						<attribute name="method" value="setReplyUser" />
+					</param>
+				</param>
+				<param name="listener">
+					<attribute name="class" value="ForwardListener"/>
+					<attribute name="getter" value="getForwardFromBuilder"/>
+				</param>
+			</param>
+			<param name="menu">
+				<attribute name="text" value="返回"/>
+				<attribute name="image" value="mily/img/color.gif"/>
+				<param name="listener">
+					<attribute name="class" value="ForwardListener"/>
+					<attribute name="getter" value="getForwardFromBuilder"/>
+				</param>
+			</param>
+			<property name="domain" class="Question" builder="EditViewBuilder">
+				<property name="rightName" label="功能点" builder="TextBuilder" />
+				<property name="questioner" label="提问人" builder="TextBuilder" />
+				<property name="replier" label="回复人" builder="TextBuilder" />
+				<property name="handler" label="指定处理人" builder="TextBuilder" />
+				<property name="title" label="提问描述" builder="TextAreaBuilder" >
+					<param name="cfg">
+						<attribute name="position" value="row" />
+					</param>
+					<param name="validate">
+						<attribute name="editable" value="false"/>
+					</param>
+				</property>
+				<property name="question" label="提问附加" builder="HtmlFieldBuilder" >
+					<param name="cfg">
+						<attribute name="position" value="row" />
+					</param>
+					<param name="validate">
+						<attribute name="editable" value="false"/>
+					</param>
+				</property>
+				<property name="reply" label="回复" builder="HtmlFieldBuilder" >
+					<param name="cfg">
+						<attribute name="position" value="row" />
+					</param>
+				</property>
+			</property>
+		</view>
+		<view name="UserQuery" builder="EditViewBuilder">
+			<param name="menu">
+				<attribute name="text" value="确定" />
+				<attribute name="image" value="mily/img/color.gif" />
+				<param name="listener">
+					<attribute name="class" value="SelectDomainListener" />
+					<attribute name="setter" value="setUserSelect4Questioner" />
+					<attribute name="view-name" value="selectedList" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="SimpleDialogCloseListener" />
+				</param>
+			</param>
+			<param name="menu">
+				<attribute name="text" value="关闭" />
+				<attribute name="image" value="mily/img/color.gif" />
+				<param name="listener">
+					<attribute name="class" value="SimpleDialogCloseListener" />
+				</param>
+			</param>
+			<property name="UserForm" class="UserForm" builder="ViewFieldBuilder">
+				<param name="cfg">
+					<attribute name="view-name" value="DeptUserList.selectedList"/>
+					<attribute name="position" value="row"/>
+				</param>
+			</property>
+		</view>
+		<view name="RightQuery" builder="EditViewBuilder">
+			<param name="menu">
+				<attribute name="text" value="确定" />
+				<attribute name="image" value="mily/img/color.gif" />
+				<param name="listener">
+					<attribute name="class" value="SelectDomainListener" />
+					<attribute name="setter" value="setRightSelect" />
+					<attribute name="view-name" value="selectedList" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="SimpleDialogCloseListener" />
+				</param>
+			</param>
+			<param name="menu">
+				<attribute name="text" value="关闭" />
+				<attribute name="image" value="mily/img/color.gif" />
+				<param name="listener">
+					<attribute name="class" value="SimpleDialogCloseListener" />
+				</param>
+			</param>
+			<property name="UserForm" class="UserForm" builder="ViewFieldBuilder">
+				<param name="cfg">
+					<attribute name="view-name" value="RightQuery.selectedList"/>
+					<attribute name="position" value="row"/>
+				</param>
+			</property>
+		</view>
+	</class>
+</mily-mappings>

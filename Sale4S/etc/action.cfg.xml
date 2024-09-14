@@ -1,0 +1,54 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+<action-navigator-configuration>
+	<realm name="set" label="服务">
+		<class name="com.haoyong.sales.common.form.TestCaseForm"/>
+		<class name="com.haoyong.sales.custom.PurchaseCustomForm"/>
+	</realm>
+	<realm name="base" label="基础">
+		<class name="com.haoyong.sales.common.form.MainForm"/>
+		<class name="com.haoyong.sales.base.form.SellerForm"/>
+		<class name="com.haoyong.sales.base.form.BaseQueryForm"/>
+		<class name="com.haoyong.sales.base.form.BaseImportForm"/>
+		<class name="com.haoyong.sales.base.form.UserForm"/>
+		<class name="com.haoyong.sales.base.form.ChooseFormer"/>
+		<class name="com.haoyong.sales.base.form.SupplierForm"/>
+		<class name="com.haoyong.sales.base.form.SupplyTypeForm" visible="false"/>
+		<class name="com.haoyong.sales.base.form.CTypeForm" visible="false"/>
+		<class name="com.haoyong.sales.base.form.CType2Form" visible="false"/>
+		<class name="com.haoyong.sales.base.form.CommColForm" visible="false"/>
+		<class name="com.haoyong.sales.base.form.YardsForm" visible="false"/>
+		<class name="com.haoyong.sales.base.form.DeliverTypeForm" visible="false"/>
+		<class name="com.haoyong.sales.base.form.BillTypeForm" visible="false"/>
+		<class name="com.haoyong.sales.base.form.CommodityForm"/>
+		<class name="com.haoyong.sales.base.form.StorehouseForm"/>
+		<class name="com.haoyong.sales.base.form.BOMForm" visible="false"/>
+		<class name="com.haoyong.sales.base.form.ClientForm"/>
+		<class name="com.haoyong.sales.base.form.SubCompanyForm"/>
+	</realm>
+	<realm name="sale" label="分销" visible="false">
+	    <class name="com.haoyong.sales.sale.form.SaleQueryForm"/>
+		<class name="com.haoyong.sales.sale.form.QuestionForm"/>
+		<class name="com.haoyong.sales.sale.form.GlobalSearchForm"/>
+	    <class name="com.haoyong.sales.sale.form.PrintModelForm" visible="false"/>
+	    <class name="com.haoyong.sales.sale.form.OrderTypeForm" visible="false"/>
+	    <class name="com.haoyong.sales.sale.form.OrderDoptionForm" visible="false"/>
+	    <class name="com.haoyong.sales.sale.form.OrderTicketForm"/>
+	    <class name="com.haoyong.sales.sale.form.BOrderTicketForm" visible="false"/>
+	    <class name="com.haoyong.sales.sale.form.DOrderTicketForm"/>
+	    <class name="com.haoyong.sales.sale.form.ArrangeTicketForm"/>
+	    <class name="com.haoyong.sales.sale.form.PArrangeTicketForm"/>
+	    <class name="com.haoyong.sales.sale.form.PurchaseTicketForm"/>
+	    <class name="com.haoyong.sales.sale.form.PPurchaseTicketForm"/>
+	    <class name="com.haoyong.sales.sale.form.ReceiptTicketForm"/>
+	    <class name="com.haoyong.sales.sale.form.PurchaseReturnForm"/>
+	    <class name="com.haoyong.sales.sale.form.StoreTicketForm"/>
+	    <class name="com.haoyong.sales.sale.form.OutStoreTicketForm"/>
+	    <class name="com.haoyong.sales.sale.form.InStoreTicketForm" visible="false"/>
+	    <class name="com.haoyong.sales.sale.form.LocationTicketForm"/>
+	    <class name="com.haoyong.sales.sale.form.InAgentTicketForm"/>
+	    <class name="com.haoyong.sales.sale.form.SendTicketForm"/>
+	    <class name="com.haoyong.sales.sale.form.OrderReturnForm"/>
+	    <class name="com.haoyong.sales.sale.form.BillTicketForm"/>
+	    <class name="com.haoyong.sales.sale.form.WBillTicketForm"/>
+	</realm>
+</action-navigator-configuration>

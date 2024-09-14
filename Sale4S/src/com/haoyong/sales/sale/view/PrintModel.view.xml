@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mily-mappings package="com.haoyong.sales.sale.form">
+	<import>net.sf.mily.support.form.*</import>
+	<import>com.haoyong.sales.common.listener.*</import>
+	<import>com.haoyong.sales.sale.domain.*</import>
+	<import>com.haoyong.sales.base.domain.*</import>
+	<import>com.haoyong.sales.base.form.*</import>
+
+	<class name="PrintModelForm" label="对账单">
+		<view name="Model" label="打印模板" builder="EditViewBuilder">
+			<param name="menu">
+				<attribute name="text" value="保存" />
+				<attribute name="image" value="mily/img/color.gif" />
+				<param name="listener">
+					<attribute name="class" value="ValidateListener" />
+					<attribute name="method" value="validateModel" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="ActionServiceListener" />
+					<param name="action">
+						<attribute name="action" value="PrintModel_Save" />
+						<attribute name="setter" value="setModel4Service" />
+						<attribute name="message" value="保存打印模板" />
+						<param name="user">
+							<attribute name="method" value="setModelUser" />
+						</param>
+					</param>
+				</param>
+				<param name="listener">
+					<attribute name="class" value="RedirectorListener" />
+					<attribute name="url" value="success.jsp" />
+				</param>
+			</param>
+			<param name="menu">
+				<attribute name="text" value="打印预览" />
+				<attribute name="image" value="mily/img/color.gif" />
+				<param name="listener">
+					<attribute name="class" value="PostListener" />
+					<attribute name="method" value="preparePrintOne" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="PostListener" />
+					<attribute name="setter" value="showPrintOne" />
+				</param>
+			</param>
+			<property name="remind" label="提示" builder="HyperlinkBuilder">
+				<param name="cfg">
+					<attribute name="position" value="row"/>
+				</param>
+			</property>
+			<property name="model" class="PrintModel">
+				<property name="name" label="模板名称" builder="TextFieldBuilder">
+					<param name="validate">
+						<attribute name="require" value="true"/>
+					</param>
+				</property>
+				<property name="voParamMap.TicketList" label="可用单头" builder="HyperlinkBuilder">
+					<param name="cfg">
+						<attribute name="setter" value="getTicketLabels"/>
+						<attribute name="position" value="row"/>
+					</param>
+				</property>
+				<property name="voParamMap.DetailList" label="可用明细" builder="HyperlinkBuilder">
+					<param name="cfg">
+						<attribute name="setter" value="getDetailLabels"/>
+						<attribute name="position" value="row"/>
+					</param>
+				</property>
+				<property name="voParamMap.FooterList" label="可用明细合计" builder="HyperlinkBuilder">
+					<param name="cfg">
+						<attribute name="setter" value="getDetailCounts"/>
+						<attribute name="position" value="row"/>
+					</param>
+				</property>
+				<property name="content" builder="ComponentBuilder">
+					<param name="cfg">
+						<attribute name="position" value="row"/>
+						<attribute name="component-getter" value="getContent"/>
+					</param>
+				</property>
+			</property>
+		</view>
+	</class>
+</mily-mappings>

@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mily-mappings package="com.haoyong.sales.base.form">
+	<import>net.sf.mily.support.form.*</import>
+	<import>com.haoyong.sales.common.listener.*</import>
+	<import>com.haoyong.sales.base.domain.*</import>
+	<!-- 仓库显图 -->
+	<class name="StorehouseForm" label="仓库">
+		<property name="Storehouse" visible="false" class="Storehouse" builder="EditViewBuilder">
+			<property name="choose" class="Storehouse">
+	        	<property name="number" label="仓库编号" builder="TextFieldBuilder"/>
+	        	<property name="name" label="仓库名称" builder="TextFieldBuilder">
+					<param name="cfg">
+						<attribute name="type" value="Require"/>
+					</param>
+					<param name="listener">
+						<attribute name="class" value="ChangeAssociateListener"/>
+						<attribute name="properties" value="Storehouse"/>
+						<attribute name="getter" value="getStorehouseSearchName"/>
+					</param>
+					<param name="listener">
+						<attribute name="class" value="SimpleDialogOpenListener"/>
+						<attribute name="view-name" value="StorehouseQuery"/>
+						<attribute name="expression" value="isDialogOpen=true"/>
+					</param>
+					<param name="button">
+						<attribute name="text" value="选择" />
+						<param name="listener">
+							<attribute name="class" value="SimpleDialogOpenListener"/>
+							<attribute name="view-name" value="StorehouseQuery"/>
+						</param>
+					</param>
+	        	</property>
+	        	<property name="storeCheck" label="需要仓库验货" builder="CheckBoxBuilder"/>
+				<property name="linker" label="仓库人" builder="TextFieldBuilder"/>
+				<property name="linkerCall" label="仓库电话" builder="TextFieldBuilder"/>
+				<property name="linkerQQ" label="仓库人QQ" builder="TextFieldBuilder"/>
+				<property name="linkerEmail" label="仓库人邮箱" builder="TextFieldBuilder"/>
+				<property name="chuanzhen" label="传真号码" builder="TextFieldBuilder"/>
+				<property name="address" label="仓库地址" builder="TextFieldBuilder"/>
+				<property name="remark" label="仓库备注" builder="TextAreaBuilder">
+					<param name="cfg">
+						<attribute name="position" value="row"/>
+					</param>
+				</property>
+			</property>
+		</property>
+		<view name="Choose" label="仓库自选" builder="EditViewBuilder">
+			<property name="chooseFormer" Class="ChooseFormer" builder="ViewFieldBuilder">
+				<param name="cfg">
+					<attribute name="view-name" value="Base"/>
+					<attribute name="position" value="row"/>
+				</param>
+			</property>
+		</view>
+		<view name="List" label="仓库建档" builder="EditViewBuilder">
+			<param name="menu">
+				<attribute name="text" value="新增" />
+				<attribute name="image" value="mily/img/color.gif" />
+				<param name="listener">
+					<attribute name="class" value="PostListener" />
+					<attribute name="method" value="prepareCreate" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="ForwardListener"/>
+					<attribute name="view-name" value="Storehouse"/>
+				</param>
+			</param>
+			<param name="menu">
+				<attribute name="text" value="编辑" />
+				<attribute name="image" value="mily/img/color.gif" />
+				<param name="listener">
+					<attribute name="class" value="SelectDomainListener" />
+					<attribute name="former" value="selectFormer4Storehouse" />
+					<attribute name="view-name" value="selectedList" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="PostListener" />
+					<attribute name="method" value="prepareEdit" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="ForwardListener" />
+					<attribute name="view-name" value="Storehouse" />
+				</param>
+			</param>
+			<param name="menu">
+				<attribute name="text" value="删除" />
+				<attribute name="image" value="mily/img/color.gif" />
+				<param name="listener">
+					<attribute name="class" value="SelectDomainListener" />
+					<attribute name="former" value="selectFormer4Storehouse" />
+					<attribute name="view-name" value="selectedList" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="ActionServiceListener" />
+					<attribute name="action" value="Storehouse_Delete" />
+					<attribute name="setter" value="setStorehouseL4Service" />
+					<attribute name="message" value="确认删除此仓库？" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="RefreshListener" />
+				</param>
+			</param>
+			<property name="selectedList" class="Storehouse" builder="SqlListBuilder">
+				<fields>
+					<field id="id" type="Long" label="选择" expression="c.ID" />
+					<field id="SellerId" type="Long" label="商家ID" visible="false" expression="c.sellerId" />
+					<field id="number" type="String" label="仓库编号" expression="c.number" />
+					<field id="name" type="String" label="仓库名称" expression="c.name" />
+					<field id="storeCheck" type="boolean" label="需要仓库验货" expression="c.storeCheck" />
+					<field id="linker" type="String" label="联系人" expression="c.linker"/>
+					<field id="linkerCall" type="String" label="联系电话" expression="c.linkerCall"/>
+					<field id="chuanzhen" type="String" label="传真号码" expression="c.chuanzhen"/>
+					<field id="address" type="String" label="地址" expression="c.address"/>
+					<field id="remark" type="String" label="备注" expression="c.remark"/>
+					<field id="version" type="int" label="版本" visible="false" expression="c.version"/>
+				</fields>
+				<DataSource><![CDATA[
+					from bs_company c
+				]]>
+				</DataSource>
+				<Where><![CDATA[
+					c.dtype=4
+				]]>
+				</Where>
+			</property>
+		</view>
+		<view name="ShowQuery" builder="EditViewBuilder">
+			<property name="selectedList" class="Storehouse" builder="SqlListBuilder">
+				<param name="cfg">
+					<attribute0 name="freezable" value="false" />
+				</param>
+				<fields>
+					<field id="id" type="Long" label="选择" expression="c.ID" />
+					<field id="SellerId" type="Long" label="商家ID" visible="false" expression="c.sellerId" />
+					<field id="number" type="String" label="仓库编号" expression="c.number" />
+					<field id="name" type="String" label="仓库名称" expression="c.name" />
+					<field id="storeCheck" type="boolean" label="需要仓库验货" expression="c.storeCheck" />
+					<field id="linker" type="String" label="联系人" expression="c.linker"/>
+					<field id="linkerCall" type="String" label="联系电话" expression="c.linkerCall"/>
+					<field id="chuanzhen" type="String" label="传真号码" expression="c.chuanzhen"/>
+					<field id="address" type="String" label="地址" expression="c.address"/>
+					<field id="remark" type="String" label="备注" expression="c.remark"/>
+					<field id="modifytime" type="String" label="编辑时间" expression="c.modifytime"/>
+					<field id="version" type="int" label="版本" visible="false" expression="c.version"/>
+				</fields>
+				<DataSource><![CDATA[
+					from bs_company c
+				]]>
+				</DataSource>
+				<Where><![CDATA[
+					c.dtype=4
+				]]>
+				</Where>
+			</property>
+		</view>
+		<view name="Storehouse" builder="EditViewBuilder">
+			<param name="menu">
+				<attribute name="text" value="提交"></attribute>
+				<attribute name="image" value="mily/img/color.gif" />
+				<param name="listener">
+					<attribute name="class" value="ValidateListener" />
+					<attribute name="method" value="validateCommit" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="ActionServiceListener" />
+					<attribute name="action" value="Storehouse_Save" />
+					<attribute name="setter" value="setStorehouseA4Service" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="ForwardListener" />
+					<attribute name="getter" value="getForwardFromBuilder" />
+				</param>
+			</param>
+			<param name="menu">
+				<attribute name="text" value="取消" />
+				<attribute name="image" value="mily/img/color.gif" />
+				<param name="listener">
+					<attribute name="class" value="ForwardListener" />
+					<attribute name="getter" value="getForwardFromBuilder" />
+				</param>
+			</param>
+			<property name="domain" class="Storehouse" builder="EditViewBuilder"/>
+		</view>
+		<view name="Import" builder="EditViewBuilder">
+			<param name="cfg">
+				<attribute name="menu" value="加载列配置" />
+			</param>
+			<param name="menu">
+				<attribute name="text" value="导入提交" />
+				<attribute name="image" value="mily/img/color.gif" />
+				<param name="listener">
+					<attribute name="class" value="ValidateListener" />
+					<attribute name="setter" value="validateImport"/>
+				</param>
+				<param name="listener">
+					<attribute name="class" value="ActionServiceListener" />
+					<attribute name="action" value="Storehouse_Save"/>
+					<attribute name="setter" value="setImportL4Service"/>
+					<attribute name="message" value="导入仓库资料"/>
+				</param>
+				<param name="listener">
+					<attribute name="class" value="RedirectorListener" />
+					<attribute name="url" value="success.jsp"/>
+				</param>
+			</param>
+			<param name="menu">
+				<attribute name="text" value="加载列配置" />
+				<attribute name="image" value="mily/img/color.gif" />
+				<attribute name="show" value="false" />
+				<param name="listener">
+					<attribute name="class" value="PostListener" />
+					<attribute name="setter" value="setImportLabelLoad"/>
+				</param>
+				<param name="listener">
+					<attribute name="class" value="PostListener" />
+					<attribute name="setter" value="BaseImportForm.getSellerIndexes"/>
+				</param>
+			</param>
+			<property name="domain.voParamMap.Remark" label="单元格内容" builder="TextAreaBuilder">
+				<param name="cfg">
+					<attribute name="position" value="row" />
+				</param>
+			</property>
+			<property name="domain" label="标题行配置" class="Storehouse" builder="EditListBuilder">
+				<param name="menu">
+					<attribute name="text" value="默认依次顺序" />
+					<attribute name="image" value="mily/img/color.gif" />
+					<param name="listener">
+						<attribute name="class" value="PostListener" />
+						<attribute name="setter" value="BaseImportForm.setImportIndexDefault" />
+					</param>
+				</param>
+				<param name="menu">
+					<attribute name="text" value="清空顺序" />
+					<attribute name="image" value="mily/img/color.gif" />
+					<param name="listener">
+						<attribute name="class" value="PostListener" />
+						<attribute name="setter" value="BaseImportForm.setImportIndexClear" />
+					</param>
+				</param>
+				<param name="cfg">
+					<attribute name="property" value="Choose-Edit" />
+				</param>
+				<property name="voParamMap.note" label="标题名" builder="TextBuilder"/>
+			</property>
+			<property name="importList" label="格式化整理" class="Storehouse" builder="EditListBuilder">
+				<param name="menu">
+					<attribute name="text" value="删除行" />
+					<attribute name="image" value="mily/img/color.gif" />
+					<param name="listener">
+						<attribute name="class" value="SelectDeleteListener" />
+					</param>
+				</param>
+			<param name="menu">
+				<attribute name="text" value="导入格式化" />
+				<attribute name="image" value="mily/img/color.gif" />
+				<param name="listener">
+					<attribute name="class" value="ValidateListener" />
+					<attribute name="setter" value="validateToImport"/>
+				</param>
+				<param name="listener">
+					<attribute name="class" value="PostListener" />
+					<attribute name="setter" value="setImportFormated"/>
+				</param>
+				<param name="listener">
+					<attribute name="class" value="RefreshListener" />
+				</param>
+			</param>
+				<param name="cfg">
+					<attribute name="property" value="Choose-Edit" />
+				</param>
+				<property name="voParamMap.error" label="导入行错误" builder="TextFieldBuilder"/>
+			</property>
+		</view>
+	</class>
+</mily-mappings>

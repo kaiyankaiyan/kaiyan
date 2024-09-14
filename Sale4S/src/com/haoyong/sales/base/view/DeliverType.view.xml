@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mily-mappings package="com.haoyong.sales.base.form">
+	<import>net.sf.mily.support.form.*</import>
+	<import>com.haoyong.sales.common.listener.*</import>
+	<import>com.haoyong.sales.base.domain.*</import>
+	<!-- 发货方式 -->
+	<class name="DeliverTypeForm" label="发货方式">
+		<view name="List" label="发货方式建档" builder="EditViewBuilder">
+			<param name="cfg">
+				<attribute name="before" value="beforeList" />
+			</param>
+			<param name="menu">
+				<attribute name="text" value="新增" />
+				<attribute name="image" value="mily/img/color.gif" />
+				<param name="listener">
+					<attribute name="class" value="PostListener" />
+					<attribute name="method" value="createPrepare" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="ForwardListener"/>
+					<attribute name="view-name" value="edit"/>
+				</param>
+			</param>
+			<param name="menu">
+				<attribute name="text" value="编辑" />
+				<attribute name="image" value="mily/img/color.gif" />
+				<param name="listener">
+					<attribute name="class" value="SelectDomainListener" />
+					<attribute name="view-name" value="detailList" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="PostListener" />
+					<attribute name="method" value="editPrepare" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="ForwardListener" />
+					<attribute name="view-name" value="edit" />
+				</param>
+			</param>
+			<param name="menu">
+				<attribute name="text" value="删除" />
+				<attribute name="image" value="mily/img/color.gif" />
+				<param name="listener">
+					<attribute name="class" value="SelectDomainListener" />
+					<attribute name="view-name" value="detailList" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="PostListener" />
+					<attribute name="method" value="editPrepare" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="ActionServiceListener" />
+					<attribute name="action" value="TypeInfos_ItemDelete" />
+					<attribute name="setter" value="setDeliver4Service" />
+					<attribute name="message" value="确认删除此发货分类？" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="RefreshListener" />
+				</param>
+			</param>
+			<property name="detailList" class="DeliverType" builder="EditListBuilder">
+				<property name="id" label="方式编号" builder="TextBuilder"/>
+				<property name="name" label="方式名称" builder="TextBuilder"/>
+			</property>
+		</view>
+		<view name="DeliverTypeQuery" builder="EditViewBuilder">
+			<param name="cfg">
+				<attribute name="before" value="beforeList" />
+			</param>
+			<property name="detailList" class="DeliverType" builder="EditSqlBuilder">
+				<property name="id" label="方式编号" builder="TextBuilder"/>
+				<property name="name" label="方式名称" builder="TextBuilder"/>
+			</property>
+		</view>
+		<view name="edit" builder="EditViewBuilder">
+			<param name="menu">
+				<attribute name="text" value="提交" />
+				<attribute name="image" value="mily/img/color.gif" />
+				<!-- 数据验证 -->
+				<param name="listener">
+					<attribute name="class" value="ValidateListener" />
+					<attribute name="method" value="createCommit" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="ActionServiceListener" />
+					<attribute name="action" value="TypeInfos_ItemSave" />
+					<attribute name="setter" value="setDeliver4Service" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="ForwardListener" />
+					<attribute name="view-name" value="List" />
+				</param>
+			</param>
+			<param name="menu">
+				<attribute name="text" value="取消" />
+				<attribute name="image" value="mily/img/color.gif" />
+				<param name="listener">
+					<attribute name="class" value="ForwardListener" />
+					<attribute name="view-name" value="List" />
+				</param>
+			</param>
+			<property name="domain" class="DeliverType" builder="EditViewBuilder">
+				<property name="id" label="方式编号" builder="TextBuilder"/>
+				<property name="name" label="方式名称" builder="TextFieldBuilder">
+  					<param name="validate">
+						<attribute name="require" value="true"/>
+					</param>
+				</property>
+			</property>
+		</view>
+	</class>
+</mily-mappings>

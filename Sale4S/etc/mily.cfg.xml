@@ -1,0 +1,82 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+<mily-configuration>
+	<!-- mapping resource path -->
+	<mappings dyna-load="true">
+		<!-- default import package and classes -->
+		<import>java.util.*</import>
+		<import>net.sf.mily.webObject.*</import>
+		<import>net.sf.mily.listener.*</import>
+		<view-sources>
+			<resource path="net/sf/mily/view/testObject.view.xml" />
+			<resource path="net/sf/mily/webObject/form/SqlListBuilderSetting.view.xml"/>
+<!-- setting 服务类 -->
+			<resource path="com/haoyong/sales/common/view/TestCase.view.xml" />
+<!-- base 基础类 -->
+			<resource path="com/haoyong/sales/base/view/Choose.view.xml" />
+			<resource path="com/haoyong/sales/base/view/Seller.view.xml" />
+			<resource path="com/haoyong/sales/base/view/BaseQuery.view.xml" />
+			<resource path="com/haoyong/sales/base/view/BaseImport.view.xml" />
+			<resource path="com/haoyong/sales/base/view/User.view.xml" />
+			<resource path="com/haoyong/sales/base/view/Client.view.xml" />
+			<resource path="com/haoyong/sales/base/view/SubCompany.view.xml" />
+			<resource path="com/haoyong/sales/base/view/Supplier.view.xml" />
+			<resource path="com/haoyong/sales/base/view/SupplyType.view.xml" />
+			<resource path="com/haoyong/sales/base/view/CType.view.xml" />
+			<resource path="com/haoyong/sales/base/view/CType2.view.xml" />
+			<resource path="com/haoyong/sales/base/view/CommCol.view.xml" />
+			<resource path="com/haoyong/sales/base/view/Yards.view.xml" />
+			<resource path="com/haoyong/sales/base/view/DeliverType.view.xml" />
+			<resource path="com/haoyong/sales/base/view/BillType.view.xml" />
+			<resource path="com/haoyong/sales/base/view/Commodity.view.xml" />
+			<resource path="com/haoyong/sales/base/view/Storehouse.view.xml" />
+			<resource path="com/haoyong/sales/base/view/BOM.view.xml" />
+<!-- sale 销售类 -->
+			<resource path="com/haoyong/sales/sale/view/SaleQuery.view.xml" />
+			<resource path="com/haoyong/sales/sale/view/Question.view.xml" />
+			<resource path="com/haoyong/sales/sale/view/GlobalSearch.view.xml" />
+			<resource path="com/haoyong/sales/sale/view/PrintModel.view.xml" />
+			<resource path="com/haoyong/sales/sale/view/OrderType.view.xml" />
+			<resource path="com/haoyong/sales/sale/view/OrderDoption.view.xml" />
+			<resource path="com/haoyong/sales/sale/view/OrderTicket.view.xml" />
+			<resource path="com/haoyong/sales/sale/view/BOrderTicket.view.xml" />
+			<resource path="com/haoyong/sales/sale/view/DOrderTicket.view.xml" />
+			<resource path="com/haoyong/sales/sale/view/ArrangeTicket.view.xml" />
+			<resource path="com/haoyong/sales/sale/view/PArrangeTicket.view.xml" />
+			<resource path="com/haoyong/sales/sale/view/PurchaseTicket.view.xml" />
+			<resource path="com/haoyong/sales/sale/view/PPurchaseTicket.view.xml" />
+			<resource path="com/haoyong/sales/sale/view/PurchaseReturn.view.xml" />
+			<resource path="com/haoyong/sales/sale/view/ReceiptTicket.view.xml" />
+			<resource path="com/haoyong/sales/sale/view/StoreTicket.view.xml" />
+			<resource path="com/haoyong/sales/sale/view/OutStoreTicket.view.xml" />
+			<resource path="com/haoyong/sales/sale/view/InStoreTicket.view.xml" />
+			<resource path="com/haoyong/sales/sale/view/LocationTicket.view.xml" />
+			<resource path="com/haoyong/sales/sale/view/OutAgentTicket.view.xml" />
+			<resource path="com/haoyong/sales/sale/view/InAgentTicket.view.xml" />
+			<resource path="com/haoyong/sales/sale/view/SendTicket.view.xml" />
+			<resource path="com/haoyong/sales/sale/view/OrderReturn.view.xml" />
+			<resource path="com/haoyong/sales/sale/view/BillTicket.view.xml" />
+			<resource path="com/haoyong/sales/sale/view/WBillTicket.view.xml" />
+<!-- custom 定制类 -->
+			<resource path="com/haoyong/sales/custom/PurchaseCustom.view.xml" />
+		</view-sources>
+	</mappings>
+	<!-- ui installer properties -->
+	<ui>
+		<properties name="net.sf.mily.cfg.UIInstaller" />
+		<properties name="net.sf.mily.cfg.ExUIInstaller" />
+	</ui>
+<!--
+	<i18n>
+		<resource path="net.sf.mily.tutorial.i18n.resources" />
+	</i18n>
+-->
+	<!-- other settings -->
+	<options>
+		<!-- Echo all ajax response to stdout  -->
+		<property name="show-response">false</property>
+		<property name="locale">SIMPLIFIED_CHINESE</property>
+		<property name="title">广州浩进销平台</property>
+		<property name="query-executor">net.sf.mily.common.JdbcQueryExecutor</property>
+		<property name="session-provider">com.haoyong.sales.common.dao.SSaleSessionProvider</property>
+	</options>
+</mily-configuration>

@@ -1,0 +1,299 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mily-mappings package="com.haoyong.sales.sale.form">
+	<import>net.sf.mily.support.form.*</import>
+	<import>com.haoyong.sales.common.listener.*</import>
+	<import>com.haoyong.sales.sale.domain.*</import>
+	<import>com.haoyong.sales.base.domain.*</import>
+	<import>com.haoyong.sales.base.form.*</import>
+
+	<class name="InAgentTicketForm" label="台账调整">
+		<property name="InstoreTicket" visible="false" class="InstoreTicket" builder="EditViewBuilder">
+			<property name="Ticket" class="InstoreTicket">
+				<property name="number" label="入账单号" builder="TextFieldBuilder">
+					<param name="cfg">
+						<attribute name="type" value="Require"/>
+					</param>
+					<param name="button">
+						<attribute name="text" value="生成单号" />
+						<param name="listener">
+							<attribute name="class" value="ChangeAssociateListener" />
+							<attribute name="method" value="setInstoreTicketNumber" />
+							<attribute name="properties" value="number" />
+						</param>
+					</param>
+				</property>
+				<property name="number2" label="人工单号" builder="TextFieldBuilder"/>
+				<property name="type" label="入账类型" builder="TextFieldBuilder">
+					<param name="cfg">
+						<attribute name="type" value="Require"/>
+					</param>
+				</property>
+				<property name="remark" label="入账备注" builder="TextAreaBuilder">
+					<param name="cfg">
+						<attribute name="position" value="row" />
+					</param>
+				</property>
+			</property>
+			<property name="Handle" class="InstoreTicket">
+				<property name="InAmount" label="入库数量" builder="TextFieldBuilder"/>
+				<property name="OutAmount" label="出库数量" builder="TextFieldBuilder"/>
+				<property name="Amount" label="新台账数" builder="TextFieldBuilder"/>
+			</property>
+		</property>
+		<view name="InstoreChoose" label="入账单自选" builder="EditViewBuilder">
+			<property name="InstoreChooseFormer" Class="ChooseFormer" builder="ViewFieldBuilder">
+				<param name="cfg">
+					<attribute name="view-name" value="Ticket"/>
+					<attribute name="position" value="row"/>
+				</param>
+			</property>
+		</view>
+		<view name="InAgent" label="入账开单" builder="EditViewBuilder">
+			<param name="cfg">
+				<attribute name="before" value="beforeInstore" />
+			</param>
+			<param name="menu">
+				<attribute name="text" value="提交入账" />
+				<attribute name="image" value="mily/img/color.gif" />
+				<param name="listener">
+					<attribute name="class" value="ValidateListener" />
+					<attribute name="method" value="validateInstore" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="PostListener" />
+					<attribute name="method" value="setInstore4Service" info="备货库存添加" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="ActionServiceListener" />
+					<attribute name="message" value="确认新增库存明细数量" />
+					<param name="action">
+						<attribute name="action" value="BomTicket_Save" />
+						<attribute name="setter" value="setInstore4Service" />
+						<attribute name="message" value="台账入库开单加台账数"/>
+						<param name="state">
+							<attribute name="id" value="30" />
+							<attribute name="name" value="台账入库开单" />
+							<attribute name="method" value="setStoreState" />
+						</param>
+					</param>
+					<param name="action">
+						<attribute name="action" value="BomTicket_Save" />
+						<attribute name="setter" value="setBom4Service" />
+						<attribute name="message" value="新增导入库存明细"/>
+						<param name="state">
+							<attribute name="id" value="0" />
+							<attribute name="name" value="台账入库开单" />
+							<attribute name="method" value="setBomState" />
+						</param>
+					</param>
+				</param>
+				<param name="listener">
+					<attribute name="class" value="RedirectorListener" />
+					<attribute name="url" value="success.jsp"/>
+				</param>
+			</param>
+			<property name="domain" class="BomDetail">
+	        	<property name="supplier.name" label="生产方名称" builder="TextFieldBuilder">
+					<param name="cfg">
+						<attribute name="type" value="Require"/>
+					</param>
+					<param name="listener">
+						<attribute name="class" value="ChangeAssociateListener"/>
+						<attribute name="properties" value="supplier"/>
+						<attribute name="getter" value="getSupplierSearchName"/>
+					</param>
+					<param name="listener">
+						<attribute name="class" value="SimpleDialogOpenListener"/>
+						<attribute name="view-name" value="SupplierQuery"/>
+						<attribute name="expression" value="isDialogOpen=true"/>
+					</param>
+					<param name="button">
+						<attribute name="text" value="选择" />
+						<param name="listener">
+							<attribute name="class" value="SimpleDialogOpenListener"/>
+							<attribute name="view-name" value="SupplierQuery"/>
+						</param>
+					</param>
+	        	</property>
+				<property name="InstoreTicket.Ticket" class="InstoreTicket" />
+			</property>
+			<property name="detailList" class="BomDetail" builder="EditListBuilder">
+				<param name="menu">
+					<attribute name="text" value="添加商品" />
+					<attribute name="image" value="mily/img/color.gif" />
+					<param name="listener">
+						<attribute name="class" value="SimpleDialogOpenListener"/>
+						<attribute name="view-name" value="StoreQuery"/>
+					</param>
+				</param>
+				<param name="menu">
+					<attribute name="text" value="移除明细" />
+					<attribute name="image" value="mily/img/color.gif" />
+					<param name="listener">
+						<attribute name="class" value="SelectDeleteListener" />
+					</param>
+				</param>
+				<property name="commodity" class="Commodity" />
+				<property name="voParamMap.BomDetail.amount" label="原台账数量" builder="TextBuilder" />
+				<property name="instoreTicket.InAmount" label="入库数量" builder="TextFieldBuilder" >
+					<param name="validate">
+						<attribute name="message" value="入库数量大于0"/>
+						<attribute name="validate"><![CDATA[isBlank(this.value) || 0<eval(this.value)]]></attribute>
+						<attribute name="getter"><![CDATA[
+							var sf={$voParamMap.BomDetail.amount}.svalue, vf=isBlank(sf)? 0: eval(sf);
+							var st={$InstoreTicket.Amount}.value, vt=isBlank(st)? 0: eval(st);
+							this.value=vf<vt? (vt-vf).toFixed(2): '';
+						]]></attribute>
+						<attribute name="setter"><![CDATA[
+							[{$InstoreTicket.Amount}]
+						]]></attribute>
+					</param>
+				</property>
+				<property name="instoreTicket.OutAmount" label="出库数量" builder="TextFieldBuilder" >
+					<param name="validate">
+						<attribute name="message" value="出库数量大于0"/>
+						<attribute name="validate"><![CDATA[isBlank(this.value) || 0<eval(this.value)]]></attribute>
+						<attribute name="getter"><![CDATA[
+							var sf={$voParamMap.BomDetail.amount}.svalue, vf=isBlank(sf)? 0: eval(sf);
+							var st={$InstoreTicket.Amount}.value, vt=isBlank(st)? 0: eval(st);
+							this.value=vf>vt? (vf-vt).toFixed(2): '';
+						]]></attribute>
+						<attribute name="setter"><![CDATA[
+							[{$InstoreTicket.Amount}]
+						]]></attribute>
+					</param>
+				</property>
+				<property name="instoreTicket.Amount" label="新台账数量" builder="TextFieldBuilder" >
+					<param name="validate">
+						<attribute name="getter"><![CDATA[
+							var sf={$voParamMap.BomDetail.amount}.svalue, vf=isBlank(sf)? 0: eval(sf);
+							var si={$InstoreTicket.InAmount}.value, vi=isBlank(si)? 0: eval(si);
+							var so={$InstoreTicket.OutAmount}.value, vo=isBlank(so)? 0: eval(so);
+							this.value=(vf+vi-vo).toFixed(2);
+						]]></attribute>
+						<attribute name="setter"><![CDATA[
+							[{$InstoreTicket.InAmount}, {$InstoreTicket.OutAmount}]
+						]]></attribute>
+					</param>
+				</property>
+				<property name="remark" label="明细备注" builder="TextFieldBuilder"/>
+			</property>
+		</view>
+		<view name="StoreQuery" builder="EditViewBuilder">
+			<param name="menu">
+				<attribute name="text" value="确定" />
+				<attribute name="image" value="mily/img/color.gif" />
+				<param name="listener">
+					<attribute name="class" value="SelectDomainListener" />
+					<attribute name="former" value="selectFormer4Store" />
+					<attribute name="setter" value="setStoreSelect" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="SimpleDialogCloseListener" />
+				</param>
+			</param>
+			<param name="menu">
+				<attribute name="text" value="关闭" />
+				<attribute name="image" value="mily/img/color.gif" />
+				<param name="listener">
+					<attribute name="class" value="SimpleDialogCloseListener" />
+				</param>
+			</param>
+			<property name="selectFormer4Commodity.selectedList" class="StoreEnough" builder="SqlListBuilder">
+				<param name="cfg">
+					<attribute name="parameter" value="getParam4Commodity" />
+				</param>
+				<fields>
+					<field id="id" type="Long" label="选择" expression="s.ID" />
+					<field id="SellerId" type="Long" label="商家ID" visible="false" expression="s.sellerId" />
+					<field id="commNumber" type="String" label="商品编号" expression="s.commNumber" />
+					<field id="commName" type="String" label="商品名称" expression="s.commName" />
+					<field id="storeAmount" type="Double" label="库存数量" expression="s.storeAmount" >
+						<param name="footer">
+							<attribute name="type" value="SUM" />
+							<attribute name="expression" value="sum(s.storeAmount)" />
+						</param>
+					</field>
+					<field id="version" type="int" label="版本" visible="false" expression="s.version" />
+				</fields>
+				<DataSource><![CDATA[
+					from sa_StoreEnough s
+				]]>
+				</DataSource>
+				<Where><![CDATA[
+					s.storeAmount>0 and {$NotCommodityList}
+				]]>
+				</Where>
+			</property>
+		</view>
+		<view name="SupplierQuery" builder="EditViewBuilder">
+			<param name="menu">
+				<attribute name="text" value="确定" />
+				<attribute name="image" value="mily/img/color.gif" />
+				<param name="listener">
+					<attribute name="class" value="SelectDomainListener" />
+					<attribute name="former" value="selectFormer4Store" />
+					<attribute name="setter" value="setSupplierSelect" />
+					<attribute name="view-name" value="selectedList" />
+					<param name="same">
+						<attribute name="properties" value="supplierName" />
+					</param>
+				</param>
+				<param name="listener">
+					<attribute name="class" value="SimpleDialogCloseListener" />
+				</param>
+			</param>
+			<param name="menu">
+				<attribute name="text" value="关闭" />
+				<attribute name="image" value="mily/img/color.gif" />
+				<param name="listener">
+					<attribute name="class" value="SimpleDialogCloseListener" />
+				</param>
+			</param>
+			<property name="selectedList" class="BomDetail" builder="SqlListBuilder">
+				<fields>
+					<field id="id" type="Long" label="选择" expression="p.ID" />
+					<field id="SellerId" type="Long" label="商家ID" visible="false" expression="p.sellerId" />
+					<field id="supplierName" type="String" label="生产方" expression="p.supplierName" />
+					<field id="commNumber" type="String" label="商品编号" expression="p.commNumber" />
+					<field id="commName" type="String" label="商品名称" expression="p.commName" />
+					<field id="amount" type="Double" label="库存数量" expression="p.amount" />
+					<field id="price" type="Double" label="库存价格" expression="p.price" />
+					<field id="stBom" type="int" label="台账状态Id" visible="false" expression="p.stBom" />
+					<field id="version" type="int" label="版本" visible="false" expression="p.version" />
+				</fields>
+				<DataSource><![CDATA[
+					from sa_BomDetail p
+				]]>
+				</DataSource>
+			</property>
+		</view>
+		<view name="CommodityQuery" builder="EditViewBuilder">
+			<param name="menu">
+				<attribute name="text" value="确定" />
+				<attribute name="image" value="mily/img/color.gif" />
+				<param name="listener">
+					<attribute name="class" value="SelectDomainListener" />
+					<attribute name="former" value="selectFormer4Store" />
+					<attribute name="setter" value="setCommoditySelect" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="SimpleDialogCloseListener" />
+				</param>
+			</param>
+			<param name="menu">
+				<attribute name="text" value="关闭" />
+				<attribute name="image" value="mily/img/color.gif" />
+				<param name="listener">
+					<attribute name="class" value="SimpleDialogCloseListener" />
+				</param>
+			</param>
+			<property name="selfForm" Class="InAgentTicketForm" builder="ViewFieldBuilder">
+				<param name="cfg">
+					<attribute name="view-name" value="SupplierQuery.selectedList"/>
+					<attribute name="position" value="row"/>
+				</param>
+			</property>
+		</view>
+	</class>
+</mily-mappings>

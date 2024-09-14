@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mily-mappings package="com.haoyong.sales.sale.form">
+	<import>net.sf.mily.support.form.*</import>
+	<import>com.haoyong.sales.common.listener.*</import>
+	<import>com.haoyong.sales.sale.domain.*</import>
+	<class name="GlobalSearchForm" label="我的HaoSale">
+		<view name="Search" label="搜索订单流转" builder="EditViewBuilder">
+			<param name="cfg">
+				<attribute name="menu" value="加载配置" />
+			</param>
+			<param name="menu">
+				<attribute name="text" value="搜索" />
+				<attribute name="image" value="mily/img/color.gif" />
+				<param name="listener">
+					<attribute name="class" value="PostListener"/>
+					<attribute name="method" value="doSearch"/>
+				</param>
+				<param name="listener">
+					<attribute name="class" value="RefreshListener"/>
+					<attribute name="view-name" value="SearchRightList"/>
+					<attribute name="before" value="setGlobalShared" info="使主界面知道全局搜索结果"/>
+				</param>
+			</param>
+			<param name="menu">
+				<attribute name="text" value="加载配置" />
+				<attribute name="image" value="mily/img/color.gif" />
+				<attribute name="show" value="false" />
+				<param name="listener">
+					<attribute name="class" value="PostListener" />
+					<attribute name="setter" value="loadSearch"/>
+				</param>
+				<param name="listener">
+					<attribute name="class" value="ChangeAssociateListener" />
+					<attribute name="properties" value="OrderDetail" />
+				</param>
+			</param>
+			<property name="OrderDetail" class="OrderDetail">
+				<property name="monthnum" label="月流水号" builder="TextFieldBuilder"/>
+				<property name="OrderTicket.number" label="订单号" builder="TextFieldBuilder"/>
+			</property>
+			<property name="SearchRightList" class="com.haoyong.sales.common.form.MainForm$RightNode" builder="EditListBuilder">
+				<property name="PathText" label="功能名称" builder="TextBuilder"/>
+				<property name="searchCount" label="记录数" builder="TextBuilder"/>
+			</property>
+		</view>
+		<view name="UserPsw" label="更改密码" builder="EditViewBuilder">
+			<property name="UserForm" Class="UserForm" builder="ViewFieldBuilder">
+				<param name="cfg">
+					<attribute name="view-name" value="ChangePassword"/>
+					<attribute name="position" value="row"/>
+				</param>
+			</property>
+		</view>
+	</class>
+</mily-mappings>

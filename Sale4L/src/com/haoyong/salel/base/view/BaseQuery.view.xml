@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mily-mappings package="com.haoyong.salel.base.form">
+	<import>net.sf.mily.support.form.*</import>
+	<import>com.haoyong.salel.common.listener.*</import>
+	<import>com.haoyong.salel.base.domain.*</import>
+	<class name="BaseQueryForm" label="基础查询">
+		<view name="ProvinceQuery" label="省份查询" builder="EditViewBuilder">
+			<property name="ProvinceForm" class="ProvinceForm" builder="ViewFieldBuilder">
+				<param name="cfg">
+					<attribute name="view-name" value="ProvinceQuery" />
+					<attribute name="position" value="row" />
+				</param>
+			</property>
+		</view>
+		<view name="CityQuery" label="城市查询" builder="EditViewBuilder">
+			<property name="CityForm" class="CityForm" builder="ViewFieldBuilder">
+				<param name="cfg">
+					<attribute name="view-name" value="CityQuery" />
+					<attribute name="position" value="row" />
+				</param>
+			</property>
+		</view>
+	</class>
+</mily-mappings>

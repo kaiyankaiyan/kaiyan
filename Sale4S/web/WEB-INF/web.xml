@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="2.5" xmlns="http://java.sun.com/xml/ns/javaee"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee 
+	http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" metadata-complete="true">
+	<display-name>SSell1.0</display-name>
+	<session-config>
+		<session-timeout>600</session-timeout>
+	</session-config>
+	<filter>
+		<filter-name>CheckLoginFilter</filter-name>
+		<filter-class>com.haoyong.sales.common.filter.CheckLoginFilter</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>CheckLoginFilter</filter-name>
+		<url-pattern>*.jsp</url-pattern>
+	</filter-mapping>
+	<servlet>
+		<servlet-name>ExecutorService</servlet-name>
+		<servlet-class>com.haoyong.sales.common.schedule.ExecutorService</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	<servlet>
+		<servlet-name>ActionForm</servlet-name>
+		<servlet-class>net.sf.mily.server.ActionForm</servlet-class>
+	</servlet>	
+	<servlet>
+		<servlet-name>CheckinForm</servlet-name>
+		<servlet-class>com.haoyong.sales.base.form.CheckinForm</servlet-class>
+	</servlet>	
+	<servlet>
+		<servlet-name>JDRequest</servlet-name>
+		<servlet-class>com.haoyong.sales.custom.JDRequest</servlet-class>
+	</servlet>	
+	<servlet-mapping>
+		<servlet-name>ActionForm</servlet-name>
+		<url-pattern>/actionform.jsp</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>CheckinForm</servlet-name>
+		<url-pattern>/CheckInForM.jsp</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>JDRequest</servlet-name>
+		<url-pattern>/custom/JDRequest.jsp</url-pattern>
+	</servlet-mapping>
+
+	<welcome-file-list>
+		<welcome-file>index.jsp</welcome-file>
+	</welcome-file-list>
+</web-app>

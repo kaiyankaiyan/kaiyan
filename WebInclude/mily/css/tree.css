@@ -1,0 +1,18 @@
+.tree {
+	border-collapse:collapse;
+	padding:0;
+	border-width:0;
+	-moz-user-select:none;
+}
+.node {
+	white-space:nowrap;
+}
+.node td:hover {
+	background-color: #C1E3FF;
+}
+.nodetext {
+	background-color: ;
+}
+.nodetext_selected, .nodetext_selected:visited {
+	background-color: #FFFFFF;
+}

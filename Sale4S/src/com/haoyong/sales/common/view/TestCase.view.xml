@@ -1,0 +1,1222 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mily-mappings package="com.haoyong.sales.common.form">
+	<import>net.sf.mily.support.form.*</import>
+	<import>com.haoyong.sales.common.listener.*</import>
+	<import>com.haoyong.sales.test.sale.*</import>
+	<import>com.haoyong.sales.custom.*</import>
+	<class name="TestCaseForm" label="测试用例">
+		<view name="gTest" label0="采购" builder="EditViewBuilder">
+			<param name="cfg">
+				<attribute name="freezable" value="false" />
+			</param>
+			<param name="menu">
+				<attribute name="text" value="打印预览" />
+				<attribute name="image" value="mily/img/color.gif" />
+				<param name="listener">
+					<attribute name="class" value="PostListener" />
+					<attribute name="setter" value="onPrintOne" />
+				</param>
+			</param>
+			<property name="L" label="Test测试" builder="HyperlinkBuilder">
+				<param name="cfg">
+					<attribute name="show-label" value="false" />
+					<attribute name="setter" value="setL" />
+					<attribute name="columns" value="2" />
+					<attribute name="type" value="Product" />
+				</param>
+			</property>
+<!-- --> 
+			<property name="p1" builder="HyperlinkBuilder">
+				<param name="cfg">
+					<attribute name="setter" value="setP2" />
+					<attribute name="property" value="SpecialOrderTest.setQ清空" />
+					<attribute name="columns" value="2" />
+				</param>
+			</property>
+
+			<property name="p1" builder="HyperlinkBuilder">
+				<param name="cfg">
+					<attribute name="setter" value="setP2" />
+					<attribute name="property" value="SpecialOrderTest.set服装生产" />
+					<attribute name="columns" value="2" />
+				</param>
+			</property>
+			<property name="p1" builder="HyperlinkBuilder">
+				<param name="cfg">
+					<attribute name="setter" value="setP2" />
+					<attribute name="property" value="SpecialOrderTest.get订单" />
+					<attribute name="columns" value="2" />
+				</param>
+			</property>
+			<property name="Total" label="合计" builder="HyperlinkBuilder">
+				<param name="cfg">
+					<attribute name="show-label" value="false" />
+					<attribute name="setter" value="setT" />
+					<attribute name="columns" value="2" />
+				</param>
+			</property>
+		</view>
+		<view name="show" label="测试结果" builder="EditViewBuilder">
+			<param name="menu">
+				<attribute name="text" value="定时刷新" />
+				<attribute name="image" value="mily/img/color.gif" />
+				<param name="listener">
+					<attribute name="class" value="ForwardListener" />
+					<attribute name="view-name" value="show" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="CyclingDoListener" />
+				</param>
+			</param>
+			<property name="s1" label0="基础" builder="HyperlinkBuilder">
+				<param name="cfg">
+					<attribute name="position" value="row" />
+					<attribute name="setter" value="setS1" />
+					<attribute name="view-name" value="gBase" />
+				</param>
+			</property>
+			<property name="s1" label0="订单" builder="HyperlinkBuilder">
+				<param name="cfg">
+					<attribute name="position" value="row" />
+					<attribute name="setter" value="setS1" />
+					<attribute name="view-name" value="gOrder" />
+				</param>
+			</property>
+			<property name="s1" label0="排单" builder="HyperlinkBuilder">
+				<param name="cfg">
+					<attribute name="position" value="row" />
+					<attribute name="setter" value="setS1" />
+					<attribute name="view-name" value="gArrange" />
+				</param>
+			</property>
+			<property name="s1" label0="采购" builder="HyperlinkBuilder">
+				<param name="cfg">
+					<attribute name="position" value="row" />
+					<attribute name="setter" value="setS1" />
+					<attribute name="view-name" value="gPurchase" />
+				</param>
+			</property>
+			<property name="s1" label0="库存计算" builder="HyperlinkBuilder">
+				<param name="cfg">
+					<attribute name="position" value="row" />
+					<attribute name="setter" value="setS1" />
+					<attribute name="view-name" value="gStore" />
+				</param>
+			</property>
+			<property name="s1" label0="收货" builder="HyperlinkBuilder">
+				<param name="cfg">
+					<attribute name="position" value="row" />
+					<attribute name="setter" value="setS1" />
+					<attribute name="view-name" value="gReceipt" />
+				</param>
+			</property>
+			<property name="s1" label0="销售发货" builder="HyperlinkBuilder">
+				<param name="cfg">
+					<attribute name="position" value="row" />
+					<attribute name="setter" value="setS1" />
+					<attribute name="view-name" value="gSend" />
+				</param>
+			</property>
+			<property name="s1" label0="退货" builder="HyperlinkBuilder">
+				<param name="cfg">
+					<attribute name="position" value="row" />
+					<attribute name="setter" value="setS1" />
+					<attribute name="view-name" value="gReturn" />
+				</param>
+			</property>
+			<property name="s1" label0="内部入库" builder="HyperlinkBuilder">
+				<param name="cfg">
+					<attribute name="position" value="row" />
+					<attribute name="setter" value="setS1" />
+					<attribute name="view-name" value="gInStore" />
+				</param>
+			</property>
+			<property name="s1" label0="内部出库" builder="HyperlinkBuilder">
+				<param name="cfg">
+					<attribute name="position" value="row" />
+					<attribute name="setter" value="setS1" />
+					<attribute name="view-name" value="gOutStore" />
+				</param>
+			</property>
+			<property name="s1" label0="收款付款，对账" builder="HyperlinkBuilder">
+				<param name="cfg">
+					<attribute name="position" value="row" />
+					<attribute name="setter" value="setS1" />
+					<attribute name="view-name" value="gBill" />
+				</param>
+			</property>
+		</view>
+		<view name="PrintViewSerial" label0="打印界面" builder="EditViewBuilder">
+			<param name="cfg">
+				<attribute name="freezable" value="false" />
+			</param>
+			<property name="printViewSerial" class="com.haoyong.sales.base.domain.PrintViewSerial">
+				<property name="path" label0="功能路径按钮" builder="TextBuilder">
+					<param name="cfg">
+						<attribute name="show-label" value="false" />
+						<attribute name="position" value="row" />
+					</param>
+				</property>
+				<property name="content" label0="界面" builder="HyperlinkBuilder">
+					<param name="cfg">
+						<attribute name="show-label" value="false" />
+						<attribute name="setter" value="setPrintView" />
+						<attribute name="position" value="row" />
+					</param>
+				</property>
+			</property>
+		</view>
+		<view name="gBase" label0="基础" builder="EditViewBuilder">
+			<param name="cfg">
+				<attribute name="freezable" value="false" />
+				<attribute name="menu" value="保存测试结果" />
+			</param>
+			<param name="menu">
+				<attribute name="text" value="保存测试结果" />
+				<attribute name="image" value="mily/img/color.gif" />
+				<attribute name="show" value="false" />
+				<param name="listener">
+					<attribute name="class" value="PostListener" />
+					<attribute name="setter" value="getTestResult" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="ActionServiceListener" />
+					<param name="action">
+						<attribute name="action" value="PrintModel_Save" />
+						<attribute name="message" value="保存单元测试用例运行结果" />
+						<attribute name="setter" value="setPrintModel4Service" />
+					</param>
+				</param>
+			</param>
+			<property name="L" label="导入" builder="HyperlinkBuilder">
+				<param name="cfg">
+					<attribute name="show-label" value="false" />
+					<attribute name="setter" value="setL" />
+					<attribute name="columns" value="2" />
+				</param>
+			</property>
+			<property name="p1" builder="HyperlinkBuilder">
+				<param name="cfg">
+					<attribute name="setter" value="setP1" />
+					<attribute name="property" value="UserTest.test导入用户" />
+					<attribute name="columns" value="2" />
+				</param>
+			</property>
+			<property name="p1" builder="HyperlinkBuilder">
+				<param name="cfg">
+					<attribute name="setter" value="setP1" />
+					<attribute name="property" value="CommodityTest.test导入商品" />
+					<attribute name="columns" value="2" />
+				</param>
+			</property>
+			<property name="p1" builder="HyperlinkBuilder">
+				<param name="cfg">
+					<attribute name="setter" value="setP1" />
+					<attribute name="property" value="StorehouseTest.test导入仓库" />
+					<attribute name="columns" value="2" />
+				</param>
+			</property>
+			<property name="p1" builder="HyperlinkBuilder">
+				<param name="cfg">
+					<attribute name="setter" value="setP1" />
+					<attribute name="property" value="SupplierTest.test导入供应商" />
+					<attribute name="columns" value="2" />
+				</param>
+			</property>
+			<property name="p1" builder="HyperlinkBuilder">
+				<param name="cfg">
+					<attribute name="setter" value="setP1" />
+					<attribute name="property" value="ClientTest.test导入客户" />
+					<attribute name="columns" value="2" />
+				</param>
+			</property>
+			<property name="p1" builder="HyperlinkBuilder">
+				<param name="cfg">
+					<attribute name="setter" value="setP1" />
+					<attribute name="property" value="SubCompanyTest.test导入分公司" />
+					<attribute name="columns" value="2" />
+				</param>
+			</property>
+			<property name="p1" builder="HyperlinkBuilder">
+				<param name="cfg">
+					<attribute name="setter" value="setP1" />
+					<attribute name="property" value="PurchaseTicketTest.test导入库存" />
+					<attribute name="columns" value="2" />
+				</param>
+			</property>
+			<property name="L" label="基础" builder="HyperlinkBuilder">
+				<param name="cfg">
+					<attribute name="show-label" value="false" />
+					<attribute name="setter" value="setL" />
+					<attribute name="columns" value="2" />
+				</param>
+			</property>
+			<property name="p1" builder="HyperlinkBuilder">
+				<param name="cfg">
+					<attribute name="setter" value="setP1" />
+					<attribute name="property" value="UserTest.test用户" />
+					<attribute name="columns" value="2" />
+				</param>
+			</property>
+			<property name="p1" builder="HyperlinkBuilder">
+				<param name="cfg">
+					<attribute name="setter" value="setP1" />
+					<attribute name="property" value="StorehouseTest.test仓库" />
+					<attribute name="columns" value="2" />
+				</param>
+			</property>
+			<property name="p1" builder="HyperlinkBuilder">
+				<param name="cfg">
+					<attribute name="setter" value="setP1" />
+					<attribute name="property" value="ClientTest.test客户" />
+					<attribute name="columns" value="2" />
+				</param>
+			</property>
+			<property name="p1" builder="HyperlinkBuilder">
+				<param name="cfg">
+					<attribute name="setter" value="setP1" />
+					<attribute name="property" value="CommodityTest.test商品大类" />
+					<attribute name="columns" value="2" />
+				</param>
+			</property>
+			<property name="p1" builder="HyperlinkBuilder">
+				<param name="cfg">
+					<attribute name="setter" value="setP1" />
+					<attribute name="property" value="CommodityTest.test商品小类" />
+					<attribute name="columns" value="2" />
+				</param>
+			</property>
+			<property name="p1" builder="HyperlinkBuilder">
+				<param name="cfg">
+					<attribute name="setter" value="setP1" />
+					<attribute name="property" value="CommodityTest.test采购商品" />
+					<attribute name="columns" value="2" />
+				</param>
+			</property>
+			<property name="p1" builder="HyperlinkBuilder">
+				<param name="cfg">
+					<attribute name="setter" value="setP1" />
+					<attribute name="property" value="CommodityTest.test生产商品" />
+					<attribute name="columns" value="2" />
+				</param>
+			</property>
+			<property name="p1" builder="HyperlinkBuilder">
+				<param name="cfg">
+					<attribute name="setter" value="setP1" />
+					<attribute name="property" value="SupplierTest.test供应商" />
+					<attribute name="columns" value="2" />
+				</param>
+			</property>
+			<property name="p1" builder="HyperlinkBuilder">
+				<param name="cfg">
+					<attribute name="setter" value="setP1" />
+					<attribute name="property" value="SupplierTest.test链接商家" />
+					<attribute name="columns" value="2" />
+				</param>
+			</property>
+			<property name="p1" builder="HyperlinkBuilder">
+				<param name="cfg">
+					<attribute name="setter" value="setP1" />
+					<attribute name="property" value="SubCompanyTest.test分公司" />
+					<attribute name="columns" value="2" />
+				</param>
+			</property>
+			<property name="L" label="全局搜索" builder="HyperlinkBuilder">
+				<param name="cfg">
+					<attribute name="show-label" value="false" />
+					<attribute name="setter" value="setL" />
+					<attribute name="columns" value="2" />
+					<attribute name="type" value="Purchase" />
+				</param>
+			</property>
+			<property name="p1" builder="HyperlinkBuilder">
+				<param name="cfg">
+					<attribute name="setter" value="setP1" />
+					<attribute name="property" value="GlobalSearchTest.test搜索" />
+					<attribute name="columns" value="2" />
+				</param>
+			</property>
+			<property name="Total" label="合计" builder="HyperlinkBuilder">
+				<param name="cfg">
+					<attribute name="show-label" value="false" />
+					<attribute name="setter" value="setT" />
+					<attribute name="columns" value="2" />
+				</param>
+			</property>
+		</view>
+		<view name="gOrder" label0="订单" builder="EditViewBuilder">
+			<param name="cfg">
+				<attribute name="freezable" value="false" />
+				<attribute name="menu" value="保存测试结果" />
+			</param>
+			<param name="menu">
+				<attribute name="text" value="保存测试结果" />
+				<attribute name="image" value="mily/img/color.gif" />
+				<attribute name="show" value="false" />
+				<param name="listener">
+					<attribute name="class" value="PostListener" />
+					<attribute name="setter" value="getTestResult" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="ActionServiceListener" />
+					<param name="action">
+						<attribute name="action" value="PrintModel_Save" />
+						<attribute name="message" value="保存单元测试用例运行结果" />
+						<attribute name="setter" value="setPrintModel4Service" />
+					</param>
+				</param>
+			</param>
+			<property name="L" label="内部订单" builder="HyperlinkBuilder">
+				<param name="cfg">
+					<attribute name="show-label" value="false" />
+					<attribute name="setter" value="setL" />
+					<attribute name="columns" value="2" />
+					<attribute name="type" value="Purchase,Product,SubCompany|Purchase,SubCompany|Product,Purchase|ClientOrder,Purchase|SubcompanyOrder" />
+				</param>
+			</property>
+			<property name="p1" builder="HyperlinkBuilder">
+				<param name="cfg">
+					<attribute name="setter" value="setP1" />
+					<attribute name="property" value="OrderTicketTest.test开客户订单" />
+					<attribute name="columns" value="2" />
+				</param>
+			</property>
+			<property name="p1" builder="HyperlinkBuilder">
+				<param name="cfg">
+					<attribute name="setter" value="setP1" />
+					<attribute name="property" value="OrderTicketTest.test开备货订单" />
+					<attribute name="columns" value="2" />
+				</param>
+			</property>
+			<property name="p1" builder="HyperlinkBuilder">
+				<param name="cfg">
+					<attribute name="setter" value="setP1" />
+					<attribute name="property" value="OrderTicketTest.test红冲开单" />
+					<attribute name="columns" value="2" />
+				</param>
+			</property>
+			<property name="Total" label="合计" builder="HyperlinkBuilder">
+				<param name="cfg">
+					<attribute name="show-label" value="false" />
+					<attribute name="setter" value="setT" />
+					<attribute name="columns" value="2" />
+				</param>
+			</property>
+			<property name="L" label="商家订单" builder="HyperlinkBuilder">
+				<param name="cfg">
+					<attribute name="show-label" value="false" />
+					<attribute name="setter" value="setL" />
+					<attribute name="columns" value="2" />
+					<attribute name="type" value="Purchase|ClientOrder,Purchase|SubcompanyOrder" />
+				</param>
+			</property>
+			<property name="p1" builder="HyperlinkBuilder">
+				<param name="cfg">
+					<attribute name="setter" value="setP1" />
+					<attribute name="property" value="OrderTicketTest.test审核商家订单" />
+					<attribute name="columns" value="2" />
+				</param>
+			</property>
+			<property name="Total" label="合计" builder="HyperlinkBuilder">
+				<param name="cfg">
+					<attribute name="show-label" value="false" />
+					<attribute name="setter" value="setT" />
+					<attribute name="columns" value="2" />
+				</param>
+			</property>
+		</view>
+		<view name="_gOrder云仓" label0="盛鼎融合京东顺丰云仓" builder="EditViewBuilder">
+			<param name="cfg">
+				<attribute name="freezable" value="false" />
+				<attribute name="menu" value="保存测试结果" />
+			</param>
+			<param name="menu">
+				<attribute name="text" value="保存测试结果" />
+				<attribute name="image" value="mily/img/color.gif" />
+				<attribute name="show" value="false" />
+				<param name="listener">
+					<attribute name="class" value="PostListener" />
+					<attribute name="setter" value="getTestResult" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="ActionServiceListener" />
+					<param name="action">
+						<attribute name="action" value="PrintModel_Save" />
+						<attribute name="message" value="保存单元测试用例运行结果" />
+						<attribute name="setter" value="setPrintModel4Service" />
+					</param>
+				</param>
+			</param>
+			<property name="L" label="订单" builder="HyperlinkBuilder">
+				<param name="cfg">
+					<attribute name="show-label" value="false" />
+					<attribute name="setter" value="setL" />
+					<attribute name="columns" value="2" />
+					<attribute name="type" value="Purchase" />
+				</param>
+			</property>
+			<property name="p1" builder="HyperlinkBuilder">
+				<param name="cfg">
+					<attribute name="setter" value="setP1" />
+					<attribute name="property" value="OrderClientTest.testdA用大仓库存的安装客户订单" />
+					<attribute name="columns" value="2" />
+				</param>
+			</property>
+			<property name="p1" builder="HyperlinkBuilder">
+				<param name="cfg">
+					<attribute name="setter" value="setP1" />
+					<attribute name="property" value="OrderClientTest.testdB用师傅库存的安装客户订单" />
+					<attribute name="columns" value="2" />
+				</param>
+			</property>
+			<property name="p1" builder="HyperlinkBuilder">
+				<param name="cfg">
+					<attribute name="setter" value="setP1" />
+					<attribute name="property" value="OrderClientTest.testdC安装师傅备货订单" />
+					<attribute name="columns" value="2" />
+				</param>
+			</property>
+			<property name="p1" builder="HyperlinkBuilder">
+				<param name="cfg">
+					<attribute name="setter" value="setP1" />
+					<attribute name="property" value="OrderClientTest.testdD免安装大仓客户订单" />
+					<attribute name="columns" value="2" />
+				</param>
+			</property>
+			<property name="p1" builder="HyperlinkBuilder">
+				<param name="cfg">
+					<attribute name="setter" value="setP1" />
+					<attribute name="property" value="OrderClientTest.testdE配件小仓客户订单" />
+					<attribute name="columns" value="2" />
+				</param>
+			</property>
+			<property name="L" label="采购单" builder="HyperlinkBuilder">
+				<param name="cfg">
+					<attribute name="show-label" value="false" />
+					<attribute name="setter" value="setL" />
+					<attribute name="columns" value="2" />
+					<attribute name="type" value="Purchase" />
+				</param>
+			</property>
+			<property name="p1" builder="HyperlinkBuilder">
+				<param name="cfg">
+					<attribute name="setter" value="setP1" />
+					<attribute name="property" value="OrderClientTest.testcA大仓备货采购待收" />
+					<attribute name="columns" value="2" />
+				</param>
+			</property>
+			<property name="p1" builder="HyperlinkBuilder">
+				<param name="cfg">
+					<attribute name="setter" value="setP1" />
+					<attribute name="property" value="OrderClientTest.testcB小仓采购备货收货" />
+					<attribute name="columns" value="2" />
+				</param>
+			</property>
+			<property name="L" label="其它" builder="HyperlinkBuilder">
+				<param name="cfg">
+					<attribute name="show-label" value="false" />
+					<attribute name="setter" value="setL" />
+					<attribute name="columns" value="2" />
+					<attribute name="type" value="Purchase" />
+				</param>
+			</property>
+			<property name="p1" builder="HyperlinkBuilder">
+				<param name="cfg">
+					<attribute name="setter" value="setP1" />
+					<attribute name="property" value="OrderClientTest.test师傅安全库存数" />
+					<attribute name="columns" value="2" />
+				</param>
+			</property>
+			<property name="p1" builder="HyperlinkBuilder">
+				<param name="cfg">
+					<attribute name="setter" value="setP1" />
+					<attribute name="property" value="OrderReturnTest.test未安装退货回大仓验货" />
+					<attribute name="columns" value="2" />
+					<attribute name="exclude" value="SubcompanyOrder" />
+				</param>
+			</property>
+			<property name="p1" builder="HyperlinkBuilder">
+				<param name="cfg">
+					<attribute name="setter" value="setP1" />
+					<attribute name="property" value="OrderReturnTest.test未安装退货回小仓" />
+					<attribute name="columns" value="2" />
+					<attribute name="exclude" value="SubcompanyOrder" />
+				</param>
+			</property>
+			<property name="p1" builder="HyperlinkBuilder">
+				<param name="cfg">
+					<attribute name="setter" value="setP1" />
+					<attribute name="property" value="OrderReturnTest.test已安装拒收退货确认" />
+					<attribute name="columns" value="2" />
+					<attribute name="exclude" value="SubcompanyOrder" />
+				</param>
+			</property>
+			<property name="p1" builder="HyperlinkBuilder">
+				<param name="cfg">
+					<attribute name="setter" value="setP1" />
+					<attribute name="property" value="PurchaseReturnTest.test验仓退货" />
+					<attribute name="columns" value="2" />
+				</param>
+			</property>
+			<property name="p1" builder="HyperlinkBuilder">
+				<param name="cfg">
+					<attribute name="setter" value="setP1" />
+					<attribute name="property" value="LocationTicketTest.test云仓迁移" />
+					<attribute name="columns" value="2" />
+				</param>
+			</property>
+			<property name="Total" label="合计" builder="HyperlinkBuilder">
+				<param name="cfg">
+					<attribute name="show-label" value="false" />
+					<attribute name="setter" value="setT" />
+					<attribute name="columns" value="2" />
+				</param>
+			</property>
+		</view>
+		<view name="gArrange" label0="排单" builder="EditViewBuilder">
+			<param name="cfg">
+				<attribute name="freezable" value="false" />
+				<attribute name="menu" value="保存测试结果" />
+			</param>
+			<param name="menu">
+				<attribute name="text" value="保存测试结果" />
+				<attribute name="image" value="mily/img/color.gif" />
+				<attribute name="show" value="false" />
+				<param name="listener">
+					<attribute name="class" value="PostListener" />
+					<attribute name="setter" value="getTestResult" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="ActionServiceListener" />
+					<param name="action">
+						<attribute name="action" value="PrintModel_Save" />
+						<attribute name="message" value="保存单元测试用例运行结果" />
+						<attribute name="setter" value="setPrintModel4Service" />
+					</param>
+				</param>
+			</param>
+			<property name="L" label="排单" builder="HyperlinkBuilder">
+				<param name="cfg">
+					<attribute name="show-label" value="false" />
+					<attribute name="setter" value="setL" />
+					<attribute name="columns" value="2" />
+					<attribute name="type" value="Purchase,Product,SubCompany|Purchase,SubCompany|Product" />
+				</param>
+			</property>
+			<property name="p1" builder="HyperlinkBuilder">
+				<param name="cfg">
+					<attribute name="setter" value="setP1" />
+					<attribute name="property" value="ArrangeTicketTest.test拆分订单" />
+					<attribute name="columns" value="2" />
+				</param>
+			</property>
+			<property name="p1" builder="HyperlinkBuilder">
+				<param name="cfg">
+					<attribute name="setter" value="setP1" />
+					<attribute name="property" value="ArrangeTicketTest.test订单安排" />
+					<attribute name="columns" value="2" />
+				</param>
+			</property>
+			<property name="p1" builder="HyperlinkBuilder">
+				<param name="cfg">
+					<attribute name="setter" value="setP1" />
+					<attribute name="property" value="ArrangeTicketTest.test调整安排" />
+					<attribute name="columns" value="2" />
+				</param>
+			</property>
+			<property name="p1" builder="HyperlinkBuilder">
+				<param name="cfg">
+					<attribute name="setter" value="setP1" />
+					<attribute name="property" value="ArrangeTicketTest.test订单红冲" />
+					<attribute name="columns" value="2" />
+				</param>
+			</property>
+			<property name="p1" builder="HyperlinkBuilder">
+				<param name="cfg">
+					<attribute name="setter" value="setP1" />
+					<attribute name="property" value="ArrangeTicketTest.test排单红冲编辑" />
+					<attribute name="columns" value="2" />
+				</param>
+			</property>
+			<property name="Total" label="合计" builder="HyperlinkBuilder">
+				<param name="cfg">
+					<attribute name="show-label" value="false" />
+					<attribute name="setter" value="setT" />
+					<attribute name="columns" value="2" />
+				</param>
+			</property>
+		</view>
+		<view name="gPurchase" label0="采购" builder="EditViewBuilder">
+			<param name="cfg">
+				<attribute name="freezable" value="false" />
+				<attribute name="menu" value="保存测试结果" />
+			</param>
+			<param name="menu">
+				<attribute name="text" value="保存测试结果" />
+				<attribute name="image" value="mily/img/color.gif" />
+				<attribute name="show" value="false" />
+				<param name="listener">
+					<attribute name="class" value="PostListener" />
+					<attribute name="setter" value="getTestResult" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="ActionServiceListener" />
+					<param name="action">
+						<attribute name="action" value="PrintModel_Save" />
+						<attribute name="message" value="保存单元测试用例运行结果" />
+						<attribute name="setter" value="setPrintModel4Service" />
+					</param>
+				</param>
+			</param>
+			<property name="L" label="商家采购" builder="HyperlinkBuilder">
+				<param name="cfg">
+					<attribute name="show-label" value="false" />
+					<attribute name="setter" value="setL" />
+					<attribute name="columns" value="2" />
+					<attribute name="type" value="Purchase|ClientOrder,Purchase|SubcompanyOrder" />
+				</param>
+			</property>
+			<property name="p1" builder="HyperlinkBuilder">
+				<param name="cfg">
+					<attribute name="setter" value="setP1" />
+					<attribute name="property" value="PurchaseTicketTest.test供应商返单处理" />
+					<attribute name="columns" value="2" />
+				</param>
+			</property>
+			<property name="p1" builder="HyperlinkBuilder">
+				<param name="cfg">
+					<attribute name="setter" value="setP1" />
+					<attribute name="property" value="PurchaseTicketTest.testLink当地购_收货改单_采购取消" />
+					<attribute name="columns" value="2" />
+				</param>
+			</property>
+			<property name="Total" label="合计" builder="HyperlinkBuilder">
+				<param name="cfg">
+					<attribute name="show-label" value="false" />
+					<attribute name="setter" value="setT" />
+					<attribute name="columns" value="2" />
+				</param>
+			</property>
+			<property name="L" label="内部采购" builder="HyperlinkBuilder">
+				<param name="cfg">
+					<attribute name="show-label" value="false" />
+					<attribute name="setter" value="setL" />
+					<attribute name="columns" value="2" />
+					<attribute name="type" value="Purchase,Product,SubCompany|Purchase,SubCompany|Product" />
+				</param>
+			</property>
+			<property name="p1" builder="HyperlinkBuilder">
+				<param name="cfg">
+					<attribute name="setter" value="setP1" />
+					<attribute name="property" value="PurchaseTicketTest.test普通采购" />
+					<attribute name="columns" value="2" />
+				</param>
+			</property>
+			<property name="p1" builder="HyperlinkBuilder">
+				<param name="cfg">
+					<attribute name="setter" value="setP1" />
+					<attribute name="property" value="PurchaseTicketTest.test原物料普通采购" />
+					<attribute name="columns" value="2" />
+				</param>
+			</property>
+			<property name="p1" builder="HyperlinkBuilder">
+				<param name="cfg">
+					<attribute name="setter" value="setP1" />
+					<attribute name="property" value="PurchaseTicketTest.test排单红冲" />
+					<attribute name="columns" value="2" />
+				</param>
+			</property>
+			<property name="p1" builder="HyperlinkBuilder">
+				<param name="cfg">
+					<attribute name="setter" value="setP1" />
+					<attribute name="property" value="PurchaseTicketTest.test订单红冲" />
+					<attribute name="columns" value="2" />
+				</param>
+			</property>
+			<property name="p1" builder="HyperlinkBuilder">
+				<param name="cfg">
+					<attribute name="setter" value="setP1" />
+					<attribute name="property" value="PurchaseTicketTest.test红冲申请_编辑" />
+					<attribute name="columns" value="2" />
+				</param>
+			</property>
+			<property name="p1" builder="HyperlinkBuilder">
+				<param name="cfg">
+					<attribute name="setter" value="setP1" />
+					<attribute name="property" value="PurchaseTicketTest.test收货改单处理" />
+					<attribute name="columns" value="2" />
+				</param>
+			</property>
+			<property name="Total" label="合计" builder="HyperlinkBuilder">
+				<param name="cfg">
+					<attribute name="show-label" value="false" />
+					<attribute name="setter" value="setT" />
+					<attribute name="columns" value="2" />
+				</param>
+			</property>
+		</view>
+		<view name="gStore" label0="库存计算" builder="EditViewBuilder">
+			<param name="cfg">
+				<attribute name="freezable" value="false" />
+				<attribute name="menu" value="保存测试结果" />
+			</param>
+			<param name="menu">
+				<attribute name="text" value="保存测试结果" />
+				<attribute name="image" value="mily/img/color.gif" />
+				<attribute name="show" value="false" />
+				<param name="listener">
+					<attribute name="class" value="PostListener" />
+					<attribute name="setter" value="getTestResult" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="ActionServiceListener" />
+					<param name="action">
+						<attribute name="action" value="PrintModel_Save" />
+						<attribute name="message" value="保存单元测试用例运行结果" />
+						<attribute name="setter" value="setPrintModel4Service" />
+					</param>
+				</param>
+			</param>
+			<property name="L" label="库存计算" builder="HyperlinkBuilder">
+				<param name="cfg">
+					<attribute name="show-label" value="false" />
+					<attribute name="setter" value="setL" />
+					<attribute name="columns" value="2" />
+					<attribute name="type" value="Purchase,Product,SubCompany|Purchase,SubCompany|Product" />
+				</param>
+			</property>
+			<property name="p1" builder="HyperlinkBuilder">
+				<param name="cfg">
+					<attribute name="setter" value="setP1" />
+					<attribute name="property" value="StoreTicketTest.test任意入库" />
+					<attribute name="columns" value="2" />
+				</param>
+			</property>
+			<property name="p1" builder="HyperlinkBuilder">
+				<param name="cfg">
+					<attribute name="setter" value="setP1" />
+					<attribute name="property" value="StoreTicketTest.test任意出库" />
+					<attribute name="columns" value="2" />
+				</param>
+			</property>
+			<property name="p1" builder="HyperlinkBuilder">
+				<param name="cfg">
+					<attribute name="setter" value="setP1" />
+					<attribute name="property" value="StoreTicketTest.test台账任意入库" />
+					<attribute name="columns" value="2" />
+				</param>
+			</property>
+			<property name="p1" builder="HyperlinkBuilder">
+				<param name="cfg">
+					<attribute name="setter" value="setP1" />
+					<attribute name="property" value="StoreTicketTest.test台账任意出库" />
+					<attribute name="columns" value="2" />
+				</param>
+			</property>
+			<property name="Total" label="合计" builder="HyperlinkBuilder">
+				<param name="cfg">
+					<attribute name="show-label" value="false" />
+					<attribute name="setter" value="setT" />
+					<attribute name="columns" value="2" />
+				</param>
+			</property>
+		</view>
+		<view name="gReceipt" label0="收货" builder="EditViewBuilder">
+			<param name="cfg">
+				<attribute name="freezable" value="false" />
+				<attribute name="menu" value="保存测试结果" />
+			</param>
+			<param name="menu">
+				<attribute name="text" value="保存测试结果" />
+				<attribute name="image" value="mily/img/color.gif" />
+				<attribute name="show" value="false" />
+				<param name="listener">
+					<attribute name="class" value="PostListener" />
+					<attribute name="setter" value="getTestResult" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="ActionServiceListener" />
+					<param name="action">
+						<attribute name="action" value="PrintModel_Save" />
+						<attribute name="message" value="保存单元测试用例运行结果" />
+						<attribute name="setter" value="setPrintModel4Service" />
+					</param>
+				</param>
+			</param>
+			<property name="L" label="收货" builder="HyperlinkBuilder">
+				<param name="cfg">
+					<attribute name="show-label" value="false" />
+					<attribute name="setter" value="setL" />
+					<attribute name="columns" value="2" />
+					<attribute name="type" value="Purchase,Product,SubCompany|Purchase,SubCompany|Product" />
+				</param>
+			</property>
+			<property name="p1" builder="HyperlinkBuilder">
+				<param name="cfg">
+					<attribute name="setter" value="setP1" />
+					<attribute name="property" value="ReceiptTicketTest.test收货开单" />
+					<attribute name="columns" value="2" />
+				</param>
+			</property>
+			<property name="p1" builder="HyperlinkBuilder">
+				<param name="cfg">
+					<attribute name="setter" value="setP1" />
+					<attribute name="property" value="ReceiptTicketTest.test撤销收货" />
+					<attribute name="columns" value="2" />
+				</param>
+			</property>
+			<property name="Total" label="合计" builder="HyperlinkBuilder">
+				<param name="cfg">
+					<attribute name="show-label" value="false" />
+					<attribute name="setter" value="setT" />
+					<attribute name="columns" value="2" />
+				</param>
+			</property>
+		</view>
+		<view name="gSend" label0="销售发货" builder="EditViewBuilder">
+			<param name="cfg">
+				<attribute name="freezable" value="false" />
+				<attribute name="menu" value="保存测试结果" />
+			</param>
+			<param name="menu">
+				<attribute name="text" value="保存测试结果" />
+				<attribute name="image" value="mily/img/color.gif" />
+				<attribute name="show" value="false" />
+				<param name="listener">
+					<attribute name="class" value="PostListener" />
+					<attribute name="setter" value="getTestResult" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="ActionServiceListener" />
+					<param name="action">
+						<attribute name="action" value="PrintModel_Save" />
+						<attribute name="message" value="保存单元测试用例运行结果" />
+						<attribute name="setter" value="setPrintModel4Service" />
+					</param>
+				</param>
+			</param>
+			<property name="L" label="销售发货" builder="HyperlinkBuilder">
+				<param name="cfg">
+					<attribute name="show-label" value="false" />
+					<attribute name="setter" value="setL" />
+					<attribute name="columns" value="2" />
+					<attribute name="type" value="Purchase,Product,SubCompany|Purchase,SubCompany|Product,SubcompanyOrder|Purchase,ClientOrder|Purchase" />
+				</param>
+			</property>
+			<property name="p1" builder="HyperlinkBuilder">
+				<param name="cfg">
+					<attribute name="setter" value="setP1" />
+					<attribute name="property" value="SendTicketTest.test订单发货" />
+					<attribute name="columns" value="2" />
+				</param>
+			</property>
+			<property name="p1" builder="HyperlinkBuilder">
+				<param name="cfg">
+					<attribute name="setter" value="setP1" />
+					<attribute name="property" value="SendTicketTest.test撤销发货" />
+					<attribute name="columns" value="2" />
+				</param>
+			</property>
+			<property name="p1" builder="HyperlinkBuilder">
+				<param name="cfg">
+					<attribute name="setter" value="setP1" />
+					<attribute name="property" value="SendTicketTest.test发货回款" />
+					<attribute name="columns" value="2" />
+					<attribute name="exclude" value="SubcompanyOrder" />
+				</param>
+			</property>
+			<property name="Total" label="合计" builder="HyperlinkBuilder">
+				<param name="cfg">
+					<attribute name="show-label" value="false" />
+					<attribute name="setter" value="setT" />
+					<attribute name="columns" value="2" />
+				</param>
+			</property>
+		</view>
+		<view name="gReturn" label0="退货" builder="EditViewBuilder">
+			<param name="cfg">
+				<attribute name="freezable" value="false" />
+				<attribute name="menu" value="保存测试结果" />
+			</param>
+			<param name="menu">
+				<attribute name="text" value="保存测试结果" />
+				<attribute name="image" value="mily/img/color.gif" />
+				<attribute name="show" value="false" />
+				<param name="listener">
+					<attribute name="class" value="PostListener" />
+					<attribute name="setter" value="getTestResult" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="ActionServiceListener" />
+					<param name="action">
+						<attribute name="action" value="PrintModel_Save" />
+						<attribute name="message" value="保存单元测试用例运行结果" />
+						<attribute name="setter" value="setPrintModel4Service" />
+					</param>
+				</param>
+			</param>
+			<property name="L" label="订单退货" builder="HyperlinkBuilder">
+				<param name="cfg">
+					<attribute name="show-label" value="false" />
+					<attribute name="setter" value="setL" />
+					<attribute name="columns" value="2" />
+					<attribute name="type" value="Purchase,Product,SubCompany|Purchase,SubCompany|Product,ClientOrder|Purchase" />
+				</param>
+			</property>
+			<property name="p1" builder="HyperlinkBuilder">
+				<param name="cfg">
+					<attribute name="setter" value="setP1" />
+					<attribute name="property" value="OrderReturnTest.test订单退货" />
+					<attribute name="columns" value="2" />
+					<attribute name="exclude" value="SubcompanyOrder" />
+				</param>
+			</property>
+			<property name="L" label="链接客户退货" builder="HyperlinkBuilder">
+				<param name="cfg">
+					<attribute name="show-label" value="false" />
+					<attribute name="setter" value="setL" />
+					<attribute name="columns" value="2" />
+					<attribute name="type" value="Purchase|SubcompanyOrder,Purchase|ClientOrder,Product|SubcompanyOrder,Product|ClientOrder" />
+				</param>
+			</property>
+			<property name="p1" builder="HyperlinkBuilder">
+				<param name="cfg">
+					<attribute name="setter" value="setP1" />
+					<attribute name="property" value="OrderReturnTest.test链接客户商家拒收退货" />
+					<attribute name="columns" value="2" />
+				</param>
+			</property>
+			<property name="p1" builder="HyperlinkBuilder">
+				<param name="cfg">
+					<attribute name="setter" value="setP1" />
+					<attribute name="property" value="PurchaseReturnTest.test链接客户商家采购退货" />
+					<attribute name="columns" value="2" />
+				</param>
+			</property>
+			<property name="Total" label="合计" builder="HyperlinkBuilder">
+				<param name="cfg">
+					<attribute name="show-label" value="false" />
+					<attribute name="setter" value="setT" />
+					<attribute name="columns" value="2" />
+				</param>
+			</property>
+			<property name="L" label="采购退货" builder="HyperlinkBuilder">
+				<param name="cfg">
+					<attribute name="show-label" value="false" />
+					<attribute name="setter" value="setL" />
+					<attribute name="columns" value="2" />
+					<attribute name="type" value="Purchase,Product,SubCompany|Purchase,SubCompany|Product,ClientOrder|Purchase" />
+				</param>
+			</property>
+			<property name="p1" builder="HyperlinkBuilder">
+				<param name="cfg">
+					<attribute name="setter" value="setP1" />
+					<attribute name="property" value="PurchaseReturnTest.test采购退货" />
+					<attribute name="columns" value="2" />
+					<attribute name="exclude" value="SubcompanyOrder" />
+				</param>
+			</property>
+			<property name="Total" label="合计" builder="HyperlinkBuilder">
+				<param name="cfg">
+					<attribute name="show-label" value="false" />
+					<attribute name="setter" value="setT" />
+					<attribute name="columns" value="2" />
+				</param>
+			</property>
+		</view>
+		<view name="gInStore" label0="内部入库" builder="EditViewBuilder">
+			<param name="cfg">
+				<attribute name="freezable" value="false" />
+				<attribute name="menu" value="保存测试结果" />
+			</param>
+			<param name="menu">
+				<attribute name="text" value="保存测试结果" />
+				<attribute name="image" value="mily/img/color.gif" />
+				<attribute name="show" value="false" />
+				<param name="listener">
+					<attribute name="class" value="PostListener" />
+					<attribute name="setter" value="getTestResult" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="ActionServiceListener" />
+					<param name="action">
+						<attribute name="action" value="PrintModel_Save" />
+						<attribute name="message" value="保存单元测试用例运行结果" />
+						<attribute name="setter" value="setPrintModel4Service" />
+					</param>
+				</param>
+			</param>
+			<property name="L" label="内部入库" builder="HyperlinkBuilder">
+				<param name="cfg">
+					<attribute name="show-label" value="false" />
+					<attribute name="setter" value="setL" />
+					<attribute name="columns" value="2" />
+					<attribute name="type" value="Purchase,Product,SubCompany|Purchase,SubCompany|Product" />
+				</param>
+			</property>
+			<property name="p1" builder="HyperlinkBuilder">
+				<param name="cfg">
+					<attribute name="setter" value="setP1" />
+					<attribute name="property" value="InStoreTicketTest.test内部入库" />
+					<attribute name="columns" value="2" />
+				</param>
+			</property>
+			<property name="Total" label="合计" builder="HyperlinkBuilder">
+				<param name="cfg">
+					<attribute name="show-label" value="false" />
+					<attribute name="setter" value="setT" />
+					<attribute name="columns" value="2" />
+				</param>
+			</property>
+			<property name="L" label="分账迁移" builder="HyperlinkBuilder">
+				<param name="cfg">
+					<attribute name="show-label" value="false" />
+					<attribute name="setter" value="setL" />
+					<attribute name="columns" value="2" />
+					<attribute name="type" value="Purchase,Product,SubCompany|Purchase,SubCompany|Product,ClientOrder|Purchase" />
+				</param>
+			</property>
+			<property name="p1" builder="HyperlinkBuilder">
+				<param name="cfg">
+					<attribute name="setter" value="setP1" />
+					<attribute name="property" value="LocationTicketTest.test分账迁移" />
+					<attribute name="columns" value="2" />
+					<attribute name="exclude" value="SubcompanyOrder" />
+				</param>
+			</property>
+			<property name="Total" label="合计" builder="HyperlinkBuilder">
+				<param name="cfg">
+					<attribute name="show-label" value="false" />
+					<attribute name="setter" value="setT" />
+					<attribute name="columns" value="2" />
+				</param>
+			</property>
+		</view>
+		<view name="gOutStore" label0="内部出库" builder="EditViewBuilder">
+			<param name="cfg">
+				<attribute name="freezable" value="false" />
+				<attribute name="menu" value="保存测试结果" />
+			</param>
+			<param name="menu">
+				<attribute name="text" value="保存测试结果" />
+				<attribute name="image" value="mily/img/color.gif" />
+				<attribute name="show" value="false" />
+				<param name="listener">
+					<attribute name="class" value="PostListener" />
+					<attribute name="setter" value="getTestResult" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="ActionServiceListener" />
+					<param name="action">
+						<attribute name="action" value="PrintModel_Save" />
+						<attribute name="message" value="保存单元测试用例运行结果" />
+						<attribute name="setter" value="setPrintModel4Service" />
+					</param>
+				</param>
+			</param>
+			<property name="L" label="内部出库" builder="HyperlinkBuilder">
+				<param name="cfg">
+					<attribute name="show-label" value="false" />
+					<attribute name="setter" value="setL" />
+					<attribute name="columns" value="2" />
+					<attribute name="type" value="Purchase,Product,SubCompany|Purchase,SubCompany|Product" />
+				</param>
+			</property>
+			<property name="p1" builder="HyperlinkBuilder">
+				<param name="cfg">
+					<attribute name="setter" value="setP1" />
+					<attribute name="property" value="OutStoreTicketTest.test销售出货" />
+					<attribute name="columns" value="2" />
+				</param>
+			</property>
+			<property name="p1" builder="HyperlinkBuilder">
+				<param name="cfg">
+					<attribute name="setter" value="setP1" />
+					<attribute name="property" value="OutStoreTicketTest.test内部出库" />
+					<attribute name="columns" value="2" />
+				</param>
+			</property>
+			<property name="Total" label="合计" builder="HyperlinkBuilder">
+				<param name="cfg">
+					<attribute name="show-label" value="false" />
+					<attribute name="setter" value="setT" />
+					<attribute name="columns" value="2" />
+				</param>
+			</property>
+		</view>
+		<view name="gBill" label0="收款付款" builder="EditViewBuilder">
+			<param name="cfg">
+				<attribute name="freezable" value="false" />
+				<attribute name="menu" value="保存测试结果" />
+			</param>
+			<param name="menu">
+				<attribute name="text" value="保存测试结果" />
+				<attribute name="image" value="mily/img/color.gif" />
+				<attribute name="show" value="false" />
+				<param name="listener">
+					<attribute name="class" value="PostListener" />
+					<attribute name="setter" value="getTestResult" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="ActionServiceListener" />
+					<param name="action">
+						<attribute name="action" value="PrintModel_Save" />
+						<attribute name="message" value="保存单元测试用例运行结果" />
+						<attribute name="setter" value="setPrintModel4Service" />
+					</param>
+				</param>
+			</param>
+			<property name="L" label="收款付款" builder="HyperlinkBuilder">
+				<param name="cfg">
+					<attribute name="show-label" value="false" />
+					<attribute name="setter" value="setL" />
+					<attribute name="columns" value="2" />
+					<attribute name="type" value="Purchase,Product,SubCompany|Purchase,SubCompany|Product" />
+				</param>
+			</property>
+			<property name="p1" builder="HyperlinkBuilder">
+				<param name="cfg">
+					<attribute name="setter" value="setP1" />
+					<attribute name="property" value="BillTicketTest.test收款" />
+					<attribute name="columns" value="2" />
+				</param>
+			</property>
+			<property name="p1" builder="HyperlinkBuilder">
+				<param name="cfg">
+					<attribute name="setter" value="setP1" />
+					<attribute name="property" value="BillTicketTest.test付款" />
+					<attribute name="columns" value="2" />
+				</param>
+			</property>
+			<property name="L" label="收付款对账" builder="HyperlinkBuilder">
+				<param name="cfg">
+					<attribute name="show-label" value="false" />
+					<attribute name="setter" value="setL" />
+					<attribute name="columns" value="2" />
+					<attribute name="type" value="Purchase,Product,SubCompany|Purchase,SubCompany|Product" />
+				</param>
+			</property>
+			<property name="p1" builder="HyperlinkBuilder">
+				<param name="cfg">
+					<attribute name="setter" value="setP1" />
+					<attribute name="property" value="WBillTicketTest.test付款对账" />
+					<attribute name="columns" value="2" />
+				</param>
+			</property>
+			<property name="p1" builder="HyperlinkBuilder">
+				<param name="cfg">
+					<attribute name="setter" value="setP1" />
+					<attribute name="property" value="WBillTicketTest.test收款对账" />
+					<attribute name="columns" value="2" />
+				</param>
+			</property>
+			<property name="Total" label="合计" builder="HyperlinkBuilder">
+				<param name="cfg">
+					<attribute name="show-label" value="false" />
+					<attribute name="setter" value="setT" />
+					<attribute name="columns" value="2" />
+				</param>
+			</property>
+		</view>
+	</class>
+</mily-mappings>

@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mily-mappings package="com.haoyong.salel.base.form">
+	<import>net.sf.mily.support.form.*</import>
+	<import>com.haoyong.salel.common.listener.*</import>
+	<import>com.haoyong.salel.base.domain.*</import>
+	<class name="ProvinceForm" label="省份">
+		<view name="List" label="省份建档" builder="EditViewBuilder">
+			<param name="menu">
+				<attribute name="text" value="新增" />
+				<attribute name="image" value="mily/img/color.gif" />
+				<param name="listener">
+					<attribute name="class" value="PostListener" />
+					<attribute name="method" value="createPrepare" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="ForwardListener" />
+					<attribute name="view-name" value="Edit" />
+				</param>
+			</param>
+			<param name="menu">
+				<attribute name="text" value="编辑" />
+				<attribute name="image" value="mily/img/color.gif" />
+				<param name="listener">
+					<attribute name="class" value="SelectDomainListener" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="PostListener" />
+					<attribute name="method" value="editPrepare" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="ForwardListener" />
+					<attribute name="view-name" value="Edit" />
+				</param>
+			</param>
+			<param name="menu">
+				<attribute name="text" value="删除" />
+				<attribute name="image" value="mily/img/color.gif" />
+				<param name="listener">
+					<attribute name="class" value="SelectDomainListener" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="ActionServiceListener" />
+					<attribute name="action" value="Province_Delete" />
+					<attribute name="setter" value="setProvinceDelete4Service" />
+					<attribute name="message" value="确认删除此省份？" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="RefreshListener" />
+				</param>
+			</param>
+			<property name="selectedList" class="Province" builder="SqlListBuilder">
+				<fields>
+					<field id="id" type="Long" label="选择" expression="c.ID" />
+					<field id="number" type="String" label="省份编号" expression="c.number" />
+					<field id="SecurityNumber" type="String" label="省份名称" expression="c.name" />
+					<field id="version" type="int" label="版本" visible="false" expression="c.version" />
+				</fields>
+				<DataSource><![CDATA[
+					from bs_province c
+				]]>
+				</DataSource>
+			</property>
+		</view>
+		<view name="Edit" builder="EditViewBuilder">
+			<param name="menu">
+				<attribute name="text" value="提交" />
+				<attribute name="image" value="mily/img/color.gif" />
+				<param name="listener">
+					<attribute name="class" value="ValidateListener" />
+					<attribute name="method" value="createCommit" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="ActionServiceListener" />
+					<attribute name="action" value="Province_Effect" />
+					<attribute name="setter" value="setProvince4Service" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="ForwardListener" />
+					<attribute name="view-name" value="List" />
+				</param>
+			</param>
+			<param name="menu">
+				<attribute name="text" value="取消" />
+				<attribute name="image" value="mily/img/color.gif" />
+				<param name="listener">
+					<attribute name="class" value="ForwardListener" />
+					<attribute name="view-name" value="List" />
+				</param>
+			</param>
+			<property name="domain" class="Province" builder="EditViewBuilder">
+				<property name="number" label="省份编号" builder="TextFieldBuilder" >
+					<param name="validate">
+						<attribute name="require" value="true" />
+						<attribute name="message" value="4位大写字母" />
+						<attribute name="validate"><![CDATA[(this.value.match(/^[A-Z]{4}$/g) && 1)==1;]]></attribute>
+					</param>
+				</property>
+				<property name="name" label="省份名称" builder="TextFieldBuilder">
+  					<param name="validate">
+						<attribute name="require" value="true"/>
+					</param>
+				</property>
+			</property>
+		</view>
+		<view name="ProvinceQuery" builder="EditViewBuilder">
+			<property name="selectedList" class="Province" builder="SqlListBuilder">
+				<param name="cfg">
+					<attribute0 name="freezable" value="false" />
+				</param>
+				<fields>
+					<field id="id" type="Long" label="选择" expression="p.ID" />
+					<field id="number" type="String" label="省份编号" expression="p.number" />
+					<field id="name" type="String" label="省份名称" expression="p.name" />
+					<field id="version" type="int" label="版本" expression="p.version" />
+				</fields>
+				<DataSource><![CDATA[
+					FROM bs_province p 
+				]]>
+				</DataSource>
+			</property>
+		</view>
+	</class>
+</mily-mappings>

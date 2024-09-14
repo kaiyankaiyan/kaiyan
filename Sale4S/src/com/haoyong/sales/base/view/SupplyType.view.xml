@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mily-mappings package="com.haoyong.sales.base.form">
+	<import>net.sf.mily.support.form.*</import>
+	<import>com.haoyong.sales.common.listener.*</import>
+	<import>com.haoyong.sales.base.domain.*</import>
+	<!-- 商品供货方式 -->
+	<class name="SupplyTypeForm" label="商品供货方式">
+		<view name="List" label="供货方式建档" builder="EditViewBuilder">
+			<param name="cfg">
+				<attribute name="before" value="beforeList" />
+			</param>
+			<param name="menu0">
+				<attribute name="text" value="供货单位建档" />
+				<attribute name="image" value="mily/img/color.gif" />
+				<param name="listener">
+					<attribute name="class" value="SelectDomainListener" />
+					<attribute name="setter" value="setSupplySelected" />
+					<attribute name="view-name" value="detailList" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="ForwardListener" />
+					<attribute name="view-name" value="AgentList" />
+				</param>
+			</param>
+			<param name="menu">
+				<attribute name="text" value="删除" />
+				<attribute name="image" value="mily/img/color.gif" />
+				<param name="listener">
+					<attribute name="class" value="SelectDomainListener" />
+					<attribute name="setter" value="setSupplySelected" />
+					<attribute name="view-name" value="detailList" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="ActionServiceListener" />
+					<attribute name="action" value="TypeInfos_ItemDelete" />
+					<attribute name="setter" value="setSupply4Service" />
+					<attribute name="message" value="确认删除此供货方式？" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="RefreshListener" />
+				</param>
+			</param>
+			<property name="detailList" class="SupplyType" builder="EditListBuilder">
+				<property name="id" label="方式编号" builder="TextBuilder"/>
+				<property name="name" label="供货方式名称" builder="TextBuilder"/>
+			</property>
+		</view>
+		<view name="AgentList" label0="采购方建档" builder="EditViewBuilder">
+			<param name="menu">
+				<attribute name="text" value="新增" />
+				<attribute name="image" value="mily/img/color.gif" />
+				<param name="listener">
+					<attribute name="class" value="PostListener" />
+					<attribute name="method" value="prepareAgent" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="ForwardListener"/>
+					<attribute name="view-name" value="Agent"/>
+				</param>
+			</param>
+			<param name="menu">
+				<attribute name="text" value="编辑" />
+				<attribute name="image" value="mily/img/color.gif" />
+				<param name="listener">
+					<attribute name="class" value="SelectDomainListener" />
+					<attribute name="setter" value="setAgentSelected" />
+					<attribute name="view-name" value="agentList" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="ForwardListener" />
+					<attribute name="view-name" value="edit" />
+				</param>
+			</param>
+			<param name="menu">
+				<attribute name="text" value="删除" />
+				<attribute name="image" value="mily/img/color.gif" />
+				<param name="listener">
+					<attribute name="class" value="SelectDomainListener" />
+					<attribute name="setter" value="setAgentSelected" />
+					<attribute name="view-name" value="agentList" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="ActionServiceListener" />
+					<attribute name="action" value="TypeInfos_ItemDelete" />
+					<attribute name="setter" value="setAgent4Service" />
+					<attribute name="message" value="确认删除此采购方？" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="RefreshListener" />
+				</param>
+			</param>
+			<param name="menu0">
+				<attribute name="text" value="返回" />
+				<attribute name="image" value="mily/img/color.gif" />
+				<param name="listener">
+					<attribute name="class" value="ForwardListener" />
+					<attribute name="view-name" value="List" />
+				</param>
+			</param>
+			<property name="agentList" class="PurchaseAgent" builder="EditListBuilder">
+				<property name="id" label="单位编号" builder="TextBuilder"/>
+				<property name="name" label="单位名称" builder="TextBuilder"/>
+			</property>
+		</view>
+		<view name="SupplyTypeQuery" builder="EditViewBuilder">
+			<param name="cfg">
+				<attribute name="before" value="beforeList" />
+			</param>
+			<property name="detailList" class="SupplyType" builder="EditSqlBuilder">
+				<property name="id" label="方式编号" builder="TextBuilder"/>
+				<property name="name" label="供货方式名称" builder="TextBuilder"/>
+			</property>
+		</view>
+		<view name="Agent" builder="EditViewBuilder">
+			<param name="menu">
+				<attribute name="text" value="提交"></attribute>
+				<attribute name="image" value="mily/img/color.gif" />
+				<param name="listener">
+					<attribute name="class" value="ValidateListener" />
+					<attribute name="method" value="validateAgent" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="ActionServiceListener" />
+					<attribute name="action" value="TypeInfos_ItemSave" />
+					<attribute name="setter" value="setAgent4Service" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="ForwardListener" />
+					<attribute name="view-name" value="AgentList" />
+				</param>
+			</param>
+			<param name="menu">
+				<attribute name="text" value="取消" />
+				<attribute name="image" value="mily/img/color.gif" />
+				<param name="listener">
+					<attribute name="class" value="ForwardListener" />
+					<attribute name="view-name" value="AgentList" />
+				</param>
+			</param>
+			<property name="agent" class="PurchaseAgent" builder="EditViewBuilder">
+				<property name="name" label="单位名称" builder="TextFieldBuilder">
+  					<param name="validate">
+						<attribute name="require" value="true"/>
+					</param>
+				</property>
+			</property>
+		</view>
+		<view name="edit" builder="EditViewBuilder">
+			<param name="menu">
+				<attribute name="text" value="提交" />
+				<attribute name="image" value="mily/img/color.gif" />
+				<!-- 数据验证 -->
+				<param name="listener">
+					<attribute name="class" value="ValidateListener" />
+					<attribute name="method" value="validateAgent" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="ActionServiceListener" />
+					<attribute name="action" value="TypeInfos_ItemSave" />
+					<attribute name="setter" value="setAgent4Service" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="ForwardListener" />
+					<attribute name="view-name" value="AgentList" />
+				</param>
+			</param>
+			<param name="menu">
+				<attribute name="text" value="取消" />
+				<attribute name="image" value="mily/img/color.gif" />
+				<param name="listener">
+					<attribute name="class" value="ForwardListener" />
+					<attribute name="view-name" value="AgentList" />
+				</param>
+			</param>
+			<property name="agent" class="PurchaseAgent" builder="EditViewBuilder">
+				<property name="id" label="单位编号" builder="TextBuilder"/>
+				<property name="name" label="单位名称" builder="TextFieldBuilder">
+  					<param name="validate">
+						<attribute name="require" value="true"/>
+					</param>
+				</property>
+			</property>
+		</view>
+	</class>
+</mily-mappings>

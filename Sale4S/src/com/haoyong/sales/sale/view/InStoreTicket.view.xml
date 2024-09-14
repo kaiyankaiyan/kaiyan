@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mily-mappings package="com.haoyong.sales.sale.form">
+	<import>net.sf.mily.support.form.*</import>
+	<import>com.haoyong.sales.common.listener.*</import>
+	<import>com.haoyong.sales.sale.domain.*</import>
+	<import>com.haoyong.sales.base.domain.*</import>
+	<import>com.haoyong.sales.base.form.*</import>
+
+	<class name="InStoreTicketForm" label="出入库">
+		<property name="InstoreTicket" visible="false" class="InstoreTicket" builder="EditViewBuilder">
+			<property name="Ticket" class="InstoreTicket">
+				<property name="number" label="入库单号" builder="TextFieldBuilder">
+					<param name="cfg">
+						<attribute name="type" value="Require"/>
+					</param>
+					<param name="button">
+						<attribute name="text" value="生成单号" />
+						<param name="listener">
+							<attribute name="class" value="ChangeAssociateListener" />
+							<attribute name="method" value="setInstoreTicketNumber" />
+							<attribute name="properties" value="number" />
+						</param>
+					</param>
+				</property>
+				<property name="number2" label="人工单号" builder="TextFieldBuilder"/>
+				<property name="inName" label="入库分账" builder="TextFieldBuilder"/>
+				<property name="type" label="入库类型" builder="TextFieldBuilder">
+					<param name="cfg">
+						<attribute name="type" value="Require"/>
+					</param>
+				</property>
+				<property name="instoreDate" label="入库月份" builder="DateBuilder"/>
+				<property name="dept" label="还料部门" builder="TextFieldBuilder"/>
+				<property name="remark" label="入库备注" builder="TextAreaBuilder">
+					<param name="cfg">
+						<attribute name="position" value="row" />
+					</param>
+				</property>
+			</property>
+		</property>
+		<view name="InStore" label="入库开单" builder="EditViewBuilder">
+			<param name="cfg">
+				<attribute name="before" value="beforeInStore" />
+			</param>
+			<param name="menu">
+				<attribute name="text" value="提交入库" />
+				<attribute name="image" value="mily/img/color.gif" />
+				<param name="listener">
+					<attribute name="class" value="ValidateListener" />
+					<attribute name="method" value="validateInStore" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="PostListener" />
+					<attribute name="method" value="setInExtra4Service" info="备货库存添加" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="ActionServiceListener" />
+					<attribute name="message" value="确认新增库存明细数量" />
+					<param name="action">
+						<attribute name="action" value="StoreTicket_Extra" />
+						<attribute name="setter" value="setInstore4Service" />
+						<attribute name="message" value="入库单新增入库明细"/>
+						<param name="state">
+							<attribute name="property" value="CreateList" />
+							<attribute name="id" value="30" />
+							<attribute name="name" value="导入库存" />
+							<attribute name="method" value="setReceiptState" />
+						</param>
+						<param name="state">
+							<attribute name="property" value="CreateList" />
+							<attribute name="id" value="30" />
+							<attribute name="method" value="setPurchaseState" />
+						</param>
+						<param name="user">
+							<attribute name="property" value="CreateList" />
+							<attribute name="method" value="setReceiptUser" />
+						</param>
+					</param>
+					<param name="action">
+						<attribute name="action" value="PurchaseTicket_Save" />
+						<attribute name="setter" value="setPurchase4Service" />
+						<attribute name="message" value="内部入库单存档"/>
+						<param name="state">
+							<attribute name="id" value="30" />
+							<attribute name="name" value="内部入库单存档" />
+							<attribute name="method" value="setReceiptState" />
+						</param>
+						<param name="state">
+							<attribute name="id" value="0" />
+							<attribute name="method" value="setPurchaseState" />
+						</param>
+						<param name="user">
+							<attribute name="method" value="setReceiptUser" />
+						</param>
+					</param>
+					<param name="action">
+						<attribute name="action" value="ReceiptTicket_Effect"/>
+						<attribute name="setter" value="setInstoreCount4Service"/>
+						<attribute name="message" value="导入后重计算库存量"/>
+					</param>
+				</param>
+				<param name="listener">
+					<attribute name="class" value="RedirectorListener" />
+					<attribute name="url" value="success.jsp"/>
+				</param>
+			</param>
+			<property name="domain" class="OrderDetail">
+				<property name="InstoreTicket.Ticket" class="InstoreTicket"/>
+			</property>
+			<property name="detailList" class="OrderDetail" builder="EditListBuilder">
+				<param name="menu">
+					<attribute name="text" value="添加明细" />
+					<attribute name="image" value="mily/img/color.gif" />
+					<param name="listener">
+						<attribute name="class" value="PostListener" />
+						<attribute name="method" value="addDetail" />
+					</param>
+					<param name="listener">
+						<attribute name="class" value="RefreshListener" />
+					</param>
+				</param>
+				<param name="menu">
+					<attribute name="text" value="移除明细" />
+					<attribute name="image" value="mily/img/color.gif" />
+					<param name="listener">
+						<attribute name="class" value="SelectDeleteListener" />
+					</param>
+				</param>
+				<property name="commodity" class="Commodity" />
+				<property name="amount" label="数量" builder="TextFieldBuilder" >
+					<param name="validate">
+						<attribute name="require" value="true" />
+						<attribute name="message" value="进库数量大于0"/>
+						<attribute name="validate"><![CDATA[0<eval(this.value)]]></attribute>
+					</param>
+				</property>
+				<property name="price" label="入库价格" builder="TextFieldBuilder" />
+				<property name="remark" label="明细备注" builder="TextFieldBuilder"/>
+			</property>
+		</view>
+		<view name="CommodityQuery" builder="EditViewBuilder">
+			<param name="menu">
+				<attribute name="text" value="确定" />
+				<attribute name="image" value="mily/img/color.gif" />
+				<param name="listener">
+					<attribute name="class" value="SelectDomainListener" />
+					<attribute name="setter" value="setCommoditySelect" />
+					<attribute name="view-name" value="selectedList" />
+				</param>
+				<param name="listener">
+					<attribute name="class" value="SimpleDialogCloseListener" />
+				</param>
+			</param>
+			<param name="menu">
+				<attribute name="text" value="关闭" />
+				<attribute name="image" value="mily/img/color.gif" />
+				<param name="listener">
+					<attribute name="class" value="SimpleDialogCloseListener" />
+				</param>
+			</param>
+			<property name="CommodityForm" class="CommodityForm" builder="ViewFieldBuilder">
+				<param name="cfg">
+					<attribute name="view-name" value="CommodityQuery.selectedList"/>
+					<attribute name="position" value="row"/>
+				</param>
+			</property>
+		</view>
+	</class>
+</mily-mappings>
